@@ -1,0 +1,16 @@
+{
+  "editor.formatOnSave": true,
+  "typescript.format.enable": false,
+  "javascript.format.enable": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#57bca9",
+    "titleBar.activeForeground": "#000000",
+    "titleBar.inactiveBackground": "#57bca9",
+    "titleBar.inactiveForeground": "#000000",
+    "titleBar.border": "#57bca9"
+  },
+  "files.associations": {
+    "*.svg": "html"
+  }
+}
