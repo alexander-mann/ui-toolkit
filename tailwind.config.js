@@ -1,4 +1,4 @@
-import { baseTheme, themePlugin, themePreset } from '@styles'
+import { baseTheme, themePlugin, themePreset } from './src/styles'
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {

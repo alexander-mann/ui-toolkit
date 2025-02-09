@@ -1,6 +1,7 @@
-import { Theme } from '@types'
-import { colorMix } from '@utils'
 import plugin from 'tailwindcss/plugin'
+
+import { Theme } from '../types'
+import { colorMix } from '../utils'
 
 export const themePlugin = (theme: Theme) =>
   plugin(

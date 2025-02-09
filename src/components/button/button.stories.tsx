@@ -7,11 +7,6 @@ import { Button, ButtonSize, ButtonVariant } from './button'
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
   component: Button,
-  parameters: {
-    controls: {
-      exclude: ['className', 'style', 'asChild'],
-    },
-  },
   argTypes: {
     children: {
       description: 'Button label',
@@ -25,7 +20,7 @@ const meta: Meta<typeof Button> = {
       options: Object.values(ButtonVariant),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: ButtonVariant.default },
+        defaultValue: { summary: ButtonVariant.primary },
       },
       control: 'select',
     },
@@ -47,7 +42,7 @@ type Story = StoryObj<typeof Button>
 
 export const BasicUsage: Story = {
   args: {
-    children: 'Click me',
+    children: 'Label',
   },
   render: (props) => <Button {...props} />,
 }

@@ -22,17 +22,21 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        [ButtonVariant.primary]: 'bg-primary text-primary-foreground',
-        [ButtonVariant.secondary]: 'bg-secondary text-secondary-foreground',
+        [ButtonVariant.primary]:
+          'bg-primary text-primary-foreground hover:bg-primary/80',
+        [ButtonVariant.secondary]:
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         [ButtonVariant.destructive]:
-          'bg-destructive text-destructive-foreground',
-        [ButtonVariant.success]: 'bg-success text-success-foreground',
-        [ButtonVariant.brand]: 'bg-brand text-brand-foreground',
+          'bg-destructive text-destructive-foreground hover:bg-destructive/80',
+        [ButtonVariant.success]:
+          'bg-success text-success-foreground hover:bg-success/80',
+        [ButtonVariant.brand]:
+          'bg-brand text-brand-foreground hover:bg-brand/80',
       },
       size: {
-        [ButtonSize.sm]: 'h-9 px-4 py-2',
-        [ButtonSize.default]: 'h-10 px-4 py-2',
-        [ButtonSize.lg]: 'h-11 px-8 py-3',
+        [ButtonSize.sm]: 'px-3 py-2 text-xs',
+        [ButtonSize.default]: 'px-4 py-3',
+        [ButtonSize.lg]: 'px-8 py-3 text-lg',
       },
     },
     defaultVariants: {
