@@ -1,0 +1,43 @@
+import { Theme } from '../types'
+import { palette } from './palette'
+
+export const baseTheme: Theme = {
+  light: {
+    background: palette.neutral[50],
+    foreground: palette.neutral[950],
+    primary: palette.neutral[950],
+    primaryForeground: palette.neutral[50],
+    secondary: palette.neutral[100],
+    secondaryForeground: palette.neutral[900],
+    muted: palette.neutral[100],
+    mutedForeground: palette.neutral[500],
+    accent: palette.neutral[100],
+    accentForeground: palette.neutral[950],
+    destructive: palette.red[600],
+    destructiveForeground: palette.red[50],
+    border: palette.neutral[300],
+    success: palette.green[700],
+    successForeground: palette.green[50],
+    brand: palette.violet[600],
+    brandForeground: palette.violet[50],
+  },
+  dark: {
+    background: palette.neutral[900],
+    foreground: palette.neutral[50],
+    primary: palette.neutral[50],
+    primaryForeground: palette.neutral[900],
+    secondary: palette.neutral[700],
+    secondaryForeground: palette.neutral[50],
+    muted: palette.neutral[800],
+    mutedForeground: palette.neutral[400],
+    accent: palette.neutral[700],
+    accentForeground: palette.neutral[50],
+    destructive: palette.red[600],
+    destructiveForeground: palette.red[50],
+    border: palette.neutral[700],
+    success: palette.green[700],
+    successForeground: palette.green[50],
+    brand: palette.violet[600],
+    brandForeground: palette.violet[50],
+  },
+}

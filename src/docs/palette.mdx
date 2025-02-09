@@ -1,0 +1,27 @@
+import { ColorItem, ColorPalette, Meta } from '@storybook/blocks'
+
+import { palette } from '../styles/palette.ts'
+
+<Meta title="Styles/Palette" />
+
+# Color Palette
+
+<ColorPalette>
+  <ColorItem title="White" colors={{ white: palette.white }} />
+  <ColorItem title="Black" colors={{ black: palette.black }} />
+  <ColorItem title="Neutral" subtitle="Variations" colors={palette.neutral} />
+  <ColorItem title="Red" subtitle="Variations" colors={palette.red} />
+  <ColorItem title="Rose" subtitle="Variations" colors={palette.rose} />
+  <ColorItem title="Orange" subtitle="Variations" colors={palette.orange} />
+  <ColorItem title="Gold" subtitle="Variations" colors={palette.gold} />
+  <ColorItem title="Sage" subtitle="Variations" colors={palette.sage} />
+  <ColorItem title="Green" subtitle="Variations" colors={palette.green} />
+  <ColorItem title="Teal" subtitle="Variations" colors={palette.teal} />
+  <ColorItem title="Cyan" subtitle="Variations" colors={palette.cyan} />
+  <ColorItem title="Blue" subtitle="Variations" colors={palette.blue} />
+  <ColorItem title="Violet" subtitle="Variations" colors={palette.violet} />
+  <ColorItem title="Purple" subtitle="Variations" colors={palette.purple} />
+  <ColorItem title="Clay" subtitle="Variations" colors={palette.clay} />
+  <ColorItem title="Sepia" subtitle="Variations" colors={palette.sepia} />
+  <ColorItem title="Midnight" subtitle="Variations" colors={palette.midnight} />
+</ColorPalette>
