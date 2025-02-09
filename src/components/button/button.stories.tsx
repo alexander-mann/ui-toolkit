@@ -46,3 +46,88 @@ export const BasicUsage: Story = {
   },
   render: (props) => <Button {...props} />,
 }
+
+export const Primary: Story = {
+  render: () => (
+    <div className="flex items-center gap-4">
+      <Button variant="primary" size="sm">
+        Small
+      </Button>
+      <Button variant="primary">Default</Button>
+      <Button variant="primary" disabled>
+        Disabled
+      </Button>
+      <Button variant="primary" size="lg">
+        Large
+      </Button>
+    </div>
+  ),
+}
+
+export const Secondary: Story = {
+  render: () => (
+    <div className="flex items-center gap-4">
+      <Button variant="secondary" size="sm">
+        Small
+      </Button>
+      <Button variant="secondary">Default</Button>
+      <Button variant="secondary" disabled>
+        Disabled
+      </Button>
+      <Button variant="secondary" size="lg">
+        Large
+      </Button>
+    </div>
+  ),
+}
+
+export const Destructive: Story = {
+  render: () => (
+    <div className="flex items-center gap-4">
+      <Button variant="destructive" size="sm">
+        Small
+      </Button>
+      <Button variant="destructive">Default</Button>
+      <Button variant="destructive" disabled>
+        Disabled
+      </Button>
+      <Button variant="destructive" size="lg">
+        Large
+      </Button>
+    </div>
+  ),
+}
+
+export const Success: Story = {
+  render: () => (
+    <div className="flex items-center gap-4">
+      <Button variant="success" size="sm">
+        Small
+      </Button>
+      <Button variant="success">Default</Button>
+      <Button variant="success" disabled>
+        Disabled
+      </Button>
+      <Button variant="success" size="lg">
+        Large
+      </Button>
+    </div>
+  ),
+}
+
+export const Brand: Story = {
+  render: () => (
+    <div className="flex items-center gap-4">
+      <Button variant="brand" size="sm">
+        Small
+      </Button>
+      <Button variant="brand">Default</Button>
+      <Button variant="brand" disabled>
+        Disabled
+      </Button>
+      <Button variant="brand" size="lg">
+        Large
+      </Button>
+    </div>
+  ),
+}
