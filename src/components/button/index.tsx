@@ -6,6 +6,7 @@ import { cva, VariantProps } from 'class-variance-authority'
 export const ButtonVariant = {
   primary: 'primary',
   secondary: 'secondary',
+  outline: 'outline',
   destructive: 'destructive',
   success: 'success',
   brand: 'brand',
@@ -26,6 +27,8 @@ const buttonVariants = cva(
           'bg-primary text-primary-foreground hover:bg-primary/80',
         [ButtonVariant.secondary]:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        [ButtonVariant.outline]:
+          'bg-transparent border border-input text-input hover:bg-accent hover:text-accent-foreground',
         [ButtonVariant.destructive]:
           'bg-destructive text-destructive-foreground hover:bg-destructive/80',
         [ButtonVariant.success]:

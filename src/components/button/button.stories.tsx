@@ -81,6 +81,23 @@ export const Secondary: Story = {
   ),
 }
 
+export const Outline: Story = {
+  render: () => (
+    <div className="flex items-center gap-4">
+      <Button variant="outline" size="sm">
+        Small
+      </Button>
+      <Button variant="outline">Default</Button>
+      <Button variant="outline" disabled>
+        Disabled
+      </Button>
+      <Button variant="outline" size="lg">
+        Large
+      </Button>
+    </div>
+  ),
+}
+
 export const Destructive: Story = {
   render: () => (
     <div className="flex items-center gap-4">
