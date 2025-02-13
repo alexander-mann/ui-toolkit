@@ -7,6 +7,8 @@ export interface ThemeColors {
   secondaryForeground: string
   muted: string
   mutedForeground: string
+  card: string
+  cardForeground: string
   accent: string
   accentForeground: string
   destructive: string

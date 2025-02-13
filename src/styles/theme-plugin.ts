@@ -19,6 +19,8 @@ export const themePlugin = (theme: Theme) =>
           '--muted-foreground': theme.light.mutedForeground,
           '--accent': theme.light.accent,
           '--accent-foreground': theme.light.accentForeground,
+          '--card': theme.light.card,
+          '--card-foreground': theme.light.cardForeground,
           '--destructive': theme.light.destructive,
           '--destructive-foreground': theme.light.destructiveForeground,
           '--border': theme.light.border,
@@ -39,6 +41,8 @@ export const themePlugin = (theme: Theme) =>
           '--secondary-foreground': theme.dark.secondaryForeground,
           '--muted': theme.dark.muted,
           '--muted-foreground': theme.dark.mutedForeground,
+          '--card': theme.dark.card,
+          '--card-foreground': theme.dark.cardForeground,
           '--accent': theme.dark.accent,
           '--accent-foreground': theme.dark.accentForeground,
           '--destructive': theme.dark.destructive,
@@ -84,6 +88,10 @@ export const themePlugin = (theme: Theme) =>
             muted: {
               DEFAULT: colorMix('muted'),
               foreground: colorMix('muted-foreground'),
+            },
+            card: {
+              DEFAULT: colorMix('card'),
+              foreground: colorMix('card-foreground'),
             },
             accent: {
               DEFAULT: colorMix('accent'),

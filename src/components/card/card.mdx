@@ -1,0 +1,32 @@
+import {
+  Canvas,
+  Controls,
+  Description,
+  Meta,
+  Source,
+  Title,
+} from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './card.stories'
+
+<Meta of={Stories} />
+
+<Title />
+<Description />
+
+#### A simple card component that can contain any content.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Card } from '@alexandermann/ui-toolkit'
+
+<Card>
+  <p>Card content</p>
+</Card>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
