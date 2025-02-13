@@ -38,16 +38,12 @@ function App() {
 
 ## Documentation
 
-Visit our [documentation site](link-to-docs) to learn more about:
+Visit our [documentation site](https://alexandermann.github.io/ui-toolkit) to learn more about:
 
 - Component API
 - Theming
 - Customization
 - Best practices
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## License
 
