@@ -38,7 +38,7 @@ function App() {
 
 ## Documentation
 
-Visit our [documentation site](https://alexandermann.github.io/ui-toolkit) to learn more about:
+Visit our [documentation site](https://alexander-mann.github.io/ui-toolkit/) to learn more about:
 
 - Component API
 - Theming
