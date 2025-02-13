@@ -1,4 +1,4 @@
-# UI Toolkit
+# Fiore Digital's UI Toolkit
 
 A modern design system built with React and Tailwind CSS, providing reusable components and consistent styling patterns.
 
@@ -13,15 +13,15 @@ A modern design system built with React and Tailwind CSS, providing reusable com
 ## Installation
 
 ```bash
-npm install @your-org/ui-toolkit
+npm install @alexandermann/ui-toolkit
 # or
-yarn add @your-org/ui-toolkit
+yarn add @alexandermann/ui-toolkit
 ```
 
 ## Usage
 
 ```jsx
-import { Button, Card } from '@your-org/ui-toolkit'
+import { Button, Card } from '@alexandermann/ui-toolkit'
 
 function App() {
   return (
@@ -51,4 +51,4 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## License
 
-MIT © [Your Organization]
+MIT © [Alexander Mann](https://github.com/alexander-mann)
