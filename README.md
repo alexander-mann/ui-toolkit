@@ -1,4 +1,4 @@
-# Fiore Digital's UI Toolkit
+# Alexander Mann's UI Toolkit
 
 A modern design system built with React and Tailwind CSS, providing reusable components and consistent styling patterns.
 

@@ -74,7 +74,8 @@
     "tsconfig-paths-webpack-plugin": "^4.2.0",
     "tscpaths": "^0.0.9",
     "typescript-eslint": "^8.23.0",
-    "webpack": "^5.90.3"
+    "webpack": "^5.90.3",
+    "style-loader": "^3.3.4"
   },
   "dependencies": {
     "@tailwindcss/container-queries": "^0.1.1",
