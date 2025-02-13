@@ -1,0 +1,45 @@
+name: Storybook Deployment
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  build-and-deploy-storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install Yarn
+        run: corepack prepare yarn@stable --activate
+
+      - name: Activate Yarn
+        run: yarn set version stable
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Storybook
+        run: yarn build-storybook
+
+      - name: Deploy Storybook
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: storybook-static
+          token: ${{ secrets.GITHUB_TOKEN }}
