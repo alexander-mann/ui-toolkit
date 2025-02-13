@@ -132,17 +132,17 @@ export const Success: Story = {
   ),
 }
 
-export const Brand: Story = {
+export const Accent: Story = {
   render: () => (
     <div className="flex items-center gap-4">
-      <Button variant="brand" size="sm">
+      <Button variant="accent" size="sm">
         Small
       </Button>
-      <Button variant="brand">Default</Button>
-      <Button variant="brand" disabled>
+      <Button variant="accent">Default</Button>
+      <Button variant="accent" disabled>
         Disabled
       </Button>
-      <Button variant="brand" size="lg">
+      <Button variant="accent" size="lg">
         Large
       </Button>
     </div>

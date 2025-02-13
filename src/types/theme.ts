@@ -16,8 +16,6 @@ export interface ThemeColors {
   border: string
   success: string
   successForeground: string
-  brand: string
-  brandForeground: string
 }
 
 export interface Theme {

@@ -17,17 +17,15 @@ export const themePlugin = (theme: Theme) =>
           '--secondary-foreground': theme.light.secondaryForeground,
           '--muted': theme.light.muted,
           '--muted-foreground': theme.light.mutedForeground,
-          '--accent': theme.light.accent,
-          '--accent-foreground': theme.light.accentForeground,
           '--card': theme.light.card,
           '--card-foreground': theme.light.cardForeground,
+          '--accent': theme.light.accent,
+          '--accent-foreground': theme.light.accentForeground,
           '--destructive': theme.light.destructive,
           '--destructive-foreground': theme.light.destructiveForeground,
           '--border': theme.light.border,
           '--success': theme.light.success,
           '--success-foreground': theme.light.successForeground,
-          '--brand': theme.light.brand,
-          '--brand-foreground': theme.light.brandForeground,
         },
       })
       // Add dark theme
@@ -50,8 +48,6 @@ export const themePlugin = (theme: Theme) =>
           '--border': theme.dark.border,
           '--success': theme.dark.success,
           '--success-foreground': theme.dark.successForeground,
-          '--brand': theme.dark.brand,
-          '--brand-foreground': theme.dark.brandForeground,
         },
       })
       // Add html base styles
@@ -96,10 +92,6 @@ export const themePlugin = (theme: Theme) =>
             accent: {
               DEFAULT: colorMix('accent'),
               foreground: colorMix('accent-foreground'),
-            },
-            brand: {
-              DEFAULT: colorMix('brand'),
-              foreground: colorMix('brand-foreground'),
             },
             success: {
               DEFAULT: colorMix('success'),
