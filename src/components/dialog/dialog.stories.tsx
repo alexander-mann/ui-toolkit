@@ -2,18 +2,18 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Modal, ModalSize } from '..'
+import { Dialog, DialogSize } from '..'
 
-const meta: Meta<typeof Modal> = {
-  title: 'Components/Modal',
-  component: Modal,
+const meta: Meta<typeof Dialog> = {
+  title: 'Components/Dialog',
+  component: Dialog,
   argTypes: {
     size: {
       description: 'Size of modal',
-      options: Object.values(ModalSize),
+      options: Object.values(DialogSize),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: ModalSize.default },
+        defaultValue: { summary: DialogSize.default },
       },
       control: 'select',
     },
@@ -39,7 +39,7 @@ const meta: Meta<typeof Modal> = {
 
 export default meta
 
-type Story = StoryObj<typeof Modal>
+type Story = StoryObj<typeof Dialog>
 
 export const BasicUsage: Story = {
   args: {
@@ -47,7 +47,7 @@ export const BasicUsage: Story = {
     usePortal: true,
   },
   render: (props) => (
-    <Modal
+    <Dialog
       {...props}
       triggerElement={
         <span className="underline hover:opacity-80">Open Modal</span>
@@ -82,6 +82,6 @@ export const BasicUsage: Story = {
         vulputate torquent vel velit. Velit faucibus parturient eu proin pretium
         justo.
       </p>
-    </Modal>
+    </Dialog>
   ),
 }

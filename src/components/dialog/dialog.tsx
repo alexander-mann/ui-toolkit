@@ -6,44 +6,44 @@ import { cva, VariantProps } from 'class-variance-authority'
 import { X } from 'lucide-react'
 import { createPortal } from 'react-dom'
 
-export const ModalSize = {
+export const DialogSize = {
   sm: 'sm',
   default: 'default',
   lg: 'lg',
 }
 
-const modalVariants = cva(
+const dialogVariants = cva(
   'flex flex-col gap-6 h-fit bg-background p-5 rounded-lg',
   {
     variants: {
       size: {
-        [ModalSize.sm]: 'w-[300px] max-h-[200px]',
-        [ModalSize.default]: 'w-[600px] max-h-[500px]',
-        [ModalSize.lg]: 'w-[1000px] max-h-[800px]',
+        [DialogSize.sm]: 'w-[300px] max-h-[200px]',
+        [DialogSize.default]: 'w-[600px] max-h-[500px]',
+        [DialogSize.lg]: 'w-[1000px] max-h-[800px]',
       },
     },
     defaultVariants: {
-      size: ModalSize.default,
+      size: DialogSize.default,
     },
   },
 )
 
-interface ModalProps
+interface DialogProps
   extends HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof modalVariants> {
+    VariantProps<typeof dialogVariants> {
   title: string
   triggerElement: React.ReactNode
   usePortal?: boolean
 }
 
-export const Modal = ({
+export const Dialog = ({
   title,
   children,
   size,
   triggerElement,
   className,
   usePortal,
-}: ModalProps) => {
+}: DialogProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleModal = () => {
@@ -59,7 +59,7 @@ export const Modal = ({
         role="dialog"
         aria-labelledby="dialog-label"
         aria-modal="true"
-        className={cn(modalVariants({ size, className }))}
+        className={cn(dialogVariants({ size, className }))}
       >
         <div className="flex justify-between items-center">
           <h1 id="dialog-label" className="text-2xl font-medium">
