@@ -37,7 +37,7 @@ export const baseTheme: Theme = {
     destructive: palette.red[500],
     destructiveForeground: palette.white,
     border: palette.neutral[300],
-    success: palette.green[500],
+    success: palette.green[600],
     successForeground: palette.white,
   },
 }

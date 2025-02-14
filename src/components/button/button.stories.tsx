@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { Lightbulb } from 'lucide-react'
+import { PawPrint } from 'lucide-react'
 
 import { Button, ButtonSize, ButtonVariant } from './button'
 
@@ -62,7 +62,7 @@ export const Default: Story = {
         Large
       </Button>
       <Button variant="default" size="icon" aria-label="Do something">
-        <Lightbulb className="size-5" />
+        <PawPrint className="size-5" />
       </Button>
     </div>
   ),
@@ -82,7 +82,7 @@ export const Secondary: Story = {
         Large
       </Button>
       <Button variant="secondary" size="icon" aria-label="Do something">
-        <Lightbulb className="size-5" />
+        <PawPrint className="size-5" />
       </Button>
     </div>
   ),
@@ -102,7 +102,7 @@ export const Outline: Story = {
         Large
       </Button>
       <Button variant="outline" size="icon" aria-label="Do something">
-        <Lightbulb className="size-5" />
+        <PawPrint className="size-5" />
       </Button>
     </div>
   ),
@@ -122,7 +122,7 @@ export const Destructive: Story = {
         Large
       </Button>
       <Button variant="destructive" size="icon" aria-label="Do something">
-        <Lightbulb className="size-5" />
+        <PawPrint className="size-5" />
       </Button>
     </div>
   ),
@@ -142,7 +142,7 @@ export const Success: Story = {
         Large
       </Button>
       <Button variant="success" size="icon" aria-label="Do something">
-        <Lightbulb className="size-5" />
+        <PawPrint className="size-5" />
       </Button>
     </div>
   ),
@@ -162,7 +162,7 @@ export const Accent: Story = {
         Large
       </Button>
       <Button variant="accent" size="icon" aria-label="Do something">
-        <Lightbulb className="size-5" />
+        <PawPrint className="size-5" />
       </Button>
     </div>
   ),
@@ -182,7 +182,7 @@ export const Ghost: Story = {
         Large
       </Button>
       <Button variant="ghost" size="icon" aria-label="Do something">
-        <Lightbulb className="size-5" />
+        <PawPrint className="size-5" />
       </Button>
     </div>
   ),
