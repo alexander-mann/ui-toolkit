@@ -33,7 +33,7 @@ jobs:
         run: yarn set version 3.8.5
 
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --no-immutable
 
       - name: Build Storybook
         run: yarn build-storybook
