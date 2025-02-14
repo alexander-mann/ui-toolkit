@@ -22,6 +22,11 @@ const meta: Meta<typeof Modal> = {
         disable: true,
       },
     },
+    usePortal: {
+      table: {
+        disable: true,
+      },
+    },
   },
   parameters: {
     exclude: ['triggerElement'],
@@ -37,6 +42,7 @@ export const BasicUsage: Story = {
   render: (props) => (
     <Modal
       {...props}
+      usePortal
       triggerElement={
         <span className="underline hover:opacity-80">Open Modal</span>
       }

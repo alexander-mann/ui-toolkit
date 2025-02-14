@@ -4,6 +4,7 @@ import { Button } from '@components/button'
 import { cn } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 import { X } from 'lucide-react'
+import { createPortal } from 'react-dom'
 
 export const ModalSize = {
   sm: 'sm',
@@ -32,6 +33,7 @@ interface ModalProps
     VariantProps<typeof modalVariants> {
   title: string
   triggerElement: React.ReactNode
+  usePortal?: boolean
 }
 
 export const Modal = ({
@@ -40,6 +42,7 @@ export const Modal = ({
   size,
   triggerElement,
   className,
+  usePortal,
 }: ModalProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -47,26 +50,25 @@ export const Modal = ({
     setIsOpen(!isOpen)
   }
 
+  const modalContent = (
+    <div className="fixed z-[1000] inset-0 flex items-center justify-center bg-black/50">
+      <div className={cn(modalVariants({ size, className }))}>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-medium">{title}</h1>
+          <Button variant="outline" size="icon" onClick={toggleModal}>
+            <X size={12} />
+          </Button>
+        </div>
+        <div className="overflow-y-auto flex flex-col gap-2">{children}</div>
+      </div>
+    </div>
+  )
+
   return (
     <>
       <button onClick={toggleModal}>{triggerElement}</button>
-      {/* Modal overlay */}
-      {isOpen && (
-        <div className="fixed z-[1000] inset-0 flex items-center justify-center bg-black/50">
-          {/* Modal content */}
-          <div className={cn(modalVariants({ size, className }))}>
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-medium">{title}</h1>
-              <Button variant="outline" size="icon" onClick={toggleModal}>
-                <X size={12} />
-              </Button>
-            </div>
-            <div className="overflow-y-auto flex flex-col gap-2">
-              {children}
-            </div>
-          </div>
-        </div>
-      )}
+      {isOpen &&
+        (usePortal ? createPortal(modalContent, document.body) : modalContent)}
     </>
   )
 }
