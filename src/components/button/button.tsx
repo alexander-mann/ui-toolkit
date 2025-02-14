@@ -4,7 +4,7 @@ import { cn } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 
 export const ButtonVariant = {
-  primary: 'primary',
+  default: 'default',
   secondary: 'secondary',
   outline: 'outline',
   destructive: 'destructive',
@@ -16,6 +16,7 @@ export const ButtonSize = {
   sm: 'sm',
   default: 'default',
   lg: 'lg',
+  icon: 'icon',
 }
 
 const buttonVariants = cva(
@@ -23,12 +24,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        [ButtonVariant.primary]:
+        [ButtonVariant.default]:
           'bg-primary text-primary-foreground hover:bg-primary/80',
         [ButtonVariant.secondary]:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         [ButtonVariant.outline]:
-          'bg-transparent border border-input text-input hover:bg-accent hover:text-accent-foreground',
+          'bg-transparent border border-input text-input hover:bg-primary/20',
         [ButtonVariant.destructive]:
           'bg-destructive text-destructive-foreground hover:bg-destructive/80',
         [ButtonVariant.success]:
@@ -40,10 +41,11 @@ const buttonVariants = cva(
         [ButtonSize.sm]: 'px-3 py-2 text-xs',
         [ButtonSize.default]: 'px-4 py-3',
         [ButtonSize.lg]: 'px-8 py-3 text-lg',
+        [ButtonSize.icon]: 'p-1.5 rounded-full',
       },
     },
     defaultVariants: {
-      variant: ButtonVariant.primary,
+      variant: ButtonVariant.default,
       size: ButtonSize.default,
     },
   },

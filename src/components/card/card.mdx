@@ -24,9 +24,20 @@ import * as Stories from './card.stories'
   code={`
 import { Card } from '@alexandermann/ui-toolkit'
 
-<Card>
-  <p>Card content</p>
-</Card>
+<div className="flex flex-col items-center gap-2">
+  <h2 className="text-xl font-bold">Total Value</h2>
+  <Card>
+    <p className="text-2xl font-semibold">$10,000</p>
+  </Card>
+</div>
 `} />
 
+## Properties
+
+<Controls />
+
 <Canvas of={Stories.BasicUsage} sourceState="none" />
+
+### Outline
+
+<Canvas of={Stories.Outline} />

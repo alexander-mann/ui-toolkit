@@ -1,8 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { Lightbulb } from 'lucide-react'
 
-import { Button, ButtonSize, ButtonVariant } from '.'
+import { Button, ButtonSize, ButtonVariant } from './button'
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -20,7 +21,7 @@ const meta: Meta<typeof Button> = {
       options: Object.values(ButtonVariant),
       table: {
         type: { summary: 'string' },
-        defaultValue: { summary: ButtonVariant.primary },
+        defaultValue: { summary: ButtonVariant.default },
       },
       control: 'select',
     },
@@ -47,18 +48,21 @@ export const BasicUsage: Story = {
   render: (props) => <Button {...props} />,
 }
 
-export const Primary: Story = {
+export const Default: Story = {
   render: () => (
     <div className="flex items-center gap-4">
-      <Button variant="primary" size="sm">
+      <Button variant="default" size="sm">
         Small
       </Button>
-      <Button variant="primary">Default</Button>
-      <Button variant="primary" disabled>
+      <Button variant="default">Default</Button>
+      <Button variant="default" disabled>
         Disabled
       </Button>
-      <Button variant="primary" size="lg">
+      <Button variant="default" size="lg">
         Large
+      </Button>
+      <Button variant="default" size="icon">
+        <Lightbulb className="size-5" />
       </Button>
     </div>
   ),
@@ -77,6 +81,9 @@ export const Secondary: Story = {
       <Button variant="secondary" size="lg">
         Large
       </Button>
+      <Button variant="secondary" size="icon">
+        <Lightbulb className="size-5" />
+      </Button>
     </div>
   ),
 }
@@ -93,6 +100,9 @@ export const Outline: Story = {
       </Button>
       <Button variant="outline" size="lg">
         Large
+      </Button>
+      <Button variant="outline" size="icon">
+        <Lightbulb className="size-5" />
       </Button>
     </div>
   ),
@@ -111,6 +121,9 @@ export const Destructive: Story = {
       <Button variant="destructive" size="lg">
         Large
       </Button>
+      <Button variant="destructive" size="icon">
+        <Lightbulb className="size-5" />
+      </Button>
     </div>
   ),
 }
@@ -128,6 +141,9 @@ export const Success: Story = {
       <Button variant="success" size="lg">
         Large
       </Button>
+      <Button variant="success" size="icon">
+        <Lightbulb className="size-5" />
+      </Button>
     </div>
   ),
 }
@@ -144,6 +160,9 @@ export const Accent: Story = {
       </Button>
       <Button variant="accent" size="lg">
         Large
+      </Button>
+      <Button variant="accent" size="icon">
+        <Lightbulb className="size-5" />
       </Button>
     </div>
   ),
