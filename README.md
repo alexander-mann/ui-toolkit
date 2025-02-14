@@ -16,8 +16,6 @@ A modern design system built with React and Tailwind CSS, providing reusable com
 npm install @alexandermann/ui-toolkit
 ```
 
-or
-
 ```bash
 yarn add @alexandermann/ui-toolkit
 ```
