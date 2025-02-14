@@ -10,6 +10,7 @@ export const ButtonVariant = {
   destructive: 'destructive',
   success: 'success',
   accent: 'accent',
+  ghost: 'ghost',
 }
 
 export const ButtonSize = {
@@ -36,6 +37,7 @@ const buttonVariants = cva(
           'bg-success text-success-foreground hover:bg-success/80',
         [ButtonVariant.accent]:
           'bg-accent text-accent-foreground hover:bg-accent/80',
+        [ButtonVariant.ghost]: 'hover:bg-primary/20',
       },
       size: {
         [ButtonSize.sm]: 'px-3 py-2 text-xs',

@@ -167,3 +167,23 @@ export const Accent: Story = {
     </div>
   ),
 }
+
+export const Ghost: Story = {
+  render: () => (
+    <div className="flex items-center gap-4">
+      <Button variant="ghost" size="sm">
+        Small
+      </Button>
+      <Button variant="ghost">Default</Button>
+      <Button variant="ghost" disabled>
+        Disabled
+      </Button>
+      <Button variant="ghost" size="lg">
+        Large
+      </Button>
+      <Button variant="ghost" size="icon">
+        <Lightbulb className="size-5" />
+      </Button>
+    </div>
+  ),
+}

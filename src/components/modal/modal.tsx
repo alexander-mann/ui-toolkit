@@ -55,8 +55,8 @@ export const Modal = ({
       <div className={cn(modalVariants({ size, className }))}>
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-medium">{title}</h1>
-          <Button variant="outline" size="icon" onClick={toggleModal}>
-            <X size={12} />
+          <Button variant="ghost" size="icon" onClick={toggleModal}>
+            <X size={16} />
           </Button>
         </div>
         <div className="overflow-y-auto flex flex-col gap-2">{children}</div>
