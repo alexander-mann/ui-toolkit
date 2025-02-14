@@ -50,25 +50,41 @@ export const Modal = ({
     setIsOpen(!isOpen)
   }
 
-  const modalContent = (
+  const ModalContent = (
     <div className="fixed z-[1000] inset-0 flex items-center justify-center bg-black/50">
-      <div className={cn(modalVariants({ size, className }))}>
+      <div
+        role="dialog"
+        aria-labelledby="dialog-label"
+        aria-modal="true"
+        className={cn(modalVariants({ size, className }))}
+      >
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-medium">{title}</h1>
-          <Button variant="ghost" size="icon" onClick={toggleModal}>
+          <h1 id="dialog-label" className="text-2xl font-medium">
+            {title}
+          </h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleModal}
+            aria-label="Close modal"
+          >
             <X size={16} />
           </Button>
         </div>
-        <div className="overflow-y-auto flex flex-col gap-2">{children}</div>
+        <div className="overflow-y-auto flex flex-col gap-2" tabIndex={0}>
+          {children}
+        </div>
       </div>
     </div>
   )
 
   return (
     <>
-      <button onClick={toggleModal}>{triggerElement}</button>
+      <button type="button" onClick={toggleModal}>
+        {triggerElement}
+      </button>
       {isOpen &&
-        (usePortal ? createPortal(modalContent, document.body) : modalContent)}
+        (usePortal ? createPortal(ModalContent, document.body) : ModalContent)}
     </>
   )
 }

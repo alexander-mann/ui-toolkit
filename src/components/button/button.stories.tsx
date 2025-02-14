@@ -61,7 +61,7 @@ export const Default: Story = {
       <Button variant="default" size="lg">
         Large
       </Button>
-      <Button variant="default" size="icon">
+      <Button variant="default" size="icon" aria-label="Do something">
         <Lightbulb className="size-5" />
       </Button>
     </div>
@@ -81,7 +81,7 @@ export const Secondary: Story = {
       <Button variant="secondary" size="lg">
         Large
       </Button>
-      <Button variant="secondary" size="icon">
+      <Button variant="secondary" size="icon" aria-label="Do something">
         <Lightbulb className="size-5" />
       </Button>
     </div>
@@ -101,7 +101,7 @@ export const Outline: Story = {
       <Button variant="outline" size="lg">
         Large
       </Button>
-      <Button variant="outline" size="icon">
+      <Button variant="outline" size="icon" aria-label="Do something">
         <Lightbulb className="size-5" />
       </Button>
     </div>
@@ -121,7 +121,7 @@ export const Destructive: Story = {
       <Button variant="destructive" size="lg">
         Large
       </Button>
-      <Button variant="destructive" size="icon">
+      <Button variant="destructive" size="icon" aria-label="Do something">
         <Lightbulb className="size-5" />
       </Button>
     </div>
@@ -141,7 +141,7 @@ export const Success: Story = {
       <Button variant="success" size="lg">
         Large
       </Button>
-      <Button variant="success" size="icon">
+      <Button variant="success" size="icon" aria-label="Do something">
         <Lightbulb className="size-5" />
       </Button>
     </div>
@@ -161,7 +161,7 @@ export const Accent: Story = {
       <Button variant="accent" size="lg">
         Large
       </Button>
-      <Button variant="accent" size="icon">
+      <Button variant="accent" size="icon" aria-label="Do something">
         <Lightbulb className="size-5" />
       </Button>
     </div>
@@ -181,7 +181,7 @@ export const Ghost: Story = {
       <Button variant="ghost" size="lg">
         Large
       </Button>
-      <Button variant="ghost" size="icon">
+      <Button variant="ghost" size="icon" aria-label="Do something">
         <Lightbulb className="size-5" />
       </Button>
     </div>
