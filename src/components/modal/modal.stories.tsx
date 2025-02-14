@@ -23,9 +23,13 @@ const meta: Meta<typeof Modal> = {
       },
     },
     usePortal: {
+      description: 'Whether to render the modal in a portal',
+      options: [true, false],
       table: {
-        disable: true,
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
       },
+      control: undefined,
     },
   },
   parameters: {
@@ -38,15 +42,16 @@ export default meta
 type Story = StoryObj<typeof Modal>
 
 export const BasicUsage: Story = {
-  args: {},
+  args: {
+    title: 'Title',
+    usePortal: true,
+  },
   render: (props) => (
     <Modal
       {...props}
-      usePortal
       triggerElement={
         <span className="underline hover:opacity-80">Open Modal</span>
       }
-      title="Title"
     >
       <p>
         Lorem ipsum odor amet, consectetuer adipiscing elit. Interdum pretium

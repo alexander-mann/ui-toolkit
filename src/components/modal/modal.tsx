@@ -51,7 +51,10 @@ export const Modal = ({
   }
 
   const ModalContent = (
-    <div className="fixed z-[1000] inset-0 flex items-center justify-center bg-black/50">
+    <div
+      className="fixed z-[1000] inset-0 flex items-center justify-center bg-black/50"
+      onClick={toggleModal}
+    >
       <div
         role="dialog"
         aria-labelledby="dialog-label"
