@@ -1,0 +1,46 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button, Accordion } from '..'
+
+import * as Stories from './accordion.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### The Accordion component provides a collapsible section that can be toggled to show or hide content. 
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Accordion, Divider } from '@alexandermann/ui-toolkit'
+
+<div className="w-[600px]">
+  <Accordion
+    title="What payment methods do you accept?"
+    id="payment-methods"
+  >
+    We accept Visa, Mastercard, American Express, and PayPal. All payments
+    are processed securely through our payment gateway.
+  </Accordion>
+  <Divider />
+  <Accordion title="How long does shipping take?" id="shipping-time">
+    Domestic orders typically arrive within 3-5 business days. International
+    shipping can take 7-14 business days depending on the destination
+    country.
+  </Accordion>
+  <Divider />
+  <Accordion title="What is your return policy?" id="return-policy">
+    We offer a 30-day return policy for all unused items in their original
+    packaging. Simply contact our customer service team to initiate a
+    return.
+  </Accordion>
+</div>
+`} />
+
+## Properties
+
+<Controls />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

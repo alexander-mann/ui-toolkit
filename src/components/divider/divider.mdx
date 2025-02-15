@@ -1,0 +1,40 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button, Divider } from '..'
+
+import * as Stories from './divider.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A horizontal or vertical line that separates content, with customizable spacing and orientation.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Divider } from '@alexandermann/ui-toolkit'
+
+<div className="w-[600px]">
+  <p>Default divider</p>
+  <Divider {...args} />
+  <p>Content below</p>
+</div>
+`} />
+
+## Properties
+
+<Controls />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+### Variants
+
+#### Custom spacing
+
+<Canvas of={Stories.CustomSpacing} />
+
+#### Vertical
+
+<Canvas of={Stories.Vertical} />
