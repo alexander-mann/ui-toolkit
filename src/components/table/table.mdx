@@ -18,7 +18,12 @@ import * as Stories from './table.stories'
   code={`
 import { Table } from '@alexandermann/ui-toolkit'
 
-const headers = ['Name', 'Role', 'Department', 'Location']
+const headers: [
+  { label: 'Name', sortable: false },
+  { label: 'Role', sortable: false },
+  { label: 'Department', sortable: false },
+  { label: 'Location', sortable: false },
+],
 const rows = [
   ['John Doe', 'Senior Developer', 'Engineering', 'New York'],
   ['Jane Smith', 'Product Manager', 'Product', 'San Francisco'],
@@ -31,3 +36,35 @@ const rows = [
 />
 
 <Canvas of={Stories.BasicUsage} sourceState="none" />
+
+### Sortable Table
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Table } from '@alexandermann/ui-toolkit'
+
+const headers = [
+  { label: 'Name', sortable: true },
+  { label: 'Role', sortable: true },
+  { label: 'Department', sortable: true },
+  { label: 'Location', sortable: true },
+]
+const rows = [
+  ['John Doe', 'Senior Developer', 'Engineering', 'New York'],
+  ['Jane Smith', 'Product Manager', 'Product', 'San Francisco'],
+  ['Mike Johnson', 'UX Designer', 'Design', 'London'],
+  ['Sarah Williams', 'Data Analyst', 'Analytics', 'Toronto'],
+]
+
+<Table 
+  caption="Employee Table" 
+  headers={headers} 
+  rows={rows} 
+  defaultSort={{ label: 'Name', direction: SortDirection.Desc }} 
+/>
+`}
+/>
+
+<Canvas of={Stories.Sortable} sourceState="none" />
