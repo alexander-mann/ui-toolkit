@@ -4,8 +4,8 @@ import { cn } from '@utils'
 import { ChevronDown } from 'lucide-react'
 
 export enum SortDirection {
-  Asc = 'asc',
-  Desc = 'desc',
+  Asc = 'ascending',
+  Desc = 'descending',
 }
 
 interface TableHeader {
@@ -53,6 +53,11 @@ const Table = ({ caption, headers, rows, defaultSort }: TableProps) => {
               {header.sortable ? (
                 <button
                   className="flex items-center gap-2 hover:opacity-50"
+                  aria-sort={
+                    sortedColumn === headers[index].label
+                      ? sortDirection
+                      : undefined
+                  }
                   onClick={() => {
                     setSortedColumn(header.label)
                     setSortDirection(
@@ -66,6 +71,7 @@ const Table = ({ caption, headers, rows, defaultSort }: TableProps) => {
                   {header.label}
                   {sortedColumn === header.label ? (
                     <ChevronDown
+                      aria-hidden={true}
                       className={cn(
                         'size-4',
                         sortDirection === SortDirection.Asc && 'rotate-180',
