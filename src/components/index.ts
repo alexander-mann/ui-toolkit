@@ -11,3 +11,5 @@ export * from './accordion'
 export * from './divider'
 
 export * from './input'
+
+export * from './table'

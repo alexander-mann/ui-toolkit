@@ -28,7 +28,7 @@ export const baseTheme: Theme = {
     primaryForeground: palette.neutral[900],
     secondary: palette.neutral[600],
     secondaryForeground: palette.neutral[50],
-    muted: palette.neutral[800],
+    muted: palette.neutral[700],
     mutedForeground: palette.neutral[400],
     card: palette.neutral[700],
     cardForeground: palette.neutral[50],
