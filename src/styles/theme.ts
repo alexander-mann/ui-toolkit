@@ -34,7 +34,7 @@ export const baseTheme: Theme = {
     cardForeground: palette.neutral[50],
     accent: palette.cyan[600],
     accentForeground: palette.cyan[50],
-    destructive: palette.red[500],
+    destructive: palette.red[400],
     destructiveForeground: palette.white,
     border: palette.neutral[300],
     success: palette.green[600],

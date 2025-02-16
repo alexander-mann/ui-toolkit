@@ -1,0 +1,32 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button, Input } from '..'
+
+import * as Stories from './input.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A versatile input component that provides a text field with support for labels, placeholders, and error states.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Input } from '@alexandermann/ui-toolkit'
+
+<Input 
+  id="email" 
+  label="Email address" 
+  placeholder="example@example.com" 
+  hasError={false} 
+  errorMessage="Please enter a valid email address."
+/>
+`} />
+
+## Properties
+
+<Controls />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
