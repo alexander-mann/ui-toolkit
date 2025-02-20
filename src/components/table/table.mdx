@@ -68,3 +68,43 @@ const rows = [
 />
 
 <Canvas of={Stories.Sortable} sourceState="none" />
+
+### Large Data Set (Scrollable)
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Table } from '@alexandermann/ui-toolkit'
+
+const rows = Array.from({ length: 100 }, (_, index) => [
+  \`Employee \${index + 1}\`,
+  \`Role \${index + 1}\`,
+  \`Department \${index + 1}\`,
+  \`Location \${index + 1}\`,
+])
+
+<div
+  className="w-[800px] h-[500px] overflow-y-auto"
+  tabIndex={0}
+  role="region"
+  aria-labelledby="table-title"
+>
+  <h2 id="table-title" className="sr-only">
+    Scrollable Table Data
+  </h2>
+  <Table
+    caption="Employee Table"
+    headers={[
+      { label: 'Name', sortable: false },
+      { label: 'Role', sortable: false },
+      { label: 'Department', sortable: false },
+      { label: 'Location', sortable: false },
+    ]}
+    rows={rows}
+  />
+</div>
+`}
+/>
+
+<Canvas of={Stories.LargeDataSet} sourceState="none" />

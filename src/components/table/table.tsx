@@ -39,7 +39,7 @@ const Table = ({ caption, headers, rows, defaultSort }: TableProps) => {
           {caption}
         </caption>
       )}
-      <thead>
+      <thead className="sticky top-0">
         <tr className="bg-muted">
           {headers.map((header, index) => (
             <th
@@ -49,15 +49,15 @@ const Table = ({ caption, headers, rows, defaultSort }: TableProps) => {
                 index === 0 && 'pl-4',
                 index === headers.length - 1 && 'pr-4',
               )}
+              aria-sort={
+                sortedColumn === headers[index].label
+                  ? sortDirection
+                  : undefined
+              }
             >
               {header.sortable ? (
                 <button
                   className="flex items-center gap-2 hover:opacity-50"
-                  aria-sort={
-                    sortedColumn === headers[index].label
-                      ? sortDirection
-                      : undefined
-                  }
                   onClick={() => {
                     setSortedColumn(header.label)
                     setSortDirection(
@@ -88,7 +88,7 @@ const Table = ({ caption, headers, rows, defaultSort }: TableProps) => {
           ))}
         </tr>
       </thead>
-      <tbody>
+      <tbody className="max-h-[500px] overflow-y-auto">
         {rows
           .sort((a, b) => {
             const index = headers.findIndex(

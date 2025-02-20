@@ -53,3 +53,33 @@ export const Sortable: Story = {
     </div>
   ),
 }
+
+export const LargeDataSet: Story = {
+  args: {
+    headers: [
+      { label: 'Name', sortable: false },
+      { label: 'Role', sortable: false },
+      { label: 'Department', sortable: false },
+      { label: 'Location', sortable: false },
+    ],
+    rows: Array.from({ length: 100 }, (_, index) => [
+      `Employee ${index + 1}`,
+      `Role ${index + 1}`,
+      `Department ${index + 1}`,
+      `Location ${index + 1}`,
+    ]),
+  },
+  render: (props) => (
+    <div
+      className="w-[800px] h-[500px] overflow-y-auto"
+      tabIndex={0}
+      role="region"
+      aria-labelledby="table-title"
+    >
+      <h2 id="table-title" className="sr-only">
+        Scrollable Table Data
+      </h2>
+      <Table {...props} />
+    </div>
+  ),
+}
