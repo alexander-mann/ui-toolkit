@@ -1,0 +1,48 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button, Toast, Toaster, toast } from '..'
+
+import * as Stories from './toast.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### Toast is a component that displays brief, temporary notifications to users. 
+
+*To use toast notifications, you must first add the `<Toaster />` component to your app's root.*
+
+#### Configuration Options
+
+The `<Toaster />` component accepts the following props:
+
+- `position`: Determines where toasts appear ('top-left', 'top-right', 'bottom-left', 'bottom-right') [default: 'bottom-right']
+- `duration`: How long toasts remain visible (in milliseconds) [default: 5000]
+- `maxToasts`: Maximum number of toasts visible at once [default: 3]
+- `usePortal`: Whether to render toasts in a React Portal [default: false]
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Button, Toaster, toast } from '@alexandermann/ui-toolkit'
+
+// Add this to your app's root component
+const App = () => (
+  <>
+    <Toaster />
+    {/* Your app content */}
+  </>
+)
+
+// Use toast function anywhere in your app
+const MyComponent = () => (
+  <Button onClick={() => toast.info('This is an info message')}>
+    Show Toast
+  </Button>
+)
+`} />
+
+
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
