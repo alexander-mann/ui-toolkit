@@ -62,7 +62,8 @@ const rows = [
   caption="Employee Table" 
   headers={headers} 
   rows={rows} 
-  defaultSort={{ label: 'Name', direction: SortDirection.Desc }} 
+  defaultSort={{ label: 'Name', direction: SortDirection.Desc }}
+  onSort={handleSort} // handle the data sorting manually
 />
 `}
 />

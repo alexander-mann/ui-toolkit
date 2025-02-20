@@ -23,9 +23,10 @@ interface TableProps {
   headers: TableHeader[]
   rows: string[][]
   defaultSort?: DefaultSort
+  onSort?: (label: string, direction: SortDirection) => void
 }
 
-const Table = ({ caption, headers, rows, defaultSort }: TableProps) => {
+const Table = ({ caption, headers, rows, defaultSort, onSort }: TableProps) => {
   const [sortedColumn, setSortedColumn] = useState(
     defaultSort?.label || headers[0].label,
   )
@@ -60,12 +61,13 @@ const Table = ({ caption, headers, rows, defaultSort }: TableProps) => {
                   className="flex items-center gap-2 hover:opacity-50"
                   onClick={() => {
                     setSortedColumn(header.label)
-                    setSortDirection(
+                    const updatedSortDirection =
                       sortDirection === SortDirection.Desc &&
-                        header.label === sortedColumn
+                      header.label === sortedColumn
                         ? SortDirection.Asc
-                        : SortDirection.Desc,
-                    )
+                        : SortDirection.Desc
+                    setSortDirection(updatedSortDirection)
+                    onSort?.(header.label, updatedSortDirection)
                   }}
                 >
                   {header.label}
@@ -89,31 +91,22 @@ const Table = ({ caption, headers, rows, defaultSort }: TableProps) => {
         </tr>
       </thead>
       <tbody className="max-h-[500px] overflow-y-auto">
-        {rows
-          .sort((a, b) => {
-            const index = headers.findIndex(
-              (header) => header.label === sortedColumn,
-            )
-            return sortDirection === SortDirection.Asc
-              ? a[index].localeCompare(b[index])
-              : b[index].localeCompare(a[index])
-          })
-          .map((row, index) => (
-            <tr key={index} className={cn(index % 2 !== 0 && 'bg-muted/50')}>
-              {row.map((cell, index) => (
-                <td
-                  key={cell}
-                  className={cn(
-                    'p-3',
-                    index === 0 && 'pl-4',
-                    index === row.length - 1 && 'pr-4',
-                  )}
-                >
-                  {cell}
-                </td>
-              ))}
-            </tr>
-          ))}
+        {rows.map((row, index) => (
+          <tr key={index} className={cn(index % 2 !== 0 && 'bg-muted/50')}>
+            {row.map((cell, index) => (
+              <td
+                key={cell}
+                className={cn(
+                  'p-3',
+                  index === 0 && 'pl-4',
+                  index === row.length - 1 && 'pr-4',
+                )}
+              >
+                {cell}
+              </td>
+            ))}
+          </tr>
+        ))}
       </tbody>
     </table>
   )

@@ -47,11 +47,39 @@ export const Sortable: Story = {
     ],
     defaultSort: { label: 'Name', direction: SortDirection.Desc },
   },
-  render: (props) => (
-    <div className="w-[800px]">
-      <Table {...props} />
-    </div>
-  ),
+  render: (props) => {
+    const [rows, setRows] = React.useState<string[][]>([])
+
+    React.useEffect(() => {
+      if (props.defaultSort && props.rows) {
+        handleSort(props.defaultSort.label, props.defaultSort.direction)
+      } else {
+        setRows(props.rows || [])
+      }
+    }, [props.rows, props.defaultSort])
+
+    const handleSort = (label: string, direction: SortDirection) => {
+      const columnIndex =
+        props.headers?.findIndex((header) => header.label === label) ?? 0
+
+      const sortedRows = [...(props.rows || [])].sort((a, b) => {
+        const aValue = String(a[columnIndex])
+        const bValue = String(b[columnIndex])
+
+        return direction === SortDirection.Asc
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue)
+      })
+
+      setRows(sortedRows)
+    }
+
+    return (
+      <div className="w-[800px]">
+        <Table {...props} rows={rows} onSort={handleSort} />
+      </div>
+    )
+  },
 }
 
 export const LargeDataSet: Story = {
