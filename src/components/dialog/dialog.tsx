@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useState } from 'react'
+import React, { HTMLAttributes, useEffect, useRef, useState } from 'react'
 
 import { Button } from '@components/button'
 import { cn } from '@utils'
@@ -17,7 +17,7 @@ const dialogVariants = cva(
   {
     variants: {
       size: {
-        [DialogSize.sm]: 'w-[300px] max-h-[200px]',
+        [DialogSize.sm]: 'w-[300px] max-h-[300px]',
         [DialogSize.default]: 'w-[600px] max-h-[500px]',
         [DialogSize.lg]: 'w-[1000px] max-h-[800px]',
       },
@@ -45,17 +45,35 @@ export const Dialog = ({
   usePortal,
 }: DialogProps) => {
   const [isOpen, setIsOpen] = useState(false)
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dialogRef.current &&
+        !dialogRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
 
   const toggleModal = () => {
     setIsOpen(!isOpen)
   }
 
   const ModalContent = (
-    <div
-      className="fixed z-[1000] inset-0 flex items-center justify-center bg-black/50"
-      onClick={toggleModal}
-    >
+    <div className="fixed z-[1000] inset-0 flex items-center justify-center bg-black/50">
       <div
+        ref={dialogRef}
         role="dialog"
         aria-labelledby="dialog-label"
         aria-modal="true"
@@ -83,9 +101,7 @@ export const Dialog = ({
 
   return (
     <>
-      <button type="button" onClick={toggleModal}>
-        {triggerElement}
-      </button>
+      <span onClick={toggleModal}>{triggerElement}</span>
       {isOpen &&
         (usePortal ? createPortal(ModalContent, document.body) : ModalContent)}
     </>

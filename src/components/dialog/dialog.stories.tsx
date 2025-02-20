@@ -1,8 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { Trash2 } from 'lucide-react'
 
-import { Dialog, DialogSize } from '..'
+import { Button, Dialog, DialogSize } from '..'
 
 const meta: Meta<typeof Dialog> = {
   title: 'Components/Dialog',
@@ -49,9 +50,7 @@ export const BasicUsage: Story = {
   render: (props) => (
     <Dialog
       {...props}
-      triggerElement={
-        <span className="underline hover:opacity-80">Open Modal</span>
-      }
+      triggerElement={<a className="underline hover:opacity-80">Open Modal</a>}
     >
       <p>
         Lorem ipsum odor amet, consectetuer adipiscing elit. Interdum pretium
@@ -82,6 +81,34 @@ export const BasicUsage: Story = {
         vulputate torquent vel velit. Velit faucibus parturient eu proin pretium
         justo.
       </p>
+    </Dialog>
+  ),
+}
+
+export const ActionDialog: Story = {
+  render: () => (
+    <Dialog
+      usePortal
+      title="Delete all data"
+      size="sm"
+      triggerElement={
+        <Button variant="destructive" className="w-80 gap-2">
+          <Trash2 className="size-4" />
+          Delete data
+        </Button>
+      }
+    >
+      <div className="flex flex-col gap-4">
+        <p>Are you sure you want to delete all of your data?</p>
+        <Button
+          variant="destructive"
+          className="w-full gap-2"
+          onClick={() => null}
+        >
+          <Trash2 className="size-5" />
+          Delete data
+        </Button>
+      </div>
     </Dialog>
   ),
 }

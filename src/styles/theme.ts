@@ -39,7 +39,7 @@ export const baseTheme: Theme = {
     accent: palette.cyan[600],
     accentForeground: palette.cyan[50],
     destructive: palette.red[400],
-    destructiveForeground: palette.white,
+    destructiveForeground: palette.black,
     border: palette.neutral[300],
     success: palette.green[400],
     successForeground: palette.black,
