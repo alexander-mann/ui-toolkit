@@ -26,6 +26,10 @@ export const themePlugin = (theme: Theme) =>
           '--border': theme.light.border,
           '--success': theme.light.success,
           '--success-foreground': theme.light.successForeground,
+          '--warning': theme.light.warning,
+          '--warning-foreground': theme.light.warningForeground,
+          '--info': theme.light.info,
+          '--info-foreground': theme.light.infoForeground,
         },
       })
       // Add dark theme
@@ -48,6 +52,10 @@ export const themePlugin = (theme: Theme) =>
           '--border': theme.dark.border,
           '--success': theme.dark.success,
           '--success-foreground': theme.dark.successForeground,
+          '--warning': theme.dark.warning,
+          '--warning-foreground': theme.dark.warningForeground,
+          '--info': theme.dark.info,
+          '--info-foreground': theme.dark.infoForeground,
         },
       })
       // Add html base styles
@@ -96,6 +104,14 @@ export const themePlugin = (theme: Theme) =>
             success: {
               DEFAULT: colorMix('success'),
               foreground: colorMix('success-foreground'),
+            },
+            warning: {
+              DEFAULT: colorMix('warning'),
+              foreground: colorMix('warning-foreground'),
+            },
+            info: {
+              DEFAULT: colorMix('info'),
+              foreground: colorMix('info-foreground'),
             },
           },
         },

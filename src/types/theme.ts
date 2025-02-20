@@ -16,6 +16,10 @@ export interface ThemeColors {
   border: string
   success: string
   successForeground: string
+  warning: string
+  warningForeground: string
+  info: string
+  infoForeground: string
 }
 
 export interface Theme {

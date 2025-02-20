@@ -1,0 +1,58 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button, Tabs } from '..'
+
+import * as Stories from './tabs.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A flexible and accessible tabbed interface component that allows users to organize and navigate between related sections of content.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Tabs } from '@alexandermann/ui-toolkit'
+
+const tabData = [
+  {
+    label: 'Tab 1',
+    content: (
+      <div className="p-4">
+        <h3 className="text-lg font-medium">First Tab Content</h3>
+        <p className="mt-2">This is the content for the first tab.</p>
+      </div>
+    ),
+  },
+  {
+    label: 'Tab 2',
+    content: (
+      <div className="p-4">
+        <h3 className="text-lg font-medium">Second Tab Content</h3>
+        <p className="mt-2">This is the content for the second tab.</p>
+      </div>
+    ),
+  },
+  {
+    label: 'Tab 3',
+    content: (
+      <div className="p-4">
+        <h3 className="text-lg font-medium">Third Tab Content</h3>
+        <p className="mt-2">This is the content for the third tab.</p>
+      </div>
+    ),
+  },
+]
+
+<div className="w-96">
+  <Tabs data={tabData} />
+</div>
+`} />
+
+## Properties
+
+<Controls />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

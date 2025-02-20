@@ -4,11 +4,11 @@
   "javascript.format.enable": false,
   "typescript.tsdk": "node_modules/typescript/lib",
   "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "#57bca9",
+    "titleBar.activeBackground": "#a8954a",
     "titleBar.activeForeground": "#000000",
-    "titleBar.inactiveBackground": "#57bca9",
+    "titleBar.inactiveBackground": "#a8954a",
     "titleBar.inactiveForeground": "#000000",
-    "titleBar.border": "#57bca9"
+    "titleBar.border": "#a8954a"
   },
   "files.associations": {
     "*.svg": "html"
