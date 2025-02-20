@@ -1,6 +1,6 @@
 {
   "name": "@alexandermann/ui-toolkit",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "React & tailwind design system",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
