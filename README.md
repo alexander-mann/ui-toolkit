@@ -1,4 +1,4 @@
-# Alexander Mann's UI Toolkit
+![SVG Logo](.storybook/logo.svg)
 
 A modern design system built with React and Tailwind CSS, providing reusable components and consistent styling patterns.
 
@@ -20,7 +20,7 @@ npm install @alexandermann/ui-toolkit
 yarn add @alexandermann/ui-toolkit
 ```
 
-## Usage
+## Basic Usage
 
 ```jsx
 import { Button, Card } from '@alexandermann/ui-toolkit'
