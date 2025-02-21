@@ -48,7 +48,7 @@ export const Sortable: Story = {
     defaultSort: { label: 'Name', direction: SortDirection.Desc },
   },
   render: (props) => {
-    const [rows, setRows] = React.useState<string[][]>([])
+    const [rows, setRows] = React.useState<(string | React.ReactNode)[][]>([])
 
     React.useEffect(() => {
       if (props.defaultSort && props.rows) {
@@ -71,7 +71,7 @@ export const Sortable: Story = {
           : bValue.localeCompare(aValue)
       })
 
-      setRows(sortedRows)
+      setRows(sortedRows as (string | React.ReactNode)[][])
     }
 
     return (

@@ -21,7 +21,7 @@ interface DefaultSort {
 interface TableProps {
   caption?: string
   headers: TableHeader[]
-  rows: string[][]
+  rows: (string | React.ReactNode)[][]
   defaultSort?: DefaultSort
   onSort?: (label: string, direction: SortDirection) => void
 }
@@ -95,7 +95,7 @@ const Table = ({ caption, headers, rows, defaultSort, onSort }: TableProps) => {
           <tr key={index} className={cn(index % 2 !== 0 && 'bg-muted/50')}>
             {row.map((cell, index) => (
               <td
-                key={cell}
+                key={`${cell}-${index}`}
                 className={cn(
                   'p-3',
                   index === 0 && 'pl-4',
