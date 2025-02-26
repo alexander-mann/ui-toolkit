@@ -1,0 +1,35 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button, Select } from '..'
+
+import * as Stories from './select.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A customizable dropdown select component that allows users to choose a single option from a predefined list.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Select } from '@alexandermann/ui-toolkit'
+
+<Select
+  label="Select a Country"
+  name="country"
+  id="country-select"
+  value={selectedCountry}
+  onChange={handleCountryChange}
+  hasError={hasError}
+  errorMessage="Please select a country"
+  options={countryOptions}
+/>
+`} />
+
+## Properties
+
+<Controls />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

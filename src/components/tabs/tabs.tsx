@@ -9,14 +9,15 @@ interface TabData {
 
 interface TabsProps {
   data: TabData[]
+  className?: string
 }
 
-const Tabs = ({ data }: TabsProps) => {
+const Tabs = ({ data, className }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(0)
 
   return (
-    <div>
-      <div className="flex" role="tablist">
+    <div className={cn('w-full', className)}>
+      <div className="flex w-full" role="tablist">
         {data.map((tab, index) => {
           const isActive = activeTab === index
           return (

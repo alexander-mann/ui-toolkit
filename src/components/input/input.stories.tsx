@@ -31,6 +31,13 @@ const meta: Meta<typeof Input> = {
       description: 'The error message to display',
       control: 'text',
     },
+    disabled: {
+      description: 'Whether the input is disabled',
+      table: {
+        defaultValue: { summary: 'false' },
+      },
+      control: 'boolean',
+    },
   },
 }
 

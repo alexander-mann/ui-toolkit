@@ -16,7 +16,7 @@
     "pre-commit": "pretty-quick --staged",
     "prettier": "prettier --write .",
     "npm-publish": "npm run build && npm publish --access public",
-    "prepare": "yarn husky"
+    "prepare": "pnpm husky"
   },
   "repository": {
     "type": "git",

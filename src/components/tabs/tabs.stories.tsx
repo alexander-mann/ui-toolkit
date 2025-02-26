@@ -55,7 +55,7 @@ export const BasicUsage: Story = {
     ],
   },
   render: (props) => (
-    <div className="w-96">
+    <div className="w-[32rem]">
       <Tabs {...props} />
     </div>
   ),

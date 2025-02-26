@@ -18,7 +18,7 @@ const Input = ({ label, id, hasError, errorMessage, ...props }: InputProps) => {
       <input
         id={id}
         className={cn(
-          'w-full rounded-md border px-3 py-2 text-sm bg-foreground/10 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent',
+          'w-full rounded-md border px-3 py-2 text-sm bg-foreground/10 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50',
           hasError && 'border-destructive',
         )}
         {...props}
