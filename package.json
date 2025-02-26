@@ -1,13 +1,13 @@
 {
   "name": "@alexandermann/ui-toolkit",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "React & tailwind design system",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "tsc --project tsconfig.json",
     "clean": "rm -rf dist",
-    "build": "yarn clean && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "build": "pnpm clean && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "generate:component": "plop component",
     "storybook": "BROWSER=none storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -15,7 +15,7 @@
     "lint:fix": "eslint . --fix",
     "pre-commit": "pretty-quick --staged",
     "prettier": "prettier --write .",
-    "npm-publish": "npm run build && npm publish --access public",
+    "npm-publish": "pnpm build && npm publish --access public",
     "prepare": "pnpm husky"
   },
   "repository": {
