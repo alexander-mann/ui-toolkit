@@ -13,20 +13,21 @@ export enum ToastVariant {
 }
 
 export const ToastPosition = {
-  TopLeft: 'top-left',
-  TopRight: 'top-right',
-  BottomLeft: 'bottom-left',
-  BottomRight: 'bottom-right',
+  TopLeft: 'TopLeft',
+  TopRight: 'TopRight',
+  BottomLeft: 'BottomLeft',
+  BottomRight: 'BottomRight',
 } as const
 
 interface Toast {
   id: string
   message: string
   variant: ToastVariant
+  dismissing?: boolean
 }
 
 const toastVariants = cva(
-  'min-w-[300px] p-3 rounded-lg shadow-xl animate-toast-in relative border bg-muted flex items-center gap-2 [&>svg]:size-5 [&>svg]:shrink-0 max-w-40 transition-all duration-200',
+  'min-w-[300px] p-3 rounded-lg shadow-xl relative border bg-muted flex items-center gap-2 [&>svg]:size-5 [&>svg]:shrink-0 max-w-40',
   {
     variants: {
       variant: {
@@ -64,9 +65,16 @@ export const Toaster = ({
           const newToasts = [...prev, { ...toast, id }]
           return newToasts.slice(-maxToasts)
         })
+
+        setTimeout(() => {
+          setToasts((prev) =>
+            prev.map((t) => (t.id === id ? { ...t, dismissing: true } : t)),
+          )
+        }, duration)
+
         setTimeout(() => {
           setToasts((prev) => prev.filter((t) => t.id !== id))
-        }, duration)
+        }, duration + 300)
       },
     }
 
@@ -102,13 +110,39 @@ export const Toaster = ({
     [ToastPosition.BottomRight]: { marginTop: '-10%' },
   }
 
+  const positionAnimationClass = {
+    [ToastPosition.TopLeft]:
+      'animate-in slide-in-from-left-full fade-in duration-300',
+    [ToastPosition.TopRight]:
+      'animate-in slide-in-from-right-full fade-in duration-300',
+    [ToastPosition.BottomLeft]:
+      'animate-in slide-in-from-left-full fade-in duration-300',
+    [ToastPosition.BottomRight]:
+      'animate-in slide-in-from-right-full fade-in duration-300',
+  }
+
+  const getExitAnimation = (position: keyof typeof ToastPosition) => {
+    switch (position) {
+      case ToastPosition.TopLeft:
+      case ToastPosition.BottomLeft:
+        return 'animate-out fade-out slide-out-to-left-full duration-300'
+      default:
+        return 'animate-out fade-out slide-out-to-right-full duration-300'
+    }
+  }
+
   const ToasterContainer = (
-    <div className={cn(positionClass[position], 'z-50 flex')}>
+    <div className={cn(positionClass[position], 'z-50 flex gap-2')}>
       {toasts.map((toast) => (
         <div
           key={toast.id}
           style={marginStyle[position]}
-          className={cn(toastVariants({ variant: toast.variant }))}
+          className={cn(
+            toastVariants({ variant: toast.variant }),
+            toast.dismissing
+              ? getExitAnimation(position)
+              : positionAnimationClass[position],
+          )}
         >
           {determineIcon(toast.variant)}
           {toast.message}

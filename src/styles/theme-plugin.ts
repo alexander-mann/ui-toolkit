@@ -115,13 +115,30 @@ export const themePlugin = (theme: Theme) =>
             },
           },
           keyframes: {
-            'toast-in': {
-              '0%': { transform: 'translateY(100%)', opacity: '0' },
-              '100%': { transform: 'translateY(0)', opacity: '1' },
+            'slide-in-from-right-full': {
+              '0%': { transform: 'translateX(100%)' },
+              '100%': { transform: 'translateX(0)' },
             },
-          },
-          animation: {
-            'toast-in': 'toast-in 0.3s ease-out forwards',
+            'slide-in-from-left-full': {
+              '0%': { transform: 'translateX(-100%)' },
+              '100%': { transform: 'translateX(0)' },
+            },
+            'slide-out-to-right-full': {
+              '0%': { transform: 'translateX(0)' },
+              '100%': { transform: 'translateX(100%)' },
+            },
+            'slide-out-to-left-full': {
+              '0%': { transform: 'translateX(0)' },
+              '100%': { transform: 'translateX(-100%)' },
+            },
+            'fade-in': {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            'fade-out': {
+              '0%': { opacity: '1' },
+              '100%': { opacity: '0' },
+            },
           },
         },
       },
