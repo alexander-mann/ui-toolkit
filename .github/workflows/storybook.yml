@@ -17,26 +17,34 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Enable Corepack
-        run: corepack enable
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: yarn
 
-      - name: Install Yarn
-        run: corepack prepare yarn@3.8.5 --activate
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
-      - name: Activate Yarn
-        run: yarn set version 3.8.5
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: yarn install --no-immutable
+        run: pnpm install
 
       - name: Build Storybook
-        run: yarn build-storybook
+        run: pnpm build-storybook
 
       - name: Deploy Storybook
         uses: JamesIves/github-pages-deploy-action@v4
