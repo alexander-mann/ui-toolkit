@@ -38,6 +38,13 @@ const meta: Meta<typeof Input> = {
       },
       control: 'boolean',
     },
+    readOnly: {
+      description: 'Whether the input is read only',
+      table: {
+        defaultValue: { summary: 'false' },
+      },
+      control: 'boolean',
+    },
   },
 }
 

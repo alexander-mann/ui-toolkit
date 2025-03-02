@@ -32,14 +32,16 @@ const Accordion = ({ title, children, id }: AccordionProps) => {
           })}
         />
       </button>
-      {isExpanded && (
-        <div
-          id={id}
-          className="pb-4 transition-all duration-300 text-muted-foreground"
-        >
-          {children}
+      <div
+        className={cn(
+          'grid transition-[grid-template-rows] duration-300',
+          isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+        )}
+      >
+        <div id={id} className="overflow-hidden">
+          <div className="pb-4 text-muted-foreground">{children}</div>
         </div>
-      )}
+      </div>
     </div>
   )
 }

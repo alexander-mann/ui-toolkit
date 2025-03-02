@@ -26,14 +26,14 @@ interface Toast {
 }
 
 const toastVariants = cva(
-  'min-w-[300px] p-3 rounded-lg shadow-xl animate-toast-in relative border bg-background flex items-center gap-2 [&>svg]:size-5 [&>svg]:shrink-0 max-w-40',
+  'min-w-[300px] p-3 rounded-lg shadow-xl animate-toast-in relative border bg-muted flex items-center gap-2 [&>svg]:size-5 [&>svg]:shrink-0 max-w-40 transition-all duration-200',
   {
     variants: {
       variant: {
-        [ToastVariant.Success]: 'border-success text-success',
-        [ToastVariant.Error]: 'border-destructive text-destructive',
-        [ToastVariant.Info]: 'border-info text-info',
-        [ToastVariant.Warning]: 'border-warning text-warning',
+        [ToastVariant.Success]: 'border-success [&>svg]:text-success',
+        [ToastVariant.Error]: 'border-destructive [&>svg]:text-destructive',
+        [ToastVariant.Info]: 'border-info [&>svg]:text-info',
+        [ToastVariant.Warning]: 'border-warning [&>svg]:text-warning',
       },
     },
   },
@@ -121,29 +121,16 @@ export const Toaster = ({
     : ToasterContainer
 }
 
+const handleAddToast = (message: string, variant: ToastVariant) => {
+  if (!toaster) {
+    throw new Error('Toast cannot be used outside Toaster')
+  }
+  toaster.addToast({ message, variant })
+}
+
 export const toast = {
-  success: (message: string) => {
-    if (!toaster) {
-      throw new Error('Toast cannot be used outside Toaster')
-    }
-    toaster.addToast({ message, variant: ToastVariant.Success })
-  },
-  error: (message: string) => {
-    if (!toaster) {
-      throw new Error('Toast cannot be used outside Toaster')
-    }
-    toaster.addToast({ message, variant: ToastVariant.Error })
-  },
-  info: (message: string) => {
-    if (!toaster) {
-      throw new Error('Toast cannot be used outside Toaster')
-    }
-    toaster.addToast({ message, variant: ToastVariant.Info })
-  },
-  warning: (message: string) => {
-    if (!toaster) {
-      throw new Error('Toast cannot be used outside Toaster')
-    }
-    toaster.addToast({ message, variant: ToastVariant.Warning })
-  },
+  success: (message: string) => handleAddToast(message, ToastVariant.Success),
+  error: (message: string) => handleAddToast(message, ToastVariant.Error),
+  info: (message: string) => handleAddToast(message, ToastVariant.Info),
+  warning: (message: string) => handleAddToast(message, ToastVariant.Warning),
 }

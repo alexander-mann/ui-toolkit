@@ -13,7 +13,7 @@ export const DialogSize = {
 }
 
 const dialogVariants = cva(
-  'flex flex-col gap-6 h-fit bg-background p-5 rounded-lg',
+  'flex flex-col gap-4 h-fit bg-background p-5 rounded-lg pb-6',
   {
     variants: {
       size: {
@@ -34,6 +34,8 @@ interface DialogProps
   title: string
   triggerElement: React.ReactNode
   usePortal?: boolean
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 export const Dialog = ({
@@ -43,9 +45,15 @@ export const Dialog = ({
   triggerElement,
   className,
   usePortal,
+  open = false,
+  onOpenChange,
 }: DialogProps) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(open)
   const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setIsOpen(open)
+  }, [open])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -54,6 +62,7 @@ export const Dialog = ({
         !dialogRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false)
+        onOpenChange?.(false)
       }
     }
 
@@ -64,10 +73,12 @@ export const Dialog = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [isOpen])
+  }, [isOpen, onOpenChange])
 
   const toggleModal = () => {
-    setIsOpen(!isOpen)
+    const newState = !isOpen
+    setIsOpen(newState)
+    onOpenChange?.(newState)
   }
 
   const ModalContent = (
@@ -80,7 +91,12 @@ export const Dialog = ({
         className={cn(dialogVariants({ size, className }))}
       >
         <div className="flex justify-between items-center">
-          <h1 id="dialog-label" className="text-2xl font-medium">
+          <h1
+            id="dialog-label"
+            className={cn('text-2xl font-medium', {
+              'text-xl': size === DialogSize.sm,
+            })}
+          >
             {title}
           </h1>
           <Button

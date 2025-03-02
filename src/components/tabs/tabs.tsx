@@ -27,10 +27,10 @@ const Tabs = ({ data, className }: TabsProps) => {
               disabled={isActive}
               aria-selected={isActive}
               className={cn(
-                'whitespace-nowrap border border-muted-foreground py-2 px-4 bg-muted-foreground/10 hover:bg-muted-foreground/30 first-of-type:rounded-tl-md last-of-type:rounded-tr-md disabled:bg-transparent',
+                'whitespace-nowrap border border-muted-foreground py-2 px-4 bg-muted-foreground/10 hover:bg-muted-foreground/30 hover:text-foreground first-of-type:rounded-tl-md last-of-type:rounded-tr-md disabled:bg-transparent transition-colors',
                 isActive
                   ? 'border-b-0'
-                  : 'border-muted-foreground/50 border-b-muted-foreground',
+                  : 'border-muted-foreground/50 border-b-muted-foreground text-muted-foreground',
               )}
               key={`${tab.label}-tab`}
               onClick={() => setActiveTab(index)}

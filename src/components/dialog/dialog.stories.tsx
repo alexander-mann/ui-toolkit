@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 import { Trash2 } from 'lucide-react'
@@ -31,6 +31,13 @@ const meta: Meta<typeof Dialog> = {
         defaultValue: { summary: 'false' },
       },
       control: undefined,
+    },
+    open: {
+      description: 'Whether to open the modal (controlled)',
+      options: [true, false],
+      table: {
+        type: { summary: 'boolean' },
+      },
     },
   },
   parameters: {
@@ -86,29 +93,34 @@ export const BasicUsage: Story = {
 }
 
 export const ActionDialog: Story = {
-  render: () => (
-    <Dialog
-      usePortal
-      title="Delete all data"
-      size="sm"
-      triggerElement={
-        <Button variant="destructive" className="w-80 gap-2">
-          <Trash2 className="size-4" />
-          Delete data
-        </Button>
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <p>Are you sure you want to delete all of your data?</p>
-        <Button
-          variant="destructive"
-          className="w-full gap-2"
-          onClick={() => null}
-        >
-          <Trash2 className="size-5" />
-          Delete data
-        </Button>
-      </div>
-    </Dialog>
-  ),
+  render: () => {
+    const [open, setOpen] = useState(false)
+    return (
+      <Dialog
+        usePortal
+        title="Delete all data"
+        size="sm"
+        open={open}
+        onOpenChange={setOpen}
+        triggerElement={
+          <Button variant="destructive" className="w-80 gap-2">
+            <Trash2 className="size-4" />
+            Delete data {open ? 'open' : 'closed'}
+          </Button>
+        }
+      >
+        <div className="flex flex-col gap-4">
+          <p>Are you sure you want to delete all of your data?</p>
+          <Button
+            variant="destructive"
+            className="w-full gap-2"
+            onClick={() => setOpen(false)}
+          >
+            <Trash2 className="size-5" />
+            Delete data
+          </Button>
+        </div>
+      </Dialog>
+    )
+  },
 }
