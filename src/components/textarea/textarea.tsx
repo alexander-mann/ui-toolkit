@@ -2,7 +2,8 @@ import React from 'react'
 
 import { cn } from '@utils'
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string
   id: string
   hasError?: boolean
@@ -10,21 +11,21 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
 }
 
-const Input = ({
+const Textarea = ({
   label,
   id,
   hasError,
   errorMessage,
   required,
   ...props
-}: InputProps) => {
+}: TextareaProps) => {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-sm">
         {label}
         {required && <span className="text-primary">*</span>}
       </label>
-      <input
+      <textarea
         id={id}
         className={cn(
           'w-full rounded-md border px-3 py-2 text-sm bg-foreground/10 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 read-only:cursor-not-allowed read-only:opacity-75',
@@ -38,4 +39,4 @@ const Input = ({
   )
 }
 
-export { Input }
+export { Textarea }

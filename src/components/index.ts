@@ -19,3 +19,5 @@ export * from './tabs'
 export * from './toast'
 
 export * from './select'
+
+export * from './textarea'

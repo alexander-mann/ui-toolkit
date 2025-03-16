@@ -9,6 +9,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   hasError?: boolean
   errorMessage?: string
   options: { label: string; value: string }[]
+  required?: boolean
 }
 
 const Select = ({
@@ -18,16 +19,19 @@ const Select = ({
   hasError,
   errorMessage,
   options,
+  required,
   ...props
 }: SelectProps) => {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-sm">
         {label}
+        {required && <span className="text-primary">*</span>}
       </label>
       <select
         id={id}
         name={name}
+        required={required}
         className={cn(
           'w-full rounded-md border px-3 py-2 text-sm bg-foreground/10 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:opacity-50 appearance-none',
           hasError && 'border-destructive',
