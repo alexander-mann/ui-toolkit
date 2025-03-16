@@ -30,14 +30,14 @@ const buttonVariants = cva(
         [ButtonVariant.secondary]:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         [ButtonVariant.outline]:
-          'bg-transparent border border-input text-input hover:bg-primary/20',
+          'bg-transparent border border-primary text-primary hover:bg-primary/10',
         [ButtonVariant.destructive]:
           'bg-destructive text-destructive-foreground hover:bg-destructive/80',
         [ButtonVariant.success]:
           'bg-success text-success-foreground hover:bg-success/80',
         [ButtonVariant.accent]:
           'bg-accent text-accent-foreground hover:bg-accent/80',
-        [ButtonVariant.ghost]: 'hover:bg-primary/20',
+        [ButtonVariant.ghost]: 'hover:bg-primary/10',
       },
       size: {
         [ButtonSize.sm]: 'px-3 py-2 text-xs',
