@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 
-import './toast.css'
-
 import { cn } from '@utils'
 import { cva } from 'class-variance-authority'
 import { AlertTriangleIcon, CircleCheck, CircleX, InfoIcon } from 'lucide-react'
@@ -50,6 +48,91 @@ interface ToastProps {
 }
 
 let toaster: { addToast: (toast: Omit<Toast, 'id'>) => void } | null = null
+
+// Inline CSS styles
+const ToastStyles = () => (
+  <style>
+    {`
+    @keyframes slide-in-from-left {
+      from {
+        transform: translateX(-100%);
+      }
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slide-in-from-right {
+      from {
+        transform: translateX(100%);
+      }
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slide-out-to-left {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    @keyframes slide-out-to-right {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(100%);
+      }
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fade-out {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
+
+    .toast-enter-left {
+      animation:
+        slide-in-from-left 0.3s ease-out,
+        fade-in 0.3s ease-out;
+    }
+
+    .toast-enter-right {
+      animation:
+        slide-in-from-right 0.3s ease-out,
+        fade-in 0.3s ease-out;
+    }
+
+    .toast-exit-left {
+      animation:
+        slide-out-to-left 0.3s ease-in,
+        fade-out 0.3s ease-in;
+    }
+
+    .toast-exit-right {
+      animation:
+        slide-out-to-right 0.3s ease-in,
+        fade-out 0.3s ease-in;
+    }
+    `}
+  </style>
+)
 
 export const Toaster = ({
   usePortal,
@@ -152,7 +235,13 @@ export const Toaster = ({
     </div>
   )
   return usePortal
-    ? createPortal(ToasterContainer, document.body)
+    ? createPortal(
+        <>
+          <ToastStyles />
+          {ToasterContainer}
+        </>,
+        document.body,
+      )
     : ToasterContainer
 }
 
