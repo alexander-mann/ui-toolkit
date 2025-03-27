@@ -2,12 +2,21 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Input } from '..'
+import { Input, InputVariant } from '..'
 
 const meta: Meta<typeof Input> = {
   title: 'Components/Input',
   component: Input,
   argTypes: {
+    variant: {
+      description: 'Variant of button',
+      options: Object.values(InputVariant),
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: InputVariant.default },
+      },
+      control: 'select',
+    },
     label: {
       description: 'The label to display',
       control: 'text',

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
+import './toast.css'
+
 import { cn } from '@utils'
 import { cva } from 'class-variance-authority'
 import { AlertTriangleIcon, CircleCheck, CircleX, InfoIcon } from 'lucide-react'
@@ -110,24 +112,23 @@ export const Toaster = ({
     [ToastPosition.BottomRight]: { marginTop: '-10%' },
   }
 
-  const positionAnimationClass = {
-    [ToastPosition.TopLeft]:
-      'animate-in slide-in-from-left-full fade-in duration-300',
-    [ToastPosition.TopRight]:
-      'animate-in slide-in-from-right-full fade-in duration-300',
-    [ToastPosition.BottomLeft]:
-      'animate-in slide-in-from-left-full fade-in duration-300',
-    [ToastPosition.BottomRight]:
-      'animate-in slide-in-from-right-full fade-in duration-300',
+  const getEntryAnimation = (position: keyof typeof ToastPosition) => {
+    switch (position) {
+      case ToastPosition.TopLeft:
+      case ToastPosition.BottomLeft:
+        return 'toast-enter-left'
+      default:
+        return 'toast-enter-right'
+    }
   }
 
   const getExitAnimation = (position: keyof typeof ToastPosition) => {
     switch (position) {
       case ToastPosition.TopLeft:
       case ToastPosition.BottomLeft:
-        return 'animate-out fade-out slide-out-to-left-full duration-300'
+        return 'toast-exit-left'
       default:
-        return 'animate-out fade-out slide-out-to-right-full duration-300'
+        return 'toast-exit-right'
     }
   }
 
@@ -141,7 +142,7 @@ export const Toaster = ({
             toastVariants({ variant: toast.variant }),
             toast.dismissing
               ? getExitAnimation(position)
-              : positionAnimationClass[position],
+              : getEntryAnimation(position),
           )}
         >
           {determineIcon(toast.variant)}

@@ -115,22 +115,6 @@ export const themePlugin = (theme: Theme) =>
             },
           },
           keyframes: {
-            'slide-in-from-right-full': {
-              '0%': { transform: 'translateX(100%)' },
-              '100%': { transform: 'translateX(0)' },
-            },
-            'slide-in-from-left-full': {
-              '0%': { transform: 'translateX(-100%)' },
-              '100%': { transform: 'translateX(0)' },
-            },
-            'slide-out-to-right-full': {
-              '0%': { transform: 'translateX(0)' },
-              '100%': { transform: 'translateX(100%)' },
-            },
-            'slide-out-to-left-full': {
-              '0%': { transform: 'translateX(0)' },
-              '100%': { transform: 'translateX(-100%)' },
-            },
             'fade-in': {
               '0%': { opacity: '0' },
               '100%': { opacity: '1' },
@@ -139,6 +123,10 @@ export const themePlugin = (theme: Theme) =>
               '0%': { opacity: '1' },
               '100%': { opacity: '0' },
             },
+          },
+          animation: {
+            'fade-in': 'fade-in 1s ease-in-out',
+            'fade-out': 'fade-out 1s ease-in-out',
           },
         },
       },

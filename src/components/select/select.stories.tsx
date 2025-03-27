@@ -2,12 +2,21 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Select } from '..'
+import { Select, SelectVariant } from '..'
 
 const meta: Meta<typeof Select> = {
   title: 'Components/Select',
   component: Select,
   argTypes: {
+    variant: {
+      description: 'Variant of select',
+      options: Object.values(SelectVariant),
+      table: {
+        type: { summary: 'string' },
+        defaultValue: { summary: SelectVariant.default },
+      },
+      control: 'select',
+    },
     label: {
       description: 'The label to display',
       control: 'text',
