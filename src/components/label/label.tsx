@@ -8,7 +8,7 @@ export const LabelVariant = {
   lg: 'lg',
 }
 
-const labelVariants = cva('font-medium', {
+const labelVariants = cva('', {
   variants: {
     variant: {
       [LabelVariant.default]: 'text-sm',

@@ -29,5 +29,3 @@ export * from './switch'
 export * from './radio-group'
 
 export * from './label'
-
-export * from './form-field'

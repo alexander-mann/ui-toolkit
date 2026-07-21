@@ -1,5 +1,6 @@
 import React, { InputHTMLAttributes } from 'react'
 
+import { Label } from '@components/label'
 import { cn } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 
@@ -65,7 +66,7 @@ const RadioGroup = ({
               )}
               {...props}
             />
-            <label htmlFor={optionId}>{option.label}</label>
+            <Label htmlFor={optionId}>{option.label}</Label>
           </div>
         )
       })}

@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { Label } from '@components/label'
 import { cn } from '@utils'
 
 interface TextareaProps
@@ -21,10 +22,9 @@ const Textarea = ({
 }: TextareaProps) => {
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-sm">
+      <Label htmlFor={id} required={required}>
         {label}
-        {required && <span className="text-primary">*</span>}
-      </label>
+      </Label>
       <textarea
         id={id}
         className={cn(

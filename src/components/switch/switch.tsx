@@ -1,5 +1,6 @@
 import React, { InputHTMLAttributes } from 'react'
 
+import { Label } from '@components/label'
 import { cn } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 
@@ -43,8 +44,9 @@ const Switch = ({
 }: SwitchProps) => {
   return (
     <div className={cn(switchVariants({ variant }))}>
-      <label
+      <Label
         htmlFor={id}
+        required={required}
         className={cn(
           'flex items-center gap-2',
           disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
@@ -62,11 +64,8 @@ const Switch = ({
           <span className="h-6 w-11 rounded-full bg-muted transition-colors peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2" />
           <span className="absolute left-0.5 top-0.5 size-5 rounded-full bg-background transition-transform peer-checked:translate-x-5" />
         </span>
-        <span>
-          {label}
-          {required && <span className="text-primary">*</span>}
-        </span>
-      </label>
+        <span>{label}</span>
+      </Label>
       {hasError && <p className="text-xs text-destructive">{errorMessage}</p>}
     </div>
   )

@@ -1,5 +1,6 @@
 import React, { InputHTMLAttributes } from 'react'
 
+import { Label } from '@components/label'
 import { cn } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 
@@ -54,10 +55,9 @@ const Checkbox = ({
           )}
           {...props}
         />
-        <label htmlFor={id}>
+        <Label htmlFor={id} required={required}>
           {label}
-          {required && <span className="text-primary">*</span>}
-        </label>
+        </Label>
       </div>
       {hasError && <p className="text-xs text-destructive">{errorMessage}</p>}
     </div>

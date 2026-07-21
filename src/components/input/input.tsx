@@ -1,5 +1,6 @@
 import React, { InputHTMLAttributes } from 'react'
 
+import { Label } from '@components/label'
 import { cn } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 
@@ -41,10 +42,9 @@ const Input = ({
 }: InputProps) => {
   return (
     <div className={cn(inputVariants({ variant }))}>
-      <label htmlFor={id}>
+      <Label htmlFor={id} required={required}>
         {label}
-        {required && <span className="text-primary">*</span>}
-      </label>
+      </Label>
       <input
         id={id}
         className={cn(
