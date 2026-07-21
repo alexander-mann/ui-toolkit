@@ -1,0 +1,30 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Switch } from '..'
+
+import * as Stories from './switch.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A toggle switch for boolean settings, with support for labels and error states.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Switch } from '@alexandermann/ui-toolkit'
+
+<Switch
+  id="notifications"
+  label="Enable notifications"
+  hasError={false}
+/>
+`} />
+
+## Properties
+
+<Controls />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />

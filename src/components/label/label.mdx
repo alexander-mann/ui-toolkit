@@ -1,0 +1,28 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Label } from '..'
+
+import * as Stories from './label.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A form label primitive with an optional required indicator, for composing custom fields.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Label } from '@alexandermann/ui-toolkit'
+
+<Label htmlFor="email" required>
+  Email address
+</Label>
+`} />
+
+## Properties
+
+<Controls />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
