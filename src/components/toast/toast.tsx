@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 
-import './toast.css'
-
 import { cn } from '@utils'
 import { cva } from 'class-variance-authority'
 import { AlertTriangleIcon, CircleCheck, CircleX, InfoIcon } from 'lucide-react'
@@ -38,6 +36,9 @@ const toastVariants = cva(
         [ToastVariant.Info]: 'border-info [&>svg]:text-info',
         [ToastVariant.Warning]: 'border-warning [&>svg]:text-warning',
       },
+    },
+    defaultVariants: {
+      variant: ToastVariant.Info,
     },
   },
 )
@@ -116,9 +117,9 @@ export const Toaster = ({
     switch (position) {
       case ToastPosition.TopLeft:
       case ToastPosition.BottomLeft:
-        return 'toast-enter-left'
+        return 'animate-slide-in-from-left'
       default:
-        return 'toast-enter-right'
+        return 'animate-slide-in-from-right'
     }
   }
 
@@ -126,9 +127,9 @@ export const Toaster = ({
     switch (position) {
       case ToastPosition.TopLeft:
       case ToastPosition.BottomLeft:
-        return 'toast-exit-left'
+        return 'animate-slide-out-to-left'
       default:
-        return 'toast-exit-right'
+        return 'animate-slide-out-to-right'
     }
   }
 

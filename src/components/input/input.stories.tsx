@@ -9,7 +9,7 @@ const meta: Meta<typeof Input> = {
   component: Input,
   argTypes: {
     variant: {
-      description: 'Variant of button',
+      description: 'Variant of input',
       options: Object.values(InputVariant),
       table: {
         type: { summary: 'string' },
