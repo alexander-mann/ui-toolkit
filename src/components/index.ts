@@ -21,3 +21,11 @@ export * from './toast'
 export * from './select'
 
 export * from './textarea'
+
+export * from './checkbox'
+
+export * from './switch'
+
+export * from './radio-group'
+
+export * from './label'

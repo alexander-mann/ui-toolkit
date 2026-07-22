@@ -1,5 +1,6 @@
 import React, { InputHTMLAttributes } from 'react'
 
+import { Label } from '@components/label'
 import { cn } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 
@@ -12,7 +13,7 @@ const inputVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [InputVariant.default]: '[&>label]:text-sm [&>input]:text-sm',
-      [InputVariant.lg]: '[&>label]:text-md [&>input]:text-md',
+      [InputVariant.lg]: '[&>label]:text-base [&>input]:text-base',
     },
   },
   defaultVariants: {
@@ -41,10 +42,9 @@ const Input = ({
 }: InputProps) => {
   return (
     <div className={cn(inputVariants({ variant }))}>
-      <label htmlFor={id}>
+      <Label htmlFor={id} required={required}>
         {label}
-        {required && <span className="text-primary">*</span>}
-      </label>
+      </Label>
       <input
         id={id}
         className={cn(

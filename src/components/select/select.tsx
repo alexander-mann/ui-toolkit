@@ -1,5 +1,6 @@
 import React, { SelectHTMLAttributes } from 'react'
 
+import { Label } from '@components/label'
 import { cn } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 
@@ -12,7 +13,7 @@ const selectVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [SelectVariant.default]: '[&>label]:text-sm [&>select]:text-sm',
-      [SelectVariant.lg]: '[&>label]:text-md [&>select]:text-md',
+      [SelectVariant.lg]: '[&>label]:text-base [&>select]:text-base',
     },
   },
   defaultVariants: {
@@ -45,10 +46,9 @@ const Select = ({
 }: SelectProps) => {
   return (
     <div className={cn(selectVariants({ variant }))}>
-      <label htmlFor={id}>
+      <Label htmlFor={id} required={required}>
         {label}
-        {required && <span className="text-primary">*</span>}
-      </label>
+      </Label>
       <select
         id={id}
         name={name}
