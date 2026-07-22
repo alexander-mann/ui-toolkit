@@ -25,7 +25,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Trust workspace (container runs as root)
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
