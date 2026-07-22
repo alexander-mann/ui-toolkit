@@ -18,6 +18,8 @@ Package manager is **pnpm** (do not use npm/yarn for installs).
 | Build library          | `pnpm build`                                                               |
 | Run Storybook          | `pnpm storybook` (port 6006)                                               |
 | Scaffold a component   | `pnpm generate:component`                                                  |
+| Color-contrast gate    | `pnpm contrast` (WCAG AA — see Accessibility below)                        |
+| Visual regression      | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh baselines)               |
 
 There is **no unit-test framework**. "Tests" = a clean `tsc` typecheck. Before finishing any change, run `pnpm test` and `pnpm lint` and make sure both pass.
 
@@ -71,6 +73,13 @@ This library must stay **WCAG 2.1 AA** compliant for color contrast, in both lig
 - **UI components & meaningful icons** (input/error borders, status icons) ≥ 3:1 (1.4.11).
 
 `pnpm contrast` (`scripts/check-contrast.mjs`) enforces this — it parses `palette.ts` + `theme.ts` and checks every foreground/background pairing the components render, exiting non-zero on any failure. **Run it after any change to `theme.ts`, `palette.ts`, or a component's color classes**, and add a new pairing to the `checks` array whenever a component introduces a new token combination. Prefer fixing contrast by picking a compliant shade **within the same hue family** so the design language is preserved.
+
+## Visual regression testing
+
+Playwright snapshots every Storybook story (light + dark) and diffs against committed baselines in `tests/vrt/__screenshots__/`. Config: `playwright.config.ts`; test: `tests/vrt/stories.spec.ts` (the story list is read from the built Storybook index, so new components are covered automatically).
+
+- Runs on every PR via `.github/workflows/vrt.yml`, inside the pinned `mcr.microsoft.com/playwright` container so rendering is stable. On a diff it fails and uploads an HTML report (expected/actual/diff) as a run artifact.
+- Baselines are generated **only in CI** (rendering is environment-sensitive) — do not commit locally-generated snapshots. After an **intentional** visual change, seed/refresh them by running the **Visual Regression** workflow with `update_baselines = true`; it regenerates and commits the PNGs. Keep the container tag in `vrt.yml` in sync with the `@playwright/test` version.
 
 ## Publishing
 
