@@ -2,13 +2,15 @@
 
 A modern design system built with React and Tailwind CSS, providing reusable components and consistent styling patterns.
 
+Browse the full component library in the [Storybook documentation](https://alexander-mann.github.io/ui-toolkit/).
+
 ## Features
 
 - 🎨 Built with React & Tailwind CSS
 - 📦 Ready-to-use components
 - 🎯 Fully customizable
-- 📱 Responsive design
-- ♿ Accessibility focused
+- 📱 Responsive design (light & dark themes)
+- ♿ WCAG 2.1 AA — color contrast enforced in CI
 
 ## Installation
 
