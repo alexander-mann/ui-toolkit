@@ -4,10 +4,26 @@
   "description": "React & tailwind design system",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./styles": {
+      "types": "./dist/styles/index.d.ts",
+      "default": "./dist/styles/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "packageManager": "pnpm@10.4.1",
   "scripts": {
     "test": "tsc --project tsconfig.json",
     "clean": "rm -rf dist",
-    "build": "pnpm clean && tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
+    "build": "pnpm clean && tsc --project tsconfig.build.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "generate:component": "plop component",
     "storybook": "BROWSER=none storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -47,19 +63,19 @@
     "@eslint/js": "^9.20.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@playwright/test": "^1.61.1",
-    "@storybook/addon-a11y": "^8.5.3",
-    "@storybook/addon-essentials": "^8.3.4",
-    "@storybook/addon-interactions": "^8.3.4",
-    "@storybook/addon-links": "^8.3.4",
-    "@storybook/addon-styling-webpack": "^1.0.0",
-    "@storybook/addon-themes": "^8.3.4",
-    "@storybook/addon-webpack5-compiler-swc": "^1.0.5",
-    "@storybook/blocks": "^8.3.4",
-    "@storybook/manager-api": "^8.3.5",
-    "@storybook/react": "^8.3.4",
-    "@storybook/react-webpack5": "^8.3.4",
-    "@storybook/test": "^8.3.4",
-    "@storybook/theming": "^8.3.5",
+    "@storybook/addon-a11y": "^8.6.17",
+    "@storybook/addon-essentials": "^8.6.17",
+    "@storybook/addon-interactions": "^8.6.17",
+    "@storybook/addon-links": "^8.6.17",
+    "@storybook/addon-styling-webpack": "^1.0.1",
+    "@storybook/addon-themes": "^8.6.17",
+    "@storybook/addon-webpack5-compiler-swc": "^1.0.6",
+    "@storybook/blocks": "^8.6.17",
+    "@storybook/manager-api": "^8.6.17",
+    "@storybook/react": "^8.6.17",
+    "@storybook/react-webpack5": "^8.6.17",
+    "@storybook/test": "^8.6.17",
+    "@storybook/theming": "^8.6.17",
     "@types/eslint__js": "^8.42.3",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
@@ -73,26 +89,46 @@
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "pretty-quick": "^4.0.0",
-    "storybook": "^8.5.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "storybook": "^8.6.17",
     "style-loader": "^3.3.4",
+    "tailwindcss": "^3.4.13",
     "tsconfig-paths": "^4.2.0",
     "tsconfig-paths-webpack-plugin": "^4.2.0",
     "tscpaths": "^0.0.9",
+    "typescript": "^5.7.3",
     "typescript-eslint": "^8.23.0",
     "webpack": "^5.90.3"
   },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "tailwindcss": "^3.4.0"
+  },
   "dependencies": {
     "@tailwindcss/container-queries": "^0.1.1",
-    "@tailwindcss/postcss": "^4.0.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwind": "^4.0.0",
     "tailwind-merge": "^3.0.1",
-    "tailwindcss": "^3.4.13",
-    "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.7.3"
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "pnpm": {
+    "overrides": {
+      "braces": ">=3.0.3",
+      "fast-uri": ">=3.1.4",
+      "flatted": ">=3.4.2",
+      "glob@>=10.2.0 <10.5.0": ">=10.5.0",
+      "handlebars": ">=4.7.9",
+      "micromatch": ">=4.0.8",
+      "postcss": ">=8.5.10",
+      "qs": ">=6.15.2",
+      "serialize-javascript": ">=7.0.5",
+      "tmp": ">=0.2.6",
+      "webpack": ">=5.104.1",
+      "ws": ">=8.21.0",
+      "yaml@>=2.0.0 <3.0.0": ">=2.8.3"
+    }
   }
 }
