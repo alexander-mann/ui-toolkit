@@ -13,7 +13,7 @@ const switchVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [SwitchVariant.default]: '[&_label]:text-sm',
-      [SwitchVariant.lg]: '[&_label]:text-md',
+      [SwitchVariant.lg]: '[&_label]:text-base',
     },
   },
   defaultVariants: {
@@ -61,8 +61,8 @@ const Switch = ({
             className={cn('peer sr-only', className)}
             {...props}
           />
-          <span className="h-6 w-11 rounded-full bg-muted transition-colors peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2" />
-          <span className="absolute left-0.5 top-0.5 size-5 rounded-full bg-background transition-transform peer-checked:translate-x-5" />
+          <span className="h-6 w-11 rounded-full border border-border bg-muted transition-colors peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2" />
+          <span className="absolute left-0.5 top-0.5 size-5 rounded-full border border-border bg-background transition-transform peer-checked:translate-x-5" />
         </span>
         <span>{label}</span>
       </Label>

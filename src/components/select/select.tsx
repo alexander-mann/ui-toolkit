@@ -13,7 +13,7 @@ const selectVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [SelectVariant.default]: '[&>label]:text-sm [&>select]:text-sm',
-      [SelectVariant.lg]: '[&>label]:text-md [&>select]:text-md',
+      [SelectVariant.lg]: '[&>label]:text-base [&>select]:text-base',
     },
   },
   defaultVariants: {

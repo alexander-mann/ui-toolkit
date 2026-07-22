@@ -13,7 +13,7 @@ const radioGroupVariants = cva('flex flex-col gap-2', {
   variants: {
     variant: {
       [RadioGroupVariant.default]: '[&_label]:text-sm [&_legend]:text-sm',
-      [RadioGroupVariant.lg]: '[&_label]:text-md [&_legend]:text-md',
+      [RadioGroupVariant.lg]: '[&_label]:text-base [&_legend]:text-base',
     },
   },
   defaultVariants: {

@@ -12,7 +12,7 @@ const labelVariants = cva('', {
   variants: {
     variant: {
       [LabelVariant.default]: 'text-sm',
-      [LabelVariant.lg]: 'text-md',
+      [LabelVariant.lg]: 'text-base',
     },
   },
   defaultVariants: {

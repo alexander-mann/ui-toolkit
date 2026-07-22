@@ -13,7 +13,7 @@ const inputVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [InputVariant.default]: '[&>label]:text-sm [&>input]:text-sm',
-      [InputVariant.lg]: '[&>label]:text-md [&>input]:text-md',
+      [InputVariant.lg]: '[&>label]:text-base [&>input]:text-base',
     },
   },
   defaultVariants: {

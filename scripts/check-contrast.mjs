@@ -117,6 +117,10 @@ const checks = [
   ['destructive icon+border / muted (toast)', 'destructive', 'muted', NON_TEXT],
   ['info icon+border / muted (toast)', 'info', 'muted', NON_TEXT],
   ['warning icon+border / muted (toast)', 'warning', 'muted', NON_TEXT],
+  // Switch: thumb outline (border) vs the off-track (muted), and the thumb
+  // fill (background) vs the on-track (primary) — both must stay distinct.
+  ['switch thumb border / off-track', 'border', 'muted', NON_TEXT],
+  ['switch thumb fill / on-track', 'background', 'primary', NON_TEXT],
 ]
 
 const palette = parsePalette()

@@ -13,7 +13,7 @@ const checkboxVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [CheckboxVariant.default]: '[&_label]:text-sm [&_input]:size-4',
-      [CheckboxVariant.lg]: '[&_label]:text-md [&_input]:size-5',
+      [CheckboxVariant.lg]: '[&_label]:text-base [&_input]:size-5',
     },
   },
   defaultVariants: {
