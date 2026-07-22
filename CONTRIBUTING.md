@@ -88,6 +88,22 @@ not commit locally-generated snapshots. After an intentional visual change, run
 the **Visual Regression** workflow manually with `update_baselines = true` to
 regenerate and commit them.
 
+## Dependency overrides
+
+`package.json` has a `pnpm.overrides` block that force-upgrades a handful of
+**transitive, dev-only** packages (pulled in by Storybook, plop, webpack, and
+tscpaths) to versions that clear known advisories. None of these are part of the
+published runtime — the shipped `dependencies` are `class-variance-authority`,
+`clsx`, `tailwind-merge`, `lucide-react`, `@tailwindcss/container-queries`, and
+`tailwindcss-animate`.
+
+Overrides are intentionally limited to **same-major** upgrades. Advisories whose
+only fix is a major bump of a package that a build tool pins to an older major
+(e.g. `picomatch` under `micromatch`, `ajv` under ESLint) are **not** overridden
+— forcing them breaks the toolchain. Those are left to Dependabot, which opens
+PRs as the upstream tools ship compatible releases. Remove an override once the
+direct dependency includes the fix on its own.
+
 ## Publishing
 
 Version bumps and `npm publish` happen via `pnpm npm-publish`. Do **not** publish
