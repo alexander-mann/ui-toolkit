@@ -16,6 +16,8 @@
     "pre-commit": "pretty-quick --staged",
     "prettier": "prettier --write .",
     "contrast": "node scripts/check-contrast.mjs",
+    "vrt": "playwright test",
+    "vrt:update": "playwright test --update-snapshots",
     "npm-publish": "pnpm build && npm publish --access public",
     "prepare": "pnpm husky"
   },
@@ -44,6 +46,7 @@
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
+    "@playwright/test": "^1.61.1",
     "@storybook/addon-a11y": "^8.5.3",
     "@storybook/addon-essentials": "^8.3.4",
     "@storybook/addon-interactions": "^8.3.4",

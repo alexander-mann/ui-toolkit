@@ -4,3 +4,6 @@ dist
 *storybook.log
 *.tsbuildinfo
 storybook-static
+test-results
+playwright-report
+blob-report

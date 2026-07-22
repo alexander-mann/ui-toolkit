@@ -1,0 +1,81 @@
+name: Visual Regression
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      update_baselines:
+        description: 'Regenerate and commit baseline snapshots'
+        type: boolean
+        default: false
+
+concurrency:
+  group: vrt-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  vrt:
+    runs-on: ubuntu-latest
+    # Pinned image keeps rendering stable across runs over time.
+    # Keep this tag in sync with the @playwright/test version in package.json.
+    container: mcr.microsoft.com/playwright:v1.61.1-jammy
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Trust workspace (container runs as root)
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Setup pnpm
+        run: corepack enable && corepack prepare pnpm@10.4.1 --activate
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Determine mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.update_baselines }}" = "true" ]; then
+            echo "action=update" >> "$GITHUB_OUTPUT"
+          elif ls tests/vrt/__screenshots__/*.png >/dev/null 2>&1; then
+            echo "action=compare" >> "$GITHUB_OUTPUT"
+          else
+            echo "action=skip" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: No baselines yet
+        if: steps.mode.outputs.action == 'skip'
+        run: echo "::notice::No baseline snapshots committed yet. Run this workflow manually with 'update_baselines' = true to seed them."
+
+      - name: Compare against baselines
+        if: steps.mode.outputs.action == 'compare'
+        run: pnpm vrt
+
+      - name: Upload diff report
+        if: ${{ always() && steps.mode.outputs.action == 'compare' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Regenerate and commit baselines
+        if: steps.mode.outputs.action == 'update'
+        run: |
+          pnpm vrt:update
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/vrt/__screenshots__
+          if git diff --cached --quiet; then
+            echo "Baselines unchanged."
+          else
+            git commit -m "chore: update VRT baselines [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
