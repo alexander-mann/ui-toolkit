@@ -15,6 +15,7 @@
     "lint:fix": "eslint . --fix",
     "pre-commit": "pretty-quick --staged",
     "prettier": "prettier --write .",
+    "contrast": "node scripts/check-contrast.mjs",
     "npm-publish": "pnpm build && npm publish --access public",
     "prepare": "pnpm husky"
   },

@@ -63,6 +63,15 @@ Prefer `pnpm generate:component` (plop) to create a new component — it generat
 
 Theme tokens live in `src/styles/` (`palette.ts` → raw colors, `theme.ts` → semantic light/dark mappings, `theme-preset.ts` / `theme-plugin.ts` → Tailwind integration). When adding a semantic color, add it to both `light` and `dark` in `theme.ts` and to the `Theme` type in `src/types/theme.ts`.
 
+## Accessibility — color contrast (WCAG 2.1 AA)
+
+This library must stay **WCAG 2.1 AA** compliant for color contrast, in both light and dark themes:
+
+- **Normal text** ≥ 4.5:1, **large text** ≥ 3:1 (1.4.3).
+- **UI components & meaningful icons** (input/error borders, status icons) ≥ 3:1 (1.4.11).
+
+`pnpm contrast` (`scripts/check-contrast.mjs`) enforces this — it parses `palette.ts` + `theme.ts` and checks every foreground/background pairing the components render, exiting non-zero on any failure. **Run it after any change to `theme.ts`, `palette.ts`, or a component's color classes**, and add a new pairing to the `checks` array whenever a component introduces a new token combination. Prefer fixing contrast by picking a compliant shade **within the same hue family** so the design language is preserved.
+
 ## Publishing
 
 Version bumps and `npm publish` are done via `pnpm npm-publish` (builds then publishes with public access). Do **not** publish or bump the version unless explicitly asked.
