@@ -4,31 +4,134 @@ import { Meta, Source } from '@storybook/blocks'
 
 # Introduction
 
-Welcome to the UI Toolkit – a comprehensive library of React components, design patterns, and utilities designed to accelerate your UI development workflow. This toolkit provides:
+Welcome to the **UI Toolkit** (`@alexandermann/ui-toolkit`) — a modern design
+system built with React 19 and Tailwind CSS, providing reusable components and
+consistent, themeable styling to accelerate your UI development workflow.
+
+📦 [npm](https://www.npmjs.com/package/@alexandermann/ui-toolkit) ·
+🐙 [GitHub repository](https://github.com/alexander-mann/ui-toolkit)
 
 - 🎨 Pre-built, customizable React components
 - 📐 Consistent design patterns and styles
-- 🚀 Easy-to-use utilities
+- 🎯 Fully customizable via CSS variables
 - 📱 Responsive and accessible components
 - 🌗 Light & dark themes out of the box
+- ♿ WCAG 2.1 AA — color contrast enforced in CI
 - 📖 Comprehensive documentation
 
-### Installation
-
-#### via npm
+## Installation
 
 <Source
   dark
   language="bash"
   code={`
+# npm
 npm install @alexandermann/ui-toolkit
-`} />
 
-#### via yarn
+# pnpm
+pnpm add @alexandermann/ui-toolkit
 
-<Source
-  dark
-  language="bash"
-  code={`
+# yarn
 yarn add @alexandermann/ui-toolkit
 `} />
+
+### Peer dependencies
+
+This package expects the following to be installed in your app:
+
+| Peer          | Supported range          |
+| ------------- | ------------------------ |
+| `react`       | `^18.0.0 \|\| ^19.0.0`   |
+| `react-dom`   | `^18.0.0 \|\| ^19.0.0`   |
+| `tailwindcss` | `^3.4.0`                 |
+
+<Source
+  dark
+  language="bash"
+  code={`
+npm install react react-dom tailwindcss
+`} />
+
+## Setup
+
+Components are styled with Tailwind utility classes that map to the design
+system's theme tokens (`bg-primary`, `text-card-foreground`, …). To make those
+tokens resolve, wire the toolkit's Tailwind **preset** and **theme plugin** into
+your `tailwind.config.js`:
+
+<Source
+  dark
+  language="js"
+  code={`
+import {
+  baseTheme,
+  themePlugin,
+  themePreset,
+} from '@alexandermann/ui-toolkit/styles'
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+    // Scan the toolkit so its class names survive Tailwind's purge:
+    './node_modules/@alexandermann/ui-toolkit/dist/**/*.js',
+  ],
+  presets: [themePreset],
+  plugins: [themePlugin(baseTheme)],
+}
+`} />
+
+`themePlugin` injects the theme's CSS variables and base styles. Pass
+`baseTheme` for the defaults, or your own object matching the `Theme` type to
+re-skin every component. See **Styles → Themes** for the full token set.
+
+## Basic usage
+
+<Source
+  dark
+  language="jsx"
+  code={`
+import { Button, Card } from '@alexandermann/ui-toolkit'
+
+function App() {
+  return (
+    <Card>
+      <h2>Card Title</h2>
+      <p>Card content goes here</p>
+      <Button variant="default" size="lg">
+        Click me
+      </Button>
+    </Card>
+  )
+}
+`} />
+
+## Dark mode
+
+The theme ships light and dark palettes. Dark mode is activated by setting
+`data-mode="dark"` on any ancestor element (typically `<html>`). Toggle the
+attribute at runtime to switch themes.
+
+<Source
+  dark
+  language="html"
+  code={`
+<html data-mode="dark">
+  ...
+</html>
+`} />
+
+## Accessibility
+
+Every foreground/background pairing the components render is checked against
+**WCAG 2.1 AA** color-contrast thresholds (normal text ≥ 4.5:1, large text and
+UI components ≥ 3:1) in both themes, and the check runs in CI — so the defaults
+are compliant out of the box in light and dark mode alike.
+
+## Next steps
+
+- **Components** — browse the sidebar for each component's API and live examples.
+- **Styles → Themes** — see the semantic light/dark token mappings.
+- **Styles → Palette** — inspect the raw color scales the themes are built from.
+- **[GitHub repository](https://github.com/alexander-mann/ui-toolkit)** —
+  source, contributing guide, and issue tracker.
