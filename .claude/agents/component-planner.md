@@ -38,6 +38,6 @@ Write a structured plan with these sections:
 - Never propose hardcoded hex colors — use theme tokens (`bg-primary`, `text-foreground`, etc.)
 - Always use `cn()` from `@utils` for className composition
 - Always use named exports, never default exports (except Storybook meta)
-- Variant/size maps must be exported plain `const` objects, not enums (except Toast which uses enum — don't follow that pattern for new components)
+- Variant/size maps must be exported plain `const` objects, not enums
 - Props must extend native HTML attributes for the root element
 - The plan is READ-ONLY — do not write any code, only output the plan

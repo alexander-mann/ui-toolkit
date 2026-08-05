@@ -5,12 +5,12 @@ import { cva } from 'class-variance-authority'
 import { AlertTriangleIcon, CircleCheck, CircleX, InfoIcon } from 'lucide-react'
 import { createPortal } from 'react-dom'
 
-export enum ToastVariant {
-  Success = 'success',
-  Error = 'error',
-  Info = 'info',
-  Warning = 'warning',
-}
+export const ToastVariant = {
+  Success: 'success',
+  Error: 'error',
+  Info: 'info',
+  Warning: 'warning',
+} as const
 
 export const ToastPosition = {
   TopLeft: 'TopLeft',
@@ -19,10 +19,12 @@ export const ToastPosition = {
   BottomRight: 'BottomRight',
 } as const
 
+type ToastVariantValue = (typeof ToastVariant)[keyof typeof ToastVariant]
+
 interface Toast {
   id: string
   message: string
-  variant: ToastVariant
+  variant: ToastVariantValue
   dismissing?: boolean
 }
 
@@ -86,7 +88,7 @@ export const Toaster = ({
     }
   }, [maxToasts, duration, position])
 
-  const determineIcon = (variant: ToastVariant) => {
+  const determineIcon = (variant: ToastVariantValue) => {
     switch (variant) {
       case ToastVariant.Success:
         return <CircleCheck />
@@ -157,7 +159,7 @@ export const Toaster = ({
     : ToasterContainer
 }
 
-const handleAddToast = (message: string, variant: ToastVariant) => {
+const handleAddToast = (message: string, variant: ToastVariantValue) => {
   if (!toaster) {
     throw new Error('Toast cannot be used outside Toaster')
   }

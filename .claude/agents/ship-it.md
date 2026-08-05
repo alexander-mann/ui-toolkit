@@ -31,8 +31,6 @@ This repo uses conventional commits, GitHub PRs, and has two CI checks: `verify`
   <type>(<scope>): <short description>
 
   [optional body — what and why]
-
-  Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
   ```
 
 - Types: `feat`, `fix`, `chore`, `refactor`, `test`, `docs`, `style`
