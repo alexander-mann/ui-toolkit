@@ -103,6 +103,42 @@ Accordion · Badge · Button · Card · Checkbox · Dialog · Divider · Input �
 Label · RadioGroup · Select · Switch · Table · Tabs · Textarea · Toast ·
 Tooltip
 
+## AI agents
+
+This repo ships custom [Claude Code](https://claude.com/claude-code) agents in
+`.claude/agents/` that encode the toolkit's conventions and automate common
+workflows. Invoke them from the Claude Code CLI with `@agent-name`:
+
+| Agent               | What it does                                                                                                                                    |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `component-planner` | Plans a new component — researches existing patterns, designs the API (CVA variants, props, a11y), and outputs a structured implementation plan |
+| `code-reviewer`     | Reviews changes against a comprehensive checklist: component conventions, code style, WCAG AA accessibility, stories/docs quality               |
+| `docs-reviewer`     | Audits all documentation (MDX, README, CLAUDE.md, CONTRIBUTING.md) for accuracy, stale references, and cross-file consistency                   |
+| `ship-it`           | Handles the full PR pipeline: pre-flight checks, branch, conventional commit, push, PR creation, VRT baseline generation, and CI verification   |
+
+### Example usage
+
+```
+# Plan a new popover component
+@component-planner Plan a Popover component
+
+# Review current changes before committing
+@code-reviewer Review my changes
+
+# Check all docs are up to date
+@docs-reviewer Audit all documentation
+
+# Ship the current work as a PR
+@ship-it Ship these changes
+```
+
+### Writing your own agents
+
+Agent definitions are Markdown files in `.claude/agents/`. Each file defines the
+agent's purpose, workflow steps, and output format. See the existing agents for
+the pattern, or refer to the
+[Claude Code docs](https://docs.anthropic.com/en/docs/claude-code/agents).
+
 ## Documentation
 
 Visit the [documentation site](https://alexander-mann.github.io/ui-toolkit/) for
