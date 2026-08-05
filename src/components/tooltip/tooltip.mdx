@@ -1,0 +1,51 @@
+import { Canvas, Controls, Description, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './tooltip.stories'
+
+<Meta of={Stories} />
+
+<Title />
+<Description />
+
+#### A lightweight tooltip for displaying contextual information on hover or focus.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Tooltip } from '@alexandermann/ui-toolkit'
+
+<Tooltip content="Helpful tip" position="top">
+  <button>Hover me</button>
+</Tooltip>
+`} />
+
+## Properties
+
+<Controls />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+### Positions
+
+<Canvas of={Stories.Positions} sourceState="none" />
+
+### Light Variant
+
+<Canvas of={Stories.LightVariant} sourceState="none" />
+
+### Without Arrow
+
+<Canvas of={Stories.NoArrow} sourceState="none" />
+
+### Controlled
+
+<Canvas of={Stories.Controlled} sourceState="none" />
+
+### On Icon
+
+<Canvas of={Stories.OnIcon} sourceState="none" />
+
+### Accessibility
+
+Tooltip uses `role="tooltip"` and `aria-describedby` to associate the tooltip content with its trigger. It appears on both hover and keyboard focus, and can be dismissed with the Escape key. Ensure trigger elements are focusable (buttons, links, or elements with `tabIndex={0}`).
