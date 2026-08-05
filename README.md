@@ -115,6 +115,7 @@ workflows. Invoke them from the Claude Code CLI with `@agent-name`:
 | `code-reviewer`     | Reviews changes against a comprehensive checklist: component conventions, code style, WCAG AA accessibility, stories/docs quality               |
 | `docs-reviewer`     | Audits all documentation (MDX, README, CLAUDE.md, CONTRIBUTING.md) for accuracy, stale references, and cross-file consistency                   |
 | `ship-it`           | Handles the full PR pipeline: pre-flight checks, branch, conventional commit, push, PR creation, VRT baseline generation, and CI verification   |
+| `a11y-auditor`      | Deep WCAG 2.1 AA accessibility audit — ARIA semantics, keyboard operability, focus management, contrast coverage, and screen reader experience  |
 
 ### Example usage
 
@@ -130,6 +131,9 @@ workflows. Invoke them from the Claude Code CLI with `@agent-name`:
 
 # Ship the current work as a PR
 @ship-it Ship these changes
+
+# Run an accessibility audit on a component
+@a11y-auditor Audit the dialog component
 ```
 
 ### Writing your own agents
