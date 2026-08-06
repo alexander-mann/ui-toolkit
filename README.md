@@ -109,13 +109,13 @@ This repo ships custom [Claude Code](https://claude.com/claude-code) agents in
 `.claude/agents/` that encode the toolkit's conventions and automate common
 workflows. Invoke them from the Claude Code CLI with `@agent-name`:
 
-| Agent               | What it does                                                                                                                                    |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `component-planner` | Plans a new component — researches existing patterns, designs the API (CVA variants, props, a11y), and outputs a structured implementation plan |
-| `code-reviewer`     | Reviews changes against a comprehensive checklist: component conventions, code style, WCAG AA accessibility, stories/docs quality               |
-| `docs-reviewer`     | Audits all documentation (MDX, README, CLAUDE.md, CONTRIBUTING.md) for accuracy, stale references, and cross-file consistency                   |
-| `ship-it`           | Handles the full PR pipeline: pre-flight checks, branch, conventional commit, push, PR creation, VRT baseline generation, and CI verification   |
-| `a11y-auditor`      | Deep WCAG 2.1 AA accessibility audit — ARIA semantics, keyboard operability, focus management, contrast coverage, and screen reader experience  |
+| Agent               | What it does                                                                                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `component-planner` | Plans a new component — researches existing patterns, designs the API (CVA variants, props, a11y), and outputs a structured implementation plan        |
+| `code-reviewer`     | Reviews changes against a comprehensive checklist: component conventions, code style, WCAG AA accessibility, stories/docs quality                      |
+| `docs-reviewer`     | Audits all documentation (MDX, README, CLAUDE.md, CONTRIBUTING.md) for accuracy, stale references, and cross-file consistency                          |
+| `release-manager`   | Handles the full PR pipeline: pre-flight checks, code review & a11y audit gates, branch, commit, push, PR creation, VRT baselines, and CI verification |
+| `a11y-auditor`      | Deep WCAG 2.1 AA accessibility audit — ARIA semantics, keyboard operability, focus management, contrast coverage, and screen reader experience         |
 
 ### Example usage
 
@@ -130,7 +130,7 @@ workflows. Invoke them from the Claude Code CLI with `@agent-name`:
 @docs-reviewer Audit all documentation
 
 # Ship the current work as a PR
-@ship-it Ship these changes
+@release-manager Ship these changes
 
 # Run an accessibility audit on a component
 @a11y-auditor Audit the dialog component

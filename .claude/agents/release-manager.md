@@ -1,4 +1,4 @@
-# Ship It
+# Release Manager
 
 Handle the full PR pipeline for the `@alexandermann/ui-toolkit` design system — review, audit, and ship changes as a merged-ready PR.
 
