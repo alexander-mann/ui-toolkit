@@ -1,10 +1,12 @@
 # Ship It
 
-Handle the full PR pipeline for the `@alexandermann/ui-toolkit` design system — from branch creation through to a merged-ready PR with passing checks.
+Handle the full PR pipeline for the `@alexandermann/ui-toolkit` design system — review, audit, and ship changes as a merged-ready PR.
 
 ## Context
 
 This repo uses conventional commits, GitHub PRs, and has two CI checks: `verify` (typecheck + lint) and `vrt` (Playwright visual regression). New components require VRT baseline generation.
+
+This agent orchestrates the full shipping pipeline, including calling the `code-reviewer` and `a11y-auditor` agents as quality gates before committing.
 
 ## Workflow
 
@@ -13,7 +15,34 @@ This repo uses conventional commits, GitHub PRs, and has two CI checks: `verify`
 - Run `pnpm test` (typecheck) and `pnpm lint` — fix any errors before proceeding.
 - If theme or color changes were made, run `pnpm contrast`.
 
-### 2. Branch
+### 2. Code review gate
+
+Run the `@code-reviewer` agent against all changed files. It checks:
+
+- Component conventions (cva, cn, named exports, theme tokens)
+- Code style (no semicolons, single quotes, const, strict equality)
+- Accessibility basics (ARIA, keyboard, contrast)
+- Stories & docs (correct package name, valid story references)
+- General quality (no debug statements, no unused code, cleanup in effects)
+
+**If the review returns NEEDS CHANGES**: fix all errors before continuing. Warnings are acceptable but should be noted in the PR description.
+
+### 3. Accessibility audit gate
+
+Run the `@a11y-auditor` agent against any new or modified components. It checks:
+
+- ARIA semantics (roles, labels, states, properties)
+- Keyboard operability (Tab, Escape, Enter/Space, arrow keys, no traps)
+- Focus management (visible indicators, focus return on overlay close)
+- Contrast coverage (all pairings present in `scripts/check-contrast.mjs`)
+- Screen reader experience (reading order, live regions, error associations)
+- Motion (respects `prefers-reduced-motion`, adequate auto-dismiss durations)
+
+**If the audit returns NEEDS REMEDIATION**: fix all WCAG violations before continuing. Best-practice warnings should be noted in the PR description.
+
+**Skip this step** for changes that don't touch component source (docs-only, config, deps).
+
+### 4. Branch
 
 - Create a branch from `main` using the naming convention:
   - `feat/<name>` for new features/components
@@ -21,7 +50,7 @@ This repo uses conventional commits, GitHub PRs, and has two CI checks: `verify`
   - `docs/<name>` for documentation-only changes
   - `chore/<name>` for tooling/deps/config
 
-### 3. Commit
+### 5. Commit
 
 - Stage only relevant files (never `git add -A`)
 - Do not commit `.env`, `node_modules/`, or locally-generated VRT snapshots
@@ -37,15 +66,16 @@ This repo uses conventional commits, GitHub PRs, and has two CI checks: `verify`
 - Scope: short noun for the area (e.g. `tooltip`, `docs`, `deps`)
 - Description: lowercase, imperative, no period, max 72 chars
 
-### 4. Push & PR
+### 6. Push & PR
 
 - Push with `-u` flag to set upstream tracking
 - Create PR with `gh pr create`:
   - Title: matches the commit message first line
-  - Body: Summary (bullet points), Files changed table, Test plan (checklist)
+  - Body: Summary (bullet points), Review & audit results, Files changed table, Test plan (checklist)
+  - Include any warnings from the code review or a11y audit in the PR description
   - Always include the `🤖 Generated with Claude Code` footer
 
-### 5. VRT baselines (if needed)
+### 7. VRT baselines (if needed)
 
 If the change adds or modifies components:
 
@@ -63,10 +93,10 @@ If the change adds or modifies components:
   ```
 - Watch the new VRT run to confirm it passes
 
-### 6. Verify
+### 8. Verify
 
 - Confirm both `verify` and `vrt` checks are green on the PR
-- Report the PR URL
+- Report the PR URL with a summary of review/audit results
 
 ## Rules
 
@@ -75,3 +105,4 @@ If the change adds or modifies components:
 - Never skip pre-commit hooks (`--no-verify`)
 - Never commit locally-generated VRT snapshots
 - Always create a new branch from latest `main`
+- Never ship code that fails the code review or a11y audit gates
