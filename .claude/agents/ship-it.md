@@ -93,7 +93,18 @@ If the change adds or modifies components:
   ```
 - Watch the new VRT run to confirm it passes
 
-### 8. Verify
+### 8. Update PR description
+
+After all commits are pushed (including any VRT baseline or fix-up commits), update the PR title and body to reflect the **final** state of all changes on the branch — not just the initial commit:
+
+- Run `git log main..HEAD --oneline` and `git diff main...HEAD --stat` to see everything included.
+- Update via `gh pr edit <number> --title "..." --body "..."`.
+- The title should summarize the overall change, not just the first commit.
+- The body should include: Summary (bullet points covering all commits), Review & audit results, Files changed table, Test plan (checklist), and the `🤖 Generated with Claude Code` footer.
+
+This ensures the PR description stays accurate even when additional commits are added after the PR was opened.
+
+### 9. Verify
 
 - Confirm both `verify` and `vrt` checks are green on the PR
 - Report the PR URL with a summary of review/audit results
