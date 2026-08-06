@@ -42,7 +42,21 @@ Run the `@a11y-auditor` agent against any new or modified components. It checks:
 
 **Skip this step** for changes that don't touch component source (docs-only, config, deps).
 
-### 4. Branch
+### 4. Docs review gate
+
+Run the `@docs-reviewer` agent to verify all documentation is accurate and consistent. It checks:
+
+- README component list matches actual inventory
+- Package name is correct in all MDX import examples
+- All `<Canvas of={Stories.X} />` references point to existing story exports
+- CLAUDE.md and CONTRIBUTING.md are current with the codebase
+- No stale file paths, commands, or references
+
+**If issues are found**: fix errors before continuing. This catches problems like wrong package names in MDX examples or missing components from the README list.
+
+**Skip this step** for changes that don't touch documentation, components, or exports.
+
+### 5. Branch
 
 - Create a branch from `main` using the naming convention:
   - `feat/<name>` for new features/components
@@ -50,7 +64,7 @@ Run the `@a11y-auditor` agent against any new or modified components. It checks:
   - `docs/<name>` for documentation-only changes
   - `chore/<name>` for tooling/deps/config
 
-### 5. Commit
+### 6. Commit
 
 - Stage only relevant files (never `git add -A`)
 - Do not commit `.env`, `node_modules/`, or locally-generated VRT snapshots
@@ -66,7 +80,7 @@ Run the `@a11y-auditor` agent against any new or modified components. It checks:
 - Scope: short noun for the area (e.g. `tooltip`, `docs`, `deps`)
 - Description: lowercase, imperative, no period, max 72 chars
 
-### 6. Push & PR
+### 7. Push & PR
 
 - Push with `-u` flag to set upstream tracking
 - Create PR with `gh pr create`:
@@ -75,7 +89,7 @@ Run the `@a11y-auditor` agent against any new or modified components. It checks:
   - Include any warnings from the code review or a11y audit in the PR description
   - Always include the `🤖 Generated with Claude Code` footer
 
-### 7. VRT baselines (if needed)
+### 8. VRT baselines (if needed)
 
 If the change adds or modifies components:
 
@@ -93,7 +107,7 @@ If the change adds or modifies components:
   ```
 - Watch the new VRT run to confirm it passes
 
-### 8. Update PR description
+### 9. Update PR description
 
 After all commits are pushed (including any VRT baseline or fix-up commits), update the PR title and body to reflect the **final** state of all changes on the branch — not just the initial commit:
 
@@ -104,7 +118,7 @@ After all commits are pushed (including any VRT baseline or fix-up commits), upd
 
 This ensures the PR description stays accurate even when additional commits are added after the PR was opened.
 
-### 9. Verify
+### 10. Verify
 
 - Confirm both `verify` and `vrt` checks are green on the PR
 - Report the PR URL with a summary of review/audit results
