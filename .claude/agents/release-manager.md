@@ -118,10 +118,34 @@ After all commits are pushed (including any VRT baseline or fix-up commits), upd
 
 This ensures the PR description stays accurate even when additional commits are added after the PR was opened.
 
-### 10. Verify
+### 10. Version recommendation
+
+Analyze the changes on the branch and recommend a semver bump in the PR description:
+
+- **patch** (0.0.x) — bug fixes, docs-only changes, internal refactors with no API change
+- **minor** (0.x.0) — new components, new props/variants on existing components, new exports
+- **major** (x.0.0) — removed or renamed exports, changed prop interfaces, breaking behavior changes
+
+To determine the recommendation:
+
+- Read the current version from `package.json`
+- Review `git diff main...HEAD` for what changed
+- Check if any public exports were added, removed, or renamed
+- Check if any prop interfaces changed shape
+
+Include the recommendation in the PR description as:
+
+```
+### Version
+Recommended bump: **minor** (0.0.16 → 0.1.0) — adds new Tooltip component export
+```
+
+**Do not bump the version or publish** — only recommend. The maintainer decides when to release.
+
+### 11. Verify
 
 - Confirm both `verify` and `vrt` checks are green on the PR
-- Report the PR URL with a summary of review/audit results
+- Report the PR URL with a summary of review/audit results and version recommendation
 
 ## Rules
 
