@@ -116,6 +116,7 @@ workflows. Invoke them from the Claude Code CLI with `@agent-name`:
 | `docs-reviewer`     | Audits all documentation (MDX, README, CLAUDE.md, CONTRIBUTING.md) for accuracy, stale references, and cross-file consistency                          |
 | `release-manager`   | Handles the full PR pipeline: pre-flight checks, code review & a11y audit gates, branch, commit, push, PR creation, VRT baselines, and CI verification |
 | `a11y-auditor`      | Deep WCAG 2.1 AA accessibility audit — ARIA semantics, keyboard operability, focus management, contrast coverage, and screen reader experience         |
+| `version-manager`   | Prepares version bump PRs — analyzes commits since last release, determines semver bump, generates changelog, and opens a release PR                   |
 
 ### Example usage
 
@@ -134,6 +135,9 @@ workflows. Invoke them from the Claude Code CLI with `@agent-name`:
 
 # Run an accessibility audit on a component
 @a11y-auditor Audit the dialog component
+
+# Prepare a version bump PR
+@version-manager Prepare a release
 ```
 
 ### Writing your own agents
