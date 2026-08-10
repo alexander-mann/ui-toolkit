@@ -33,7 +33,7 @@
     "prettier": "prettier --write .",
     "contrast": "node scripts/check-contrast.mjs",
     "vrt": "playwright test",
-    "vrt:update": "playwright test --update-snapshots",
+    "vrt:update": "playwright test --update-snapshots=all",
     "npm-publish": "pnpm build && npm publish --access public",
     "prepare": "pnpm husky"
   },
