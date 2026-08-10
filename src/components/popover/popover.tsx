@@ -8,7 +8,12 @@ import React, {
   useState,
 } from 'react'
 
-import { cn, getFloatingStyle, isVerticalPosition } from '@utils'
+import {
+  cn,
+  FloatingPlacement,
+  getFloatingPlacement,
+  isVerticalPosition,
+} from '@utils'
 import { VariantProps } from 'class-variance-authority'
 import { createPortal } from 'react-dom'
 
@@ -45,6 +50,11 @@ interface PopoverBaseProps
     VariantProps<typeof popoverPlacementVariants> {
   content: React.ReactNode
   children: React.ReactNode
+  /**
+   * Heading level for `title`. Set it to whatever keeps the surrounding
+   * document outline correct — the library cannot know where the popover sits.
+   */
+  headingLevel?: 2 | 3 | 4 | 5 | 6
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
@@ -69,6 +79,7 @@ export const Popover = ({
   content,
   children,
   title,
+  headingLevel = 2,
   position,
   align,
   size,
@@ -87,9 +98,8 @@ export const Popover = ({
   ...props
 }: PopoverProps) => {
   const [internalOpen, setInternalOpen] = useState(defaultOpen)
-  const [portalStyle, setPortalStyle] = useState<React.CSSProperties | null>(
-    null,
-  )
+  const [portalPlacement, setPortalPlacement] =
+    useState<FloatingPlacement | null>(null)
   const isControlled = controlledOpen !== undefined
   const isOpen = isControlled ? controlledOpen : internalOpen
 
@@ -102,9 +112,16 @@ export const Popover = ({
   const lastFocusedRef = useRef<HTMLElement | null>(null)
   const wasOpenRef = useRef(controlledOpen ?? defaultOpen)
 
+  const Heading = `h${headingLevel}` as const
   const resolvedPosition = position ?? PopoverPosition.bottom
   const resolvedAlign = align ?? PopoverAlign.center
-  const isSurfaceRendered = isOpen && (!usePortal || portalStyle !== null)
+  const isSurfaceRendered = isOpen && (!usePortal || portalPlacement !== null)
+
+  // After a flip the surface sits on the opposite side, so the arrow and the
+  // enter animation have to follow the placement that was actually used.
+  const effectivePosition = portalPlacement?.position ?? resolvedPosition
+  const effectiveAlign = portalPlacement?.align ?? resolvedAlign
+  const arrowShift = portalPlacement?.arrowShift ?? 0
 
   const updateOpen = useCallback(
     (value: boolean) => {
@@ -199,30 +216,47 @@ export const Popover = ({
     focusTrigger()
   }
 
+  /**
+   * Portal placement is measured rather than derived from CSS, which is what
+   * makes viewport collision handling possible. The surface renders hidden at
+   * the origin for one frame so it can be measured, then jumps to its resolved
+   * placement — `isSurfaceRendered` keeps focus and dismissal logic waiting
+   * until that has happened.
+   */
   useEffect(() => {
     if (!isOpen || !usePortal) {
-      setPortalStyle(null)
+      setPortalPlacement(null)
       return
     }
 
     let frame = 0
 
-    const updatePortalStyle = () => {
-      const rect = rootRef.current?.getBoundingClientRect()
-      if (!rect) {
+    const updatePlacement = () => {
+      const triggerRect = rootRef.current?.getBoundingClientRect()
+      const surface = surfaceRef.current
+      if (!triggerRect || !surface) {
         return
       }
-      setPortalStyle(
-        getFloatingStyle(rect, resolvedPosition, resolvedAlign, offset),
+      setPortalPlacement(
+        getFloatingPlacement(
+          triggerRect,
+          resolvedPosition,
+          resolvedAlign,
+          offset,
+          // offsetWidth/Height, not getBoundingClientRect: the surface is
+          // mid-`zoom-in-95` while being measured, and a client rect reports
+          // the scaled visual box (95% of the real width).
+          { width: surface.offsetWidth, height: surface.offsetHeight },
+        ),
       )
     }
 
     const scheduleUpdate = () => {
       cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(updatePortalStyle)
+      frame = requestAnimationFrame(updatePlacement)
     }
 
-    updatePortalStyle()
+    updatePlacement()
     window.addEventListener('scroll', scheduleUpdate, true)
     window.addEventListener('resize', scheduleUpdate)
 
@@ -348,15 +382,15 @@ export const Popover = ({
       onBlur={handleSurfaceBlur}
       onKeyDown={handleSurfaceKeyDown}
       className={cn(
-        enterAnimationClasses[resolvedPosition],
+        enterAnimationClasses[effectivePosition],
         popoverVariants({ size, className }),
       )}
       style={style}
     >
       {title !== undefined && (
-        <h2 id={titleId} className="mb-2 text-base font-medium">
+        <Heading id={titleId} className="mb-2 text-base font-medium">
           {title}
-        </h2>
+        </Heading>
       )}
       {content}
       {arrow && (
@@ -364,18 +398,35 @@ export const Popover = ({
           aria-hidden="true"
           className={cn(
             'absolute size-2 rotate-45 border border-border bg-background',
-            arrowPositionClasses[resolvedPosition],
+            arrowPositionClasses[effectivePosition],
             arrowAlignClasses[
-              isVerticalPosition(resolvedPosition) ? 'vertical' : 'horizontal'
-            ][resolvedAlign],
+              isVerticalPosition(effectivePosition) ? 'vertical' : 'horizontal'
+            ][effectiveAlign],
           )}
+          style={
+            arrowShift === 0
+              ? undefined
+              : isVerticalPosition(effectivePosition)
+                ? { marginLeft: -arrowShift }
+                : { marginTop: -arrowShift }
+          }
         />
       )}
     </div>
   )
 
   const anchoredSurface = usePortal ? (
-    <div className="z-50" style={portalStyle ?? undefined}>
+    <div
+      className="z-50"
+      style={
+        portalPlacement?.style ?? {
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          visibility: 'hidden',
+        }
+      }
+    >
       {surface}
     </div>
   ) : (
@@ -395,7 +446,7 @@ export const Popover = ({
   return (
     <div ref={rootRef} className="relative inline-flex">
       {trigger}
-      {isSurfaceRendered &&
+      {isOpen &&
         (usePortal
           ? createPortal(anchoredSurface, document.body)
           : anchoredSurface)}

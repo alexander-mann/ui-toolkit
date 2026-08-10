@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react'
 
-import { cn, getFloatingStyle } from '@utils'
+import { cn, getFloatingPlacement } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 import { createPortal } from 'react-dom'
 
@@ -125,7 +125,9 @@ export const Tooltip = ({
     timeoutRef.current = setTimeout(() => {
       if (usePortal && triggerRef.current) {
         const rect = triggerRef.current.getBoundingClientRect()
-        setPortalStyle(getFloatingStyle(rect, resolvedPosition, 'center', 8))
+        setPortalStyle(
+          getFloatingPlacement(rect, resolvedPosition, 'center', 8).style,
+        )
       }
       updateOpen(true)
     }, delay)
