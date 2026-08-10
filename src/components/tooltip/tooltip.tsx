@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react'
 
-import { cn } from '@utils'
+import { cn, getFloatingStyle } from '@utils'
 import { cva, VariantProps } from 'class-variance-authority'
 import { createPortal } from 'react-dom'
 
@@ -45,7 +45,6 @@ const tooltipVariants = cva(
     },
     defaultVariants: {
       variant: 'default',
-      position: 'top',
     },
   },
 )
@@ -109,6 +108,9 @@ export const Tooltip = ({
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null)
   const [portalStyle, setPortalStyle] = useState<React.CSSProperties>({})
 
+  const resolvedPosition = position ?? 'top'
+  const resolvedVariant = variant ?? 'default'
+
   const updateOpen = useCallback(
     (value: boolean) => {
       if (!isControlled) {
@@ -123,35 +125,11 @@ export const Tooltip = ({
     timeoutRef.current = setTimeout(() => {
       if (usePortal && triggerRef.current) {
         const rect = triggerRef.current.getBoundingClientRect()
-        const styles: React.CSSProperties = { position: 'fixed' }
-
-        if (position === 'top') {
-          styles.left = rect.left + rect.width / 2
-          styles.top = rect.top
-          styles.transform = 'translate(-50%, -100%)'
-          styles.paddingBottom = 8
-        } else if (position === 'bottom') {
-          styles.left = rect.left + rect.width / 2
-          styles.top = rect.bottom
-          styles.transform = 'translate(-50%, 0)'
-          styles.paddingTop = 8
-        } else if (position === 'left') {
-          styles.left = rect.left
-          styles.top = rect.top + rect.height / 2
-          styles.transform = 'translate(-100%, -50%)'
-          styles.paddingRight = 8
-        } else if (position === 'right') {
-          styles.left = rect.right
-          styles.top = rect.top + rect.height / 2
-          styles.transform = 'translate(0, -50%)'
-          styles.paddingLeft = 8
-        }
-
-        setPortalStyle(styles)
+        setPortalStyle(getFloatingStyle(rect, resolvedPosition, 'center', 8))
       }
       updateOpen(true)
     }, delay)
-  }, [delay, position, updateOpen, usePortal])
+  }, [delay, resolvedPosition, updateOpen, usePortal])
 
   const hide = useCallback(() => {
     if (timeoutRef.current) {
@@ -183,9 +161,6 @@ export const Tooltip = ({
     }
   }, [isOpen, hide])
 
-  const resolvedPosition = position ?? 'top'
-  const resolvedVariant = variant ?? 'default'
-
   const arrowElement = arrow ? (
     <span
       className={cn(
@@ -201,10 +176,10 @@ export const Tooltip = ({
       role="tooltip"
       id={tooltipId}
       className={cn(
-        usePortal ? '' : 'absolute',
+        usePortal ? 'relative' : 'absolute',
         tooltipVariants({
           variant,
-          position: usePortal ? undefined : position,
+          position: usePortal ? undefined : resolvedPosition,
           className,
         }),
       )}
