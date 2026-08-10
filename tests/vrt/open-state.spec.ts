@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { waitForDomIdle } from './stories.spec'
+import { waitForDomIdle } from './dom-idle'
 
 /**
  * Guards the coverage itself. The stories below exist so visual regression

@@ -3,6 +3,8 @@ import { resolve } from 'node:path'
 
 import { expect, test } from '@playwright/test'
 
+import { waitForDomIdle } from './dom-idle'
+
 /**
  * One visual snapshot per Storybook story, in both themes. The story list is
  * read from the built Storybook index so new components are covered
@@ -20,46 +22,6 @@ if (!existsSync(indexPath)) {
 interface StoryEntry {
   id: string
   type: string
-}
-
-/**
- * A story with a `play` function keeps mutating the DOM after Storybook
- * reports it as rendered, so capturing on the render signal alone freezes it
- * mid-interaction. Storybook's own render phase is not a reliable gate here
- * (it reports "finished" before a play function has finished), so wait for the
- * DOM itself to go quiet instead — the actual precondition for a stable
- * screenshot, and independent of Storybook internals.
- */
-export const waitForDomIdle = async (
-  page: import('@playwright/test').Page,
-  { idleMs = 150, timeoutMs = 5_000 } = {},
-) => {
-  await page
-    .evaluate(
-      ({ idleMs, timeoutMs }) =>
-        new Promise<void>((resolve) => {
-          let idleTimer = 0
-          const observer = new MutationObserver(() => {
-            window.clearTimeout(idleTimer)
-            idleTimer = window.setTimeout(finish, idleMs)
-          })
-          const finish = () => {
-            window.clearTimeout(idleTimer)
-            window.clearTimeout(capTimer)
-            observer.disconnect()
-            resolve()
-          }
-          const capTimer = window.setTimeout(finish, timeoutMs)
-          idleTimer = window.setTimeout(finish, idleMs)
-          observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-          })
-        }),
-      { idleMs, timeoutMs },
-    )
-    .catch(() => undefined)
 }
 
 const index = JSON.parse(readFileSync(indexPath, 'utf8')) as {
