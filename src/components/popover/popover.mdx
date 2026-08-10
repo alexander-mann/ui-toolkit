@@ -1,0 +1,81 @@
+import { Canvas, Controls, Description, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './popover.stories'
+
+<Meta of={Stories} />
+
+<Title />
+<Description />
+
+#### A click-triggered surface for rich, interactive content anchored to a trigger.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Popover } from '@alexandermann/ui-toolkit'
+
+<Popover title="Shipping" content="Orders placed before 2pm ship the same day.">
+  <button>Open popover</button>
+</Popover>
+`} />
+
+## Properties
+
+<Controls />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+### Positions
+
+<Canvas of={Stories.Positions} sourceState="none" />
+
+### Alignment
+
+`align` runs along the cross axis — horizontally for `top` and `bottom`, vertically for `left` and `right`.
+
+<Canvas of={Stories.Alignment} sourceState="none" />
+
+### Sizes
+
+<Canvas of={Stories.Sizes} sourceState="none" />
+
+### Interactive content
+
+Unlike a tooltip, a popover can hold focusable content such as inputs and buttons.
+
+<Canvas of={Stories.WithForm} sourceState="none" />
+
+### Controlled
+
+<Canvas of={Stories.Controlled} sourceState="none" />
+
+### In A Portal
+
+Set `usePortal` when an ancestor clips overflow or creates a stacking context the popover needs to escape.
+
+<Canvas of={Stories.InPortal} sourceState="none" />
+
+### Without Arrow
+
+<Canvas of={Stories.NoArrow} sourceState="none" />
+
+### Popover vs. Tooltip vs. Dialog
+
+| Component | Trigger | Interactive content | Blocks the page |
+| --------- | ------- | ------------------- | --------------- |
+| `Tooltip` | Hover or focus | No | No |
+| `Popover` | Click | Yes | No |
+| `Dialog`  | Click | Yes | Yes — modal with a scrim |
+
+### Accessibility
+
+The surface uses `role="dialog"`, which must have an accessible name — so exactly one of `title` (rendered as a heading) or `aria-label` is **required**, and TypeScript enforces it. The trigger receives `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls`.
+
+The trigger element is cloned rather than wrapped, so a `button` is ideal. A non-interactive host element such as a `span` also receives `role="button"` and `tabIndex={0}` so it stays keyboard operable, and anything that is not a React element is wrapped in a `button` automatically.
+
+Opening moves focus to the first focusable element inside the popover, or to the surface itself when it holds no controls — where a focus ring makes the landing point visible. Escape closes it and returns focus to the trigger, but only when the popover held focus, so a dismissal never yanks focus from elsewhere on the page. The popover is non-modal and never traps focus: tabbing past the last control (or back past the first) closes it and hands focus to the trigger, letting the browser carry on from there. That is what keeps a portalled surface — appended to `document.body`, far from its trigger — from stranding focus at the end of the document.
+
+### Known limitations
+
+Placement does no viewport collision detection, so a popover anchored near an edge can overflow rather than flipping to the opposite side; pick a `position` that suits the trigger's location. Screen-reader users encounter a portalled surface at the end of the document rather than next to its trigger, which is why `usePortal` defaults to `false` — reach for it only when an ancestor clips overflow.

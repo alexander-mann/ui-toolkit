@@ -31,3 +31,5 @@ export * from './radio-group'
 export * from './label'
 
 export * from './tooltip'
+
+export * from './popover'
