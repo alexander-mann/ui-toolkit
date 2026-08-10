@@ -3,6 +3,26 @@ import plugin from 'tailwindcss/plugin'
 import { Theme } from '../types'
 import { colorMix } from '../utils'
 
+const animations = {
+  'slide-in-from-right': 'slide-in-from-right 0.3s ease-out',
+  'slide-in-from-left': 'slide-in-from-left 0.3s ease-out',
+  'slide-out-to-right': 'slide-out-to-right 0.3s ease-in',
+  'slide-out-to-left': 'slide-out-to-left 0.3s ease-in',
+  'fade-in': 'fade-in 1s ease-in-out',
+  'fade-out': 'fade-out 1s ease-in-out',
+}
+
+/**
+ * Every animation utility this library ships: `animate-in`/`animate-out` from
+ * tailwindcss-animate, plus the named animations above. Derived from the map
+ * so a new animation can't silently escape the reduced-motion rule.
+ */
+const animationSelectors = [
+  '.animate-in',
+  '.animate-out',
+  ...Object.keys(animations).map((name) => `.animate-${name}`),
+].join(', ')
+
 export const themePlugin = (theme: Theme) =>
   plugin(
     ({ addBase }) => {
@@ -63,6 +83,17 @@ export const themePlugin = (theme: Theme) =>
         html: {
           color: 'var(--foreground)',
           backgroundColor: 'var(--background)',
+        },
+      })
+      // Honour a reduced-motion preference for every animation this library
+      // ships, so components don't each have to opt in. Scoped to our own
+      // animation utilities rather than a blanket `*` reset, which would also
+      // silence animations the consuming app owns.
+      addBase({
+        '@media (prefers-reduced-motion: reduce)': {
+          [animationSelectors]: {
+            animation: 'none !important',
+          },
         },
       })
     },
@@ -140,14 +171,7 @@ export const themePlugin = (theme: Theme) =>
               '100%': { opacity: '0' },
             },
           },
-          animation: {
-            'slide-in-from-right': 'slide-in-from-right 0.3s ease-out',
-            'slide-in-from-left': 'slide-in-from-left 0.3s ease-out',
-            'slide-out-to-right': 'slide-out-to-right 0.3s ease-in',
-            'slide-out-to-left': 'slide-out-to-left 0.3s ease-in',
-            'fade-in': 'fade-in 1s ease-in-out',
-            'fade-out': 'fade-out 1s ease-in-out',
-          },
+          animation: animations,
         },
       },
     },

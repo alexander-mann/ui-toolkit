@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority'
 import { PopoverAlign, PopoverPosition, PopoverSize } from './popover.constants'
 
 export const popoverVariants = cva(
-  'relative rounded-md border border-border bg-background p-4 text-sm text-foreground shadow-md ring-offset-background animate-in fade-in-0 zoom-in-95 motion-reduce:animate-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+  'relative rounded-md border border-border bg-background p-4 text-sm text-foreground shadow-md ring-offset-background animate-in fade-in-0 zoom-in-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
   {
     variants: {
       size: {
