@@ -22,39 +22,42 @@ interface StoryEntry {
   type: string
 }
 
-interface StoryRender {
-  phase?: string
-}
-
-interface PreviewWindow {
-  __STORYBOOK_PREVIEW__?: { storyRenders?: StoryRender[] }
-}
-
 /**
- * Stories with a `play` function are still mid-interaction when Storybook
- * reports the story as rendered, so capturing straight away freezes them in
- * their pre-interaction state. Wait for every render to leave the playing
- * phase. Falls back to capturing immediately if Storybook's internals move,
- * so this degrades rather than failing the suite.
+ * A story with a `play` function keeps mutating the DOM after Storybook
+ * reports it as rendered, so capturing on the render signal alone freezes it
+ * mid-interaction. Storybook's own render phase is not a reliable gate here
+ * (it reports "finished" before a play function has finished), so wait for the
+ * DOM itself to go quiet instead — the actual precondition for a stable
+ * screenshot, and independent of Storybook internals.
  */
-const waitForPlayToSettle = async (page: import('@playwright/test').Page) => {
+export const waitForDomIdle = async (
+  page: import('@playwright/test').Page,
+  { idleMs = 150, timeoutMs = 5_000 } = {},
+) => {
   await page
-    .waitForFunction(
-      () => {
-        const renders = (window as unknown as PreviewWindow)
-          .__STORYBOOK_PREVIEW__?.storyRenders
-        if (!renders || renders.length === 0) {
-          return false
-        }
-        // Checking for the absence of an in-progress phase rather than a list
-        // of terminal ones, so a renamed terminal phase can't hang the wait.
-        const inProgress = ['preparing', 'loading', 'rendering', 'playing']
-        return renders.every(
-          (render) => render.phase && !inProgress.includes(render.phase),
-        )
-      },
-      undefined,
-      { timeout: 5_000 },
+    .evaluate(
+      ({ idleMs, timeoutMs }) =>
+        new Promise<void>((resolve) => {
+          let idleTimer = 0
+          const observer = new MutationObserver(() => {
+            window.clearTimeout(idleTimer)
+            idleTimer = window.setTimeout(finish, idleMs)
+          })
+          const finish = () => {
+            window.clearTimeout(idleTimer)
+            window.clearTimeout(capTimer)
+            observer.disconnect()
+            resolve()
+          }
+          const capTimer = window.setTimeout(finish, timeoutMs)
+          idleTimer = window.setTimeout(finish, idleMs)
+          observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+          })
+        }),
+      { idleMs, timeoutMs },
     )
     .catch(() => undefined)
 }
@@ -73,7 +76,7 @@ test.describe('storybook visual regression', () => {
           `/iframe.html?id=${story.id}&globals=theme:${theme}&viewMode=story`,
         )
         await page.locator('#storybook-root').waitFor({ state: 'attached' })
-        await waitForPlayToSettle(page)
+        await waitForDomIdle(page)
         await page.evaluate(() => document.fonts.ready)
         await expect(page).toHaveScreenshot(`${story.id}-${theme}.png`, {
           fullPage: true,
