@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { expect, screen, userEvent, within } from '@storybook/test'
 import { Settings } from 'lucide-react'
 
 import { Button } from '../button'
@@ -116,6 +117,23 @@ export default meta
 
 type Story = StoryObj<typeof Popover>
 
+/**
+ * Opens the popover so the surface itself is covered by visual regression —
+ * a trigger-only snapshot would miss placement, the arrow, and the layout of
+ * the content. Play functions don't autoplay in docs canvases (pinned below
+ * rather than left to the default), so the docs page still renders closed.
+ */
+const openOnPlay =
+  (triggerName: string): Story['play'] =>
+  async ({ canvasElement }) => {
+    await userEvent.click(
+      within(canvasElement).getByRole('button', { name: triggerName }),
+    )
+    await expect(await screen.findByRole('dialog')).toBeVisible()
+  }
+
+const noDocsAutoplay = { docs: { autoplay: false } }
+
 export const BasicUsage: Story = {
   args: {
     title: 'About popovers',
@@ -202,6 +220,8 @@ export const Sizes: Story = {
 }
 
 export const WithForm: Story = {
+  parameters: noDocsAutoplay,
+  play: openOnPlay('Project settings'),
   render: () => (
     <div className="flex items-center justify-center p-24">
       <Popover
@@ -255,6 +275,8 @@ export const Controlled: Story = {
 }
 
 export const InPortal: Story = {
+  parameters: noDocsAutoplay,
+  play: openOnPlay('Open popover'),
   render: () => (
     <div className="flex items-center justify-center p-24">
       <div className="h-24 w-64 overflow-hidden rounded-md border border-border p-4">
@@ -274,6 +296,8 @@ export const InPortal: Story = {
 }
 
 export const NoArrow: Story = {
+  parameters: noDocsAutoplay,
+  play: openOnPlay('Open popover'),
   render: () => (
     <div className="flex items-center justify-center p-24">
       <Popover
