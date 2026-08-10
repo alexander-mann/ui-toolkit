@@ -38,7 +38,7 @@ Enforced by ESLint (`typescript-eslint` strict + stylistic) and Prettier. Key ru
 
 ## Component conventions
 
-Each component lives in `src/components/<kebab-name>/` with four files:
+Each component lives in `src/components/<kebab-name>/` with at least these four files (larger ones add the optional siblings described below):
 
 - `<name>.tsx` — the component
 - `index.ts` — `export * from './<name>'`
@@ -57,9 +57,23 @@ Follow the pattern in `src/components/button/button.tsx`:
 - Use named exports (`export { Button }`), not default exports.
 - Colors come from theme CSS variables via Tailwind tokens (`bg-primary`, `text-primary-foreground`, `bg-destructive`, etc.) — never hardcode hex values. The token set is defined in `src/styles/theme.ts` and `palette.ts`.
 
+### Splitting up a large component
+
+Four files is the default and fits almost every component. Once a component's `.tsx` passes roughly **200 lines**, move the declarations that don't touch React state into siblings rather than letting the component file absorb them:
+
+- `<name>.constants.ts` — the exported option maps (`PopoverPosition`) and their derived value types
+- `<name>.variants.ts` — `cva` definitions and plain class-name lookup maps
+- `<name>.utils.ts` — pure helpers with no React state (geometry, DOM selectors, formatting)
+
+Re-export the public pieces from `<name>.tsx` (`export * from './<name>.constants'`) so `index.ts`, the stories, and consumer imports stay unchanged. `src/components/popover` is the reference example. Don't split preemptively — a 77-line component like `button` is better off in one file.
+
+### Centralize on the second use
+
+A constant, type, or helper needed by a **second** component moves to a shared home: `src/utils` for helpers, `src/types` for internal types, `src/styles` for tokens. `src/utils/floating.ts` is the reference example — the shared anchoring geometry behind `tooltip` and `popover`. Don't promote on the first use: an abstraction derived from a single caller usually guesses the wrong shape, and the second caller is what reveals the real one. Types that are part of the public API stay with the code that exports them — `src/index.ts` re-exports `components`, `styles`, and `utils`, but not `types`.
+
 ### Scaffolding
 
-Prefer `pnpm generate:component` (plop) to create a new component — it generates all four files and appends the barrel export. Then flesh out the `.tsx` following the `cva` pattern above (the template stub is intentionally minimal).
+Prefer `pnpm generate:component` (plop) to create a new component — it generates all four files and appends the barrel export. Then flesh out the `.tsx` following the `cva` pattern above (the template stub is intentionally minimal). The generator only ever makes the four base files; the extra files above are added by hand when a component earns them.
 
 ## Theming
 

@@ -37,3 +37,7 @@ import { Dialog } from '@alexandermann/ui-toolkit'
 
 #### Action Dialog
 <Canvas of={Stories.ActionDialog} sourceState="none" />
+
+### Accessibility
+
+The dialog is labelled by its `title`, which renders as an `h2` — a dialog heading is a section heading, not the page title, so an `h1` would compete with the host page's own. Set `headingLevel` if a different level suits the surrounding document outline.

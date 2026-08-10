@@ -100,8 +100,8 @@ Toggle the attribute at runtime to switch themes.
 ## Components
 
 Accordion · Badge · Button · Card · Checkbox · Dialog · Divider · Input ·
-Label · RadioGroup · Select · Switch · Table · Tabs · Textarea · Toast ·
-Tooltip
+Label · Popover · RadioGroup · Select · Switch · Table · Tabs · Textarea ·
+Toast · Tooltip
 
 ## AI agents
 

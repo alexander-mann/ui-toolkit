@@ -3,6 +3,8 @@ import { resolve } from 'node:path'
 
 import { expect, test } from '@playwright/test'
 
+import { waitForDomIdle } from './dom-idle'
+
 /**
  * One visual snapshot per Storybook story, in both themes. The story list is
  * read from the built Storybook index so new components are covered
@@ -36,6 +38,7 @@ test.describe('storybook visual regression', () => {
           `/iframe.html?id=${story.id}&globals=theme:${theme}&viewMode=story`,
         )
         await page.locator('#storybook-root').waitFor({ state: 'attached' })
+        await waitForDomIdle(page)
         await page.evaluate(() => document.fonts.ready)
         await expect(page).toHaveScreenshot(`${story.id}-${theme}.png`, {
           fullPage: true,

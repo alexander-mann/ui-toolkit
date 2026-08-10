@@ -73,7 +73,10 @@ flowchart LR
 
 1. `pnpm generate:component` scaffolds the four files
    (`<name>.tsx`, `index.ts`, `<name>.stories.tsx`, `<name>.mdx`) and appends the
-   barrel export.
+   barrel export. Larger components may add `<name>.constants.ts`,
+   `<name>.variants.ts`, and `<name>.utils.ts` siblings by hand — see
+   "Splitting up a large component" in CLAUDE.md
+   ([`src/components/popover/`](src/components/popover/) is the reference).
 2. Flesh out `<name>.tsx` following the `class-variance-authority` pattern in
    [`src/components/button/button.tsx`](src/components/button/button.tsx).
 3. Use only theme tokens for color (`bg-primary`, `text-destructive-foreground`,
