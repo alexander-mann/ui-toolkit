@@ -1,4 +1,10 @@
-import React, { HTMLAttributes, useEffect, useRef, useState } from 'react'
+import React, {
+  HTMLAttributes,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react'
 
 import { Button } from '@components/button'
 import { cn } from '@utils'
@@ -33,6 +39,11 @@ interface DialogProps
     VariantProps<typeof dialogVariants> {
   title: string
   triggerElement: React.ReactNode
+  /**
+   * Heading level for `title`. Defaults to `h2`: a dialog heading is a section
+   * heading, not the page title, so an `h1` would compete with the host page's.
+   */
+  headingLevel?: 2 | 3 | 4 | 5 | 6
   usePortal?: boolean
   open?: boolean
   onOpenChange?: (open: boolean) => void
@@ -40,6 +51,7 @@ interface DialogProps
 
 export const Dialog = ({
   title,
+  headingLevel = 2,
   children,
   size,
   triggerElement,
@@ -50,6 +62,8 @@ export const Dialog = ({
 }: DialogProps) => {
   const [isOpen, setIsOpen] = useState(open)
   const dialogRef = useRef<HTMLDivElement>(null)
+  const titleId = useId()
+  const Heading = `h${headingLevel}` as const
 
   useEffect(() => {
     setIsOpen(open)
@@ -86,19 +100,19 @@ export const Dialog = ({
       <div
         ref={dialogRef}
         role="dialog"
-        aria-labelledby="dialog-label"
+        aria-labelledby={titleId}
         aria-modal="true"
         className={cn(dialogVariants({ size, className }))}
       >
         <div className="flex justify-between items-center">
-          <h1
-            id="dialog-label"
+          <Heading
+            id={titleId}
             className={cn('text-2xl font-medium', {
               'text-xl': size === DialogSize.sm,
             })}
           >
             {title}
-          </h1>
+          </Heading>
           <Button
             variant="ghost"
             size="icon"

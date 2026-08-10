@@ -25,6 +25,15 @@ const meta: Meta<typeof Popover> = {
       },
       control: 'text',
     },
+    headingLevel: {
+      description: 'Heading level for the title, to fit the document outline',
+      options: [2, 3, 4, 5, 6],
+      table: {
+        type: { summary: '2 | 3 | 4 | 5 | 6' },
+        defaultValue: { summary: '2' },
+      },
+      control: 'select',
+    },
     position: {
       description: 'Side of the trigger the popover is anchored to',
       options: Object.values(PopoverPosition),
