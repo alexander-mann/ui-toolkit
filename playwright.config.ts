@@ -41,12 +41,13 @@ export default defineConfig({
      * 1280x720 frame. Components could appear, vanish, or shift 7px and still
      * pass; see issue #29.
      *
-     * Measured at `threshold: 0.25`, cross-run noise is 0 px, so 100 px is
-     * margin over a floor of zero and still ~18x below that 1,791 px signal.
-     * Absolute rather than a ratio because noise scales with the amount of
-     * rendered text, not with image area, so a ratio over-budgets exactly the
-     * mostly-empty stories that failed. `tests/vrt/tolerance.spec.ts` keeps the
-     * budget honest.
+     * The noise floor was then measured in the pinned container at
+     * `maxDiffPixels: 0`: every baseline matched to the pixel, twice over. At
+     * `threshold: 0.25` there is no cross-run noise to budget for, so 100 px is
+     * pure headroom — ~18x below that 1,791 px signal, and absolute rather than
+     * a ratio because noise scales with the amount of rendered text, not with
+     * image area (a ratio over-budgets exactly the mostly-empty stories that
+     * failed). `tests/vrt/tolerance.spec.ts` keeps the budget honest.
      */
     toHaveScreenshot: { threshold: 0.25, maxDiffPixels: 100 },
   },
