@@ -94,6 +94,7 @@ Playwright snapshots every Storybook story (light + dark) and diffs against comm
 
 - Runs on every PR via `.github/workflows/vrt.yml`, inside the pinned `mcr.microsoft.com/playwright` container so rendering is stable. On a diff it fails and uploads an HTML report (expected/actual/diff) as a run artifact.
 - Baselines are generated **only in CI** (rendering is environment-sensitive) — do not commit locally-generated snapshots. After an **intentional** visual change, seed/refresh them by running the **Visual Regression** workflow with `update_baselines = true`; it regenerates and commits the PNGs. Keep the container tag in `vrt.yml` in sync with the `@playwright/test` version.
+- Tolerance is split across the two knobs Playwright gives you: `threshold` absorbs sub-pixel AA noise per pixel, `maxDiffPixels` stays a small structural budget. Don't raise `maxDiffPixels` (or reintroduce `maxDiffPixelRatio`) to quiet a failing diff — a budget in the thousands lets a whole light-on-light component appear or disappear unnoticed. `tests/vrt/tolerance.spec.ts` fails if the budget grows that loose; `tests/vrt/open-state.spec.ts` asserts the play-function stories are actually open at capture time.
 
 ## Publishing
 

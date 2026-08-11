@@ -22,8 +22,31 @@ export default defineConfig({
     baseURL: `http://localhost:${process.env.SB_PORT || 6007}`,
   },
   expect: {
-    // Tolerate sub-pixel AA noise without hiding real regressions.
-    toHaveScreenshot: { maxDiffPixelRatio: 0.01 },
+    /**
+     * Two independent knobs, each doing the job it exists for:
+     *
+     * - `threshold` bounds how different a *single* pixel may be (YIQ colour
+     *   distance) before it counts at all. This is the lever for sub-pixel AA
+     *   noise.
+     * - `maxDiffPixels` bounds *how many* pixels may differ. That is a
+     *   structural budget, so it stays small.
+     *
+     * `maxDiffPixelRatio: 0.01` used to do both jobs with the second knob, and
+     * a light-on-light surface is what that hides: `bg-background` on a white
+     * page differs from the pixels beneath only at its border, arrow, glyphs
+     * and shadow, so an entire popover appearing or vanishing moves just
+     * 1,791 px — comfortably inside the 9,216 px a 0.01 ratio allows on a
+     * 1280x720 frame. Components could appear, vanish, or shift 7px and still
+     * pass; see issue #29.
+     *
+     * Measured at `threshold: 0.25`, cross-run noise is 0 px, so 100 px is
+     * margin over a floor of zero and still ~18x below that 1,791 px signal.
+     * Absolute rather than a ratio because noise scales with the amount of
+     * rendered text, not with image area, so a ratio over-budgets exactly the
+     * mostly-empty stories that failed. `tests/vrt/tolerance.spec.ts` keeps the
+     * budget honest.
+     */
+    toHaveScreenshot: { threshold: 0.25, maxDiffPixels: 100 },
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
