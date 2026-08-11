@@ -66,6 +66,44 @@ export default {
 `baseTheme` for the defaults, or your own object matching the `Theme` type to
 re-skin every component.
 
+## Custom theme
+
+Components only ever reference semantic tokens (`bg-primary`,
+`text-card-foreground`, …), so replacing the theme object re-skins the whole
+library. A theme is plain data: a `light` and a `dark` set with the same 21
+tokens, typed by the exported `Theme` interface.
+
+```ts
+// theme.ts
+import { baseTheme, type Theme } from '@alexandermann/ui-toolkit/styles'
+
+export const brandTheme: Theme = {
+  light: {
+    ...baseTheme.light,
+    primary: '#3B2F8F',
+    primaryForeground: '#FFFFFF',
+  },
+  dark: {
+    ...baseTheme.dark,
+    primary: '#BFB4FF',
+    primaryForeground: '#14103A',
+  },
+}
+```
+
+Then hand it to the plugin in place of `baseTheme`:
+
+```js
+plugins: [themePlugin(brandTheme)]
+```
+
+A custom theme is your palette, so its contrast is yours to verify — the WCAG AA
+guarantee travels with the color values, not the components.
+
+The full walkthrough — every token and what renders it, color-value rules,
+runtime theme switching, and the contrast pairings to check — is in
+[**Styles → Custom Theme**](https://alexander-mann.github.io/ui-toolkit/?path=/docs/styles-custom-theme--docs).
+
 ## Basic usage
 
 ```jsx

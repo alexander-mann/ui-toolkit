@@ -69,7 +69,7 @@ Re-export the public pieces from `<name>.tsx` (`export * from './<name>.constant
 
 ### Centralize on the second use
 
-A constant, type, or helper needed by a **second** component moves to a shared home: `src/utils` for helpers, `src/types` for internal types, `src/styles` for tokens. `src/utils/floating.ts` is the reference example — the shared anchoring geometry behind `tooltip` and `popover`. Don't promote on the first use: an abstraction derived from a single caller usually guesses the wrong shape, and the second caller is what reveals the real one. Types that are part of the public API stay with the code that exports them — `src/index.ts` re-exports `components`, `styles`, and `utils`, but not `types`.
+A constant, type, or helper needed by a **second** component moves to a shared home: `src/utils` for helpers, `src/types` for internal types, `src/styles` for tokens. `src/utils/floating.ts` is the reference example — the shared anchoring geometry behind `tooltip` and `popover`. Don't promote on the first use: an abstraction derived from a single caller usually guesses the wrong shape, and the second caller is what reveals the real one. Types that are part of the public API stay with the code that exports them — `src/index.ts` re-exports `components`, `styles`, and `utils`, but not `types`. The one bridge is `Theme`/`ThemeColors`: they are defined in `src/types/theme.ts` but re-exported from `src/styles/theme.ts` (`export type { Theme, ThemeColors } from '../types'`), because consumers need them to type a custom theme. Treat them as public API — a change to either is a breaking change for consumers.
 
 ### Scaffolding
 
@@ -77,7 +77,9 @@ Prefer `pnpm generate:component` (plop) to create a new component — it generat
 
 ## Theming
 
-Theme tokens live in `src/styles/` (`palette.ts` → raw colors, `theme.ts` → semantic light/dark mappings, `theme-preset.ts` / `theme-plugin.ts` → Tailwind integration). When adding a semantic color, add it to both `light` and `dark` in `theme.ts` and to the `Theme` type in `src/types/theme.ts`.
+Theme tokens live in `src/styles/` (`palette.ts` → raw colors, `theme.ts` → semantic light/dark mappings, `theme-preset.ts` / `theme-plugin.ts` → Tailwind integration). When adding a semantic color, add it to both `light` and `dark` in `theme.ts` and to the `ThemeColors` type in `src/types/theme.ts`.
+
+A token is public API, so adding or renaming one also means updating: the variable maps in `theme-plugin.ts` (both modes) and its `colors` extension, the swatch list in `src/docs/themes.mdx`, the token table in `src/docs/custom-theme.mdx`, the token count quoted in `src/docs/custom-theme.mdx` and `README.md`, and the `checks` array in `scripts/check-contrast.mjs`.
 
 ## Accessibility — color contrast (WCAG 2.1 AA)
 

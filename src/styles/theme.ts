@@ -1,6 +1,8 @@
 import { Theme } from '../types'
 import { palette } from './palette'
 
+export type { Theme, ThemeColors } from '../types'
+
 export const baseTheme: Theme = {
   light: {
     background: palette.white,

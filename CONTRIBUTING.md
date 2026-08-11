@@ -83,6 +83,8 @@ flowchart LR
    …) — never hardcode hex values.
 4. If you introduce a new foreground/background pairing, add it to the `checks`
    array in `scripts/check-contrast.mjs` and run `pnpm contrast`.
+5. If you add or rename a theme token, update the docs that enumerate them —
+   see "Theming" in [CLAUDE.md](CLAUDE.md) for the full list of surfaces.
 
 ## Visual regression baselines
 
