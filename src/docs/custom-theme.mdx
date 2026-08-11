@@ -1,0 +1,272 @@
+import { Meta, Source } from '@storybook/blocks'
+
+<Meta title="Styles/Custom Theme" />
+
+# Custom Theme
+
+The toolkit ships `baseTheme`, but nothing about the components is tied to it.
+Every color a component renders resolves through a **semantic token** — a CSS
+variable injected by `themePlugin` — so swapping the theme object re-skins the
+whole library without touching a single component.
+
+## How theming works
+
+A theme is plain data. `themePlugin(theme)` turns it into two things:
+
+1. **CSS variables** — `theme.light` on `:root`, `theme.dark` on
+   `[data-mode="dark"]`.
+2. **Tailwind color utilities** — `bg-primary`, `text-card-foreground`,
+   `border`, … each wired to its variable through `color-mix`, which is what
+   keeps opacity modifiers like `bg-primary/50` working.
+
+Components only ever reference those utilities, never raw colors. So the entire
+customization surface is the object you hand to the plugin.
+
+## 1. Define your theme
+
+A theme needs a `light` and a `dark` set, each with all 21 tokens. The `Theme`
+type is exported from `@alexandermann/ui-toolkit/styles` — annotate your object
+with it and TypeScript will flag any token you forget (a missing token means an
+undefined CSS variable at runtime, not a fallback).
+
+<Source
+  dark
+  language="ts"
+  code={`
+// theme.ts
+import type { Theme } from '@alexandermann/ui-toolkit/styles'
+
+export const oceanTheme: Theme = {
+  light: {
+    background: '#FFFFFF',
+    foreground: '#0B1A22',
+    primary: '#0B5A72',
+    primaryForeground: '#FFFFFF',
+    secondary: '#CFE3EA',
+    secondaryForeground: '#08303D',
+    muted: '#EEF4F6',
+    mutedForeground: '#4A6672',
+    card: '#FFFFFF',
+    cardForeground: '#0B1A22',
+    accent: '#8FD3E8',
+    accentForeground: '#06323F',
+    destructive: '#9D4646',
+    destructiveForeground: '#FFFFFF',
+    border: '#6C858F',
+    success: '#2F6B4F',
+    successForeground: '#FFFFFF',
+    warning: '#8A6300',
+    warningForeground: '#FFFFFF',
+    info: '#1F5F8B',
+    infoForeground: '#FFFFFF',
+  },
+  dark: {
+    background: '#0E1F27',
+    foreground: '#F2F8FA',
+    primary: '#9BD7EA',
+    primaryForeground: '#062430',
+    secondary: '#33525F',
+    secondaryForeground: '#F2F8FA',
+    muted: '#1B333D',
+    mutedForeground: '#A8C2CC',
+    card: '#162C35',
+    cardForeground: '#F2F8FA',
+    accent: '#276F86',
+    accentForeground: '#EAF7FB',
+    destructive: '#D99393',
+    destructiveForeground: '#000000',
+    border: '#A8C2CC',
+    success: '#7FC29B',
+    successForeground: '#000000',
+    warning: '#E3C46A',
+    warningForeground: '#000000',
+    info: '#8FC1E3',
+    infoForeground: '#000000',
+  },
+}
+`} />
+
+## 2. Wire it into Tailwind
+
+Pass your theme to `themePlugin` in place of `baseTheme`. Everything else about
+the setup is unchanged.
+
+<Source
+  dark
+  language="js"
+  code={`
+// tailwind.config.js
+import { themePlugin, themePreset } from '@alexandermann/ui-toolkit/styles'
+
+import { oceanTheme } from './theme'
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}',
+    './node_modules/@alexandermann/ui-toolkit/dist/**/*.js',
+  ],
+  presets: [themePreset],
+  plugins: [themePlugin(oceanTheme)],
+}
+`} />
+
+`themePreset` stays as-is — it registers the `[data-mode="dark"]` dark-mode
+selector and the animation/container-query plugins the components depend on.
+
+## Starting from the base theme
+
+Re-skinning usually means changing a handful of tokens, not all 42 (21 per
+mode). Spread
+`baseTheme` and override what you need — you keep every token you didn't think
+about, and the `Theme` annotation still holds.
+
+<Source
+  dark
+  language="ts"
+  code={`
+import { baseTheme, type Theme } from '@alexandermann/ui-toolkit/styles'
+
+export const brandTheme: Theme = {
+  light: {
+    ...baseTheme.light,
+    primary: '#3B2F8F',
+    primaryForeground: '#FFFFFF',
+  },
+  dark: {
+    ...baseTheme.dark,
+    primary: '#BFB4FF',
+    primaryForeground: '#14103A',
+  },
+}
+`} />
+
+The raw color scales behind `baseTheme` are exported too, so you can build a
+theme out of them instead of hand-picking hex values — see **Styles → Palette**
+for the shades.
+
+<Source
+  dark
+  language="ts"
+  code={`
+import { palette } from '@alexandermann/ui-toolkit/styles'
+
+primary: palette.violet[700],
+primaryForeground: palette.white,
+`} />
+
+## Token reference
+
+| Token | CSS variable | What actually renders it |
+| --- | --- | --- |
+| `background` | `--background` | The page surface, and the surface of `Dialog`, `Popover`, and `Tooltip`; also the `Switch` thumb fill |
+| `foreground` | `--foreground` | Default body text — and, at `/10`, the fill of `Input`, `Textarea`, and `Select` |
+| `primary` | `--primary` | The `primary` button/badge variant, focus rings, and the `Switch` on-track |
+| `primaryForeground` | `--primary-foreground` | Text/icons on `primary` |
+| `secondary` | `--secondary` | The `secondary` button and badge variant |
+| `secondaryForeground` | `--secondary-foreground` | Text/icons on `secondary` |
+| `muted` | `--muted` | The `Toast` surface, `Table` header and zebra rows, and the `Switch` off-track |
+| `mutedForeground` | `--muted-foreground` | Secondary text and help text; also `Tabs` borders and their `/10` tab fills |
+| `card` | `--card` | The `Card` surface only — dialogs, popovers, and tooltips use `background` |
+| `cardForeground` | `--card-foreground` | Text on `card` |
+| `accent` | `--accent` | The `accent` button and badge variant (hover is `accent/80`) |
+| `accentForeground` | `--accent-foreground` | Text/icons on `accent` |
+| `destructive` | `--destructive` | Destructive actions, error text, and error borders |
+| `destructiveForeground` | `--destructive-foreground` | Text/icons on `destructive` |
+| `border` | `--border` | The default border color (`border`, `border-border`) — dividers and most component borders |
+| `success` | `--success` | Success status fills and icons |
+| `successForeground` | `--success-foreground` | Text/icons on `success` |
+| `warning` | `--warning` | Warning status fills and icons |
+| `warningForeground` | `--warning-foreground` | Text/icons on `warning` |
+| `info` | `--info` | Informational status fills and icons |
+| `infoForeground` | `--info-foreground` | Text/icons on `info` |
+
+Borders are not exclusively `border`: `Tabs` draws with `muted-foreground`,
+badges with their own variant color, and every error state with `destructive`.
+So a border-color change often means touching more than one token.
+
+Every token also becomes a full Tailwind color, so `text-primary`,
+`border-destructive`, and `bg-muted/40` all resolve in your own markup — not
+just inside the toolkit.
+
+## Color values
+
+Token values are injected into `color-mix(in srgb, …)`, so use an opaque color
+in a form sRGB can mix: hex, `rgb()`, or `hsl()`. Avoid values that already
+carry alpha (`#RRGGBBAA`, `rgba()`) — the opacity modifiers would compound on
+top of them. Reach for the modifier instead: `bg-primary/50`.
+
+## Dark mode
+
+Dark tokens apply under `data-mode="dark"` on any ancestor, typically `<html>`.
+Toggle the attribute at runtime to switch modes.
+
+<Source
+  dark
+  language="html"
+  code={`
+<html data-mode="dark">
+  ...
+</html>
+`} />
+
+## Switching themes at runtime
+
+`themePlugin` bakes its variables in at build time, so one plugin call means one
+theme. To ship several — per-brand skins, a user-selectable palette — override
+the variables in your own CSS with a selector that outranks `:root`, and load it
+after Tailwind's base layer.
+
+<Source
+  dark
+  language="css"
+  code={`
+html[data-brand='forest'] {
+  --primary: #2F6B4F;
+  --primary-foreground: #FFFFFF;
+}
+
+html[data-brand='forest'][data-mode='dark'] {
+  --primary: #7FC29B;
+  --primary-foreground: #000000;
+}
+`} />
+
+For a single subtree, inline styles work and need no selector juggling — at the
+cost of light/dark switching for the tokens you pin, since one hard-coded value
+now applies in both modes:
+
+<Source
+  dark
+  language="jsx"
+  code={`
+<section style={{ '--primary': '#2F6B4F' }}>
+  <Button>Scoped to this section</Button>
+</section>
+`} />
+
+## Keep it accessible
+
+The defaults are **WCAG 2.1 AA** compliant for color contrast in both modes, and
+that is checked in CI — but a custom theme is your palette, and the guarantee
+travels with the values, not the components. Verify each pairing your theme
+changes:
+
+- **Normal text ≥ 4.5:1** — each `*Foreground` token against its own fill
+  (`primaryForeground` on `primary`, `cardForeground` on `card`, …), plus
+  `foreground` and `mutedForeground` on `background`, `mutedForeground` on
+  `muted`, and colored text: `destructive` on `background` and on `card`, and
+  `primary` on `background`.
+- **UI components & meaningful icons ≥ 3:1** — `border` on `background`, the
+  status tokens (`success`, `warning`, `info`, `destructive`) on `muted` where
+  toasts render their icons and borders, and both switch pairings: the thumb
+  outline (`border` on `muted`) and the thumb fill (`background` on `primary`).
+
+When a pairing falls short, fix it by picking a different shade **within the
+same hue family** — that preserves the design language instead of pulling the
+theme toward gray.
+
+The repo's contrast gate (`pnpm contrast`) enforces exactly these pairings
+against `theme.ts`. If you keep your theme in a repo of your own, it is worth
+porting: the script is dependency-free Node and lives in
+[`scripts/check-contrast.mjs`](https://github.com/alexander-mann/ui-toolkit/blob/main/scripts/check-contrast.mjs).
