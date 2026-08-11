@@ -17,7 +17,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  reporter: [['html', { open: 'never' }]],
+  // `list` puts the differing story and its pixel count in the CI log, so a
+  // failure is legible without downloading the HTML report.
+  reporter: [['list'], ['html', { open: 'never' }]],
   use: {
     baseURL: `http://localhost:${process.env.SB_PORT || 6007}`,
   },
