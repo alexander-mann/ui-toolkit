@@ -37,17 +37,25 @@ export default defineConfig({
      * a light-on-light surface is what that hides: `bg-background` on a white
      * page differs from the pixels beneath only at its border, arrow, glyphs
      * and shadow, so an entire popover appearing or vanishing moves just
-     * 1,791 px — comfortably inside the 9,216 px a 0.01 ratio allows on a
+     * 1,492 px — comfortably inside the 9,216 px a 0.01 ratio allows on a
      * 1280x720 frame. Components could appear, vanish, or shift 7px and still
      * pass; see issue #29.
      *
      * The noise floor was then measured in the pinned container at
      * `maxDiffPixels: 0`: every baseline matched to the pixel, twice over. At
      * `threshold: 0.25` there is no cross-run noise to budget for, so 100 px is
-     * pure headroom — ~18x below that 1,791 px signal, and absolute rather than
-     * a ratio because noise scales with the amount of rendered text, not with
-     * image area (a ratio over-budgets exactly the mostly-empty stories that
-     * failed). `tests/vrt/tolerance.spec.ts` keeps the budget honest.
+     * pure headroom — ~15x below that 1,492 px signal.
+     *
+     * Note both figures are properties of the pair of knobs, not of
+     * `maxDiffPixels` alone: the same vanishing popover shrinks to 224 px at
+     * `threshold: 0.9`. Raise the threshold and you quietly spend the headroom.
+     * An absolute budget over a ratio buys nothing while every baseline is
+     * 1280x720 (100 px is ratio 0.000108) — it is there for the day a
+     * `fullPage` capture runs taller than the viewport, since noise tracks the
+     * amount of rendered text rather than image area, and a ratio would hand
+     * that one story a bigger budget for no reason.
+     *
+     * `tests/vrt/tolerance.spec.ts` guards the budget.
      */
     toHaveScreenshot: { threshold: 0.25, maxDiffPixels: 100 },
   },

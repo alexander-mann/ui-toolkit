@@ -1,6 +1,6 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
-import { waitForDomIdle } from './dom-idle'
+import { settleStory } from './dom-idle'
 
 /**
  * Guards the diff budget in playwright.config.ts.
@@ -16,6 +16,11 @@ import { waitForDomIdle } from './dom-idle'
  * runs the configured comparator (threshold + maxDiffPixels) and never writes a
  * baseline, not even under `--update-snapshots=all`, so this cannot quietly
  * rebase itself onto the closed state.
+ *
+ * The trigger assertions matter as much as the screenshot one. A negated
+ * comparison passes on *any* difference, including a Storybook error page or a
+ * blank frame, so pin the frame to the same story at the same layout first —
+ * otherwise the guard could report a healthy budget while rendering nothing.
  */
 const guardBaseline = 'tolerance-guard-popover-open-light.png'
 
@@ -27,27 +32,31 @@ const storyUrl = (args?: string) =>
     ...(args ? [`args=${args}`] : []),
   ].join('&')
 
-const settle = async (page: Page) => {
-  await page.locator('#storybook-root').waitFor({ state: 'attached' })
-  await waitForDomIdle(page)
-  await page.evaluate(() => document.fonts.ready)
-}
-
 const screenshot = { fullPage: true, animations: 'disabled' } as const
 
 test.describe('screenshot diff budget', () => {
   test('a popover cannot vanish inside the budget', async ({ page }) => {
     await page.goto(storyUrl('defaultOpen:!true'))
-    await settle(page)
+    await settleStory(page)
+
+    const trigger = page.getByRole('button', { name: 'Open popover' })
     await expect(
       page.locator('[role="dialog"]'),
       'the guard needs the popover open to capture its surface',
     ).toHaveCount(1)
+    const openTriggerBox = await trigger.boundingBox()
     await expect(page).toHaveScreenshot(guardBaseline, screenshot)
 
     await page.goto(storyUrl())
-    await settle(page)
+    await settleStory(page)
     await expect(page.locator('[role="dialog"]')).toHaveCount(0)
+    await expect(
+      trigger,
+      'the closed frame has to be the same story, or the diff below proves ' +
+        'nothing about the budget',
+    ).toBeVisible()
+    expect(await trigger.boundingBox()).toEqual(openTriggerBox)
+
     await expect(
       page,
       'the whole popover surface is gone, yet the diff fits inside ' +
