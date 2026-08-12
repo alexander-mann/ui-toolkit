@@ -8,7 +8,11 @@ the project is put together and the checks a change must pass.
 
 ## Prerequisites
 
-- **Node.js** 20+
+- **Node.js** 20 or newer — `.nvmrc` pins 22 (`nvm use` picks it up), and the
+  `engines` field in `package.json` declares the supported floor, which pnpm
+  warns about rather than enforcing. CI builds Storybook on 20, 22, 24, and the
+  newest Node release, since `.storybook/main.ts` runs under bare Node and is
+  sensitive to CJS/ESM changes between versions.
 - **pnpm** (the only supported package manager — see the `packageManager` field
   in `package.json`). Do not use npm or yarn for installs.
 
@@ -18,16 +22,17 @@ pnpm install
 
 ## Local development
 
-| Task                 | Command                                            |
-| -------------------- | -------------------------------------------------- |
-| Run Storybook        | `pnpm storybook` (http://localhost:6006)           |
-| Typecheck ("test")   | `pnpm test`                                        |
-| Lint                 | `pnpm lint` (autofix `pnpm lint:fix`)              |
-| Format               | `pnpm prettier`                                    |
-| Build the library    | `pnpm build`                                       |
-| Scaffold a component | `pnpm generate:component`                          |
-| Color-contrast gate  | `pnpm contrast`                                    |
-| Visual regression    | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh) |
+| Task                 | Command                                             |
+| -------------------- | --------------------------------------------------- |
+| Run Storybook        | `pnpm storybook` (http://localhost:6006)            |
+| Typecheck ("test")   | `pnpm test`                                         |
+| Lint                 | `pnpm lint` (autofix `pnpm lint:fix`)               |
+| Format               | `pnpm prettier`                                     |
+| Build the library    | `pnpm build`                                        |
+| Scaffold a component | `pnpm generate:component`                           |
+| Color-contrast gate  | `pnpm contrast`                                     |
+| Build Storybook      | `pnpm build-storybook` — required before `pnpm vrt` |
+| Visual regression    | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh)  |
 
 There is no unit-test framework — a passing `tsc` typecheck (`pnpm test`) is the
 test. Before opening a PR, make sure `pnpm test`, `pnpm lint`, and (for any

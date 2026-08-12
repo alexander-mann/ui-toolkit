@@ -4,7 +4,7 @@ Handle the full PR pipeline for the `@alexandermann/ui-toolkit` design system â€
 
 ## Context
 
-This repo uses conventional commits, GitHub PRs, and has two CI checks: `verify` (typecheck + lint) and `vrt` (Playwright visual regression). New components require VRT baseline generation.
+This repo uses conventional commits, GitHub PRs, and has three CI checks: `verify` (typecheck + lint), `storybook` (builds Storybook across a Node version matrix, so it reports one leg per version), and `vrt` (Playwright visual regression). New components require VRT baseline generation.
 
 This agent orchestrates the full shipping pipeline, including calling the `code-reviewer` and `a11y-auditor` agents as quality gates before committing.
 
@@ -120,7 +120,7 @@ This ensures the PR description stays accurate even when additional commits are 
 
 ### 10. Verify
 
-- Confirm both `verify` and `vrt` checks are green on the PR
+- Confirm the `verify`, `storybook`, and `vrt` checks are green on the PR. The `storybook` job reports one leg per Node version; its floating `current` leg is `continue-on-error`, so a failure there is advisory â€” investigate it, but it does not block the merge.
 - Report the PR URL with a summary of review/audit results
 - Remind the user to run `@version-manager` when they're ready to cut a release
 

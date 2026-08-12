@@ -1,6 +1,11 @@
+import { createRequire } from 'node:module'
+
 import type { StorybookConfig } from '@storybook/react-webpack5'
 import remarkGfm from 'remark-gfm'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+
+// Node 23+ type-strips this file as ESM, where the CJS `require` is undefined.
+const require = createRequire(import.meta.url)
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
