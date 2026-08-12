@@ -35,6 +35,21 @@ export default tseslint.config(
       'no-confusing-arrow': 'error',
       'no-extra-semi': 'error',
       'dot-notation': 'error',
+      // `export * as X from './m'` builds a namespace object, so when `m`'s
+      // value is a default export it reaches consumers as `X.default` rather
+      // than as `X`. Bundlers and Tailwind's config loader paper over that with
+      // default interop; plain ESM does not, so it fails only in consumer
+      // builds. Barrels here re-export named bindings with a plain `export *`,
+      // so nothing needs the namespace form — `eslint-disable-next-line` is the
+      // escape hatch if a genuine namespace re-export ever comes up.
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ExportAllDeclaration[exported]',
+          message:
+            'Avoid `export * as X` — it exposes a namespace object, not the module value. Give the module a named export and re-export it with `export *`.',
+        },
+      ],
     },
   },
   {
