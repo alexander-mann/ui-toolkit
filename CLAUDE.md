@@ -10,20 +10,20 @@ Guidance for AI agents working in this repo. Follow these conventions so changes
 
 Package manager is **pnpm** (do not use npm/yarn for installs).
 
-| Task                   | Command                                                                    |
-| ---------------------- | -------------------------------------------------------------------------- |
-| Typecheck (the "test") | `pnpm test` — runs `tsc --project tsconfig.json`, no emit failures allowed |
-| Lint                   | `pnpm lint` (autofix: `pnpm lint:fix`)                                     |
-| Format                 | `pnpm prettier`                                                            |
-| Build library          | `pnpm build`                                                               |
-| Run Storybook          | `pnpm storybook` (port 6006)                                               |
-| Scaffold a component   | `pnpm generate:component`                                                  |
-| Color-contrast gate    | `pnpm contrast` (WCAG AA — see Accessibility below)                        |
-| Tailwind preset gate   | `pnpm preset` (see Theming below)                                          |
-| Build Storybook        | `pnpm build-storybook` — required before `pnpm vrt`                        |
-| Visual regression      | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh baselines)               |
+| Task                   | Command                                                                                        |
+| ---------------------- | ---------------------------------------------------------------------------------------------- |
+| Typecheck (the "test") | `pnpm test` — typechecks `src/` (`tsconfig.json`) then the VRT harness (`tsconfig.tests.json`) |
+| Lint                   | `pnpm lint` (autofix: `pnpm lint:fix`)                                                         |
+| Format                 | `pnpm prettier`                                                                                |
+| Build library          | `pnpm build`                                                                                   |
+| Run Storybook          | `pnpm storybook` (port 6006)                                                                   |
+| Scaffold a component   | `pnpm generate:component`                                                                      |
+| Color-contrast gate    | `pnpm contrast` (WCAG AA — see Accessibility below)                                            |
+| Tailwind preset gate   | `pnpm preset` (see Theming below)                                                              |
+| Build Storybook        | `pnpm build-storybook` — required before `pnpm vrt`                                            |
+| Visual regression      | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh baselines)                                   |
 
-There is **no unit-test framework**. "Tests" = a clean `tsc` typecheck. Before finishing any change, run `pnpm test` and `pnpm lint` and make sure both pass.
+There is **no unit-test framework**. "Tests" = a clean `tsc` typecheck, over two projects: `tsconfig.json` for `src/`, then `tsconfig.tests.json` (`noEmit`) for the VRT harness — `tests/**` and `playwright.config.ts`. They can't be merged; `tsconfig.tests.json`'s header comment explains why. Coverage is still partial: `.storybook/`, `scripts/`, and the other root configs sit in neither project (issue #36), so a new file outside `src/` and `tests/` is typechecked by nothing until it's added to one of them. Before finishing any change, run `pnpm test` and `pnpm lint` and make sure both pass.
 
 ## Code style
 
