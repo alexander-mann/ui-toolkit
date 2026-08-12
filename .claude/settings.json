@@ -1,6 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
+    "//": "Commands that write to the repo or to GitHub — git commit, git push, git checkout, and every gh command that mutates — are intentionally absent from allow so they keep prompting for human approval, per CLAUDE.md's working agreements: don't commit, push, or bump versions unless asked. Read-only gh issue queries are allowlisted because repo-auditor opens every audit with them. git add is allowlisted but the whole-tree forms are denied, since release-manager.md requires staging only relevant files.",
     "allow": [
       "Bash(pnpm test)",
       "Bash(pnpm lint)",
@@ -8,6 +9,9 @@
       "Bash(pnpm prettier)",
       "Bash(pnpm build)",
       "Bash(pnpm build-storybook)",
+      "Bash(pnpm contrast)",
+      "Bash(pnpm preset)",
+      "Bash(pnpm vrt)",
       "Bash(pnpm generate:component)",
       "Bash(pnpm install)",
       "Bash(tsc:*)",
@@ -17,12 +21,36 @@
       "Bash(git log:*)",
       "Bash(git show:*)",
       "Bash(git add:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh run view:*)",
       "Bash(ls:*)",
       "Bash(cat:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
       "Bash(rg:*)"
     ],
-    "deny": ["Bash(pnpm npm-publish)", "Bash(npm publish:*)"]
+    "deny": [
+      "Bash(pnpm npm-publish)",
+      "Bash(npm publish:*)",
+      "Bash(git add -A)",
+      "Bash(git add --all)",
+      "Bash(git add .)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/warn-ungated-files.sh"
+          }
+        ]
+      }
+    ]
   }
 }

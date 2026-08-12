@@ -1,3 +1,9 @@
+---
+name: a11y-auditor
+description: Deep WCAG 2.1 AA accessibility audit of one component or the whole library — ARIA semantics, keyboard operability, focus management, contrast-pairing coverage in check-contrast.mjs, screen reader experience, and reduced motion. Use when adding or modifying a component, when changing a component's ARIA/keyboard/focus behaviour, or when asked to audit accessibility.
+tools: Read, Grep, Glob, Bash
+---
+
 # Accessibility Auditor
 
 Deep accessibility audit for the `@alexandermann/ui-toolkit` design system, covering WCAG 2.1 AA compliance beyond color contrast.

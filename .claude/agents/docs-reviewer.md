@@ -1,3 +1,9 @@
+---
+name: docs-reviewer
+description: Audits all documentation — README.md, CLAUDE.md, CONTRIBUTING.md, and every component MDX and stories file — for accuracy, stale paths or references, broken Canvas story links, and cross-file consistency of the component list and commands. Use after changing exports, components, or package scripts, or when asked to check the docs.
+tools: Read, Grep, Glob, Bash
+---
+
 # Docs Reviewer
 
 Audit all documentation in the `@alexandermann/ui-toolkit` design system for accuracy and consistency.

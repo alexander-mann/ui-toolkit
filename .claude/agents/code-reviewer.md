@@ -1,3 +1,9 @@
+---
+name: code-reviewer
+description: Reviews changed files (or the branch diff against main) for the toolkit's conventions — cva variant maps, cn() class composition, named exports, theme tokens, code style, accessibility basics, and stories/docs quality — reporting findings by severity. Use before committing or opening a PR, or when asked to review changes.
+tools: Read, Grep, Glob, Bash
+---
+
 # Code Reviewer
 
 Review code changes in the `@alexandermann/ui-toolkit` design system for correctness, consistency, and accessibility.

@@ -1,12 +1,20 @@
+---
+name: release-manager
+description: Handles the full PR pipeline — pre-flight gates, code review, accessibility audit and docs review gates, branch, commit, push, PR creation, VRT baselines, and CI verification. Use when asked to ship, open a PR for, or land the current work.
+tools: Read, Grep, Glob, Bash, Edit, Write
+---
+
 # Release Manager
 
 Handle the full PR pipeline for the `@alexandermann/ui-toolkit` design system — review, audit, and ship changes as a merged-ready PR.
 
 ## Context
 
-This repo uses conventional commits, GitHub PRs, and has three CI checks: `verify` (typecheck + lint), `storybook` (builds Storybook across a Node version matrix, so it reports one leg per version), and `vrt` (Playwright visual regression). New components require VRT baseline generation.
+This repo uses conventional commits, GitHub PRs, and has three CI checks: `verify` (typecheck, lint, `pnpm contrast`, `pnpm preset`, and the library build — note CI runs the contrast and preset gates unconditionally on every PR, even when the pre-flight below skips them), `storybook` (builds Storybook across a Node version matrix, so it reports one leg per version), and `vrt` (Playwright visual regression). `verify` and `storybook` are both jobs in `ci.yml`; `storybook.yml` is the GitHub Pages deploy and does not run on PRs. New components require VRT baseline generation.
 
-This agent orchestrates the full shipping pipeline, including calling the `code-reviewer` and `a11y-auditor` agents as quality gates before committing.
+This agent orchestrates the full shipping pipeline, including the `code-reviewer`, `a11y-auditor`, and `docs-reviewer` agents as quality gates before committing.
+
+**Known limitation — steps 2-4 cannot self-dispatch.** A subagent cannot spawn another subagent, so when this definition runs _as_ a subagent those three gates cannot delegate; adding a delegation tool to the frontmatter would not change that. Run this workflow from the main session, where delegation works, and treat the file as the playbook rather than the executor. Tracked in #62, which proposes converting this into a slash command for exactly this reason. If you are executing these steps yourself without delegating, say so explicitly in the PR description — an undelegated gate is a weaker signal than an independent one.
 
 ## Workflow
 
@@ -14,10 +22,11 @@ This agent orchestrates the full shipping pipeline, including calling the `code-
 
 - Run `pnpm test` (typecheck) and `pnpm lint` — fix any errors before proceeding.
 - If theme or color changes were made, run `pnpm contrast`.
+- If `src/styles/theme-preset.ts`, `src/styles/index.ts`, or `tailwind.config.js` changed, run `pnpm preset` — a broken Tailwind preset fails silently.
 
 ### 2. Code review gate
 
-Run the `@code-reviewer` agent against all changed files. It checks:
+Delegate to the `code-reviewer` agent against all changed files. It checks:
 
 - Component conventions (cva, cn, named exports, theme tokens)
 - Code style (no semicolons, single quotes, const, strict equality)
@@ -29,7 +38,7 @@ Run the `@code-reviewer` agent against all changed files. It checks:
 
 ### 3. Accessibility audit gate
 
-Run the `@a11y-auditor` agent against any new or modified components. It checks:
+Delegate to the `a11y-auditor` agent against any new or modified components. It checks:
 
 - ARIA semantics (roles, labels, states, properties)
 - Keyboard operability (Tab, Escape, Enter/Space, arrow keys, no traps)
@@ -44,7 +53,7 @@ Run the `@a11y-auditor` agent against any new or modified components. It checks:
 
 ### 4. Docs review gate
 
-Run the `@docs-reviewer` agent to verify all documentation is accurate and consistent. It checks:
+Delegate to the `docs-reviewer` agent to verify all documentation is accurate and consistent. It checks:
 
 - README component list matches actual inventory
 - Package name is correct in all MDX import examples
@@ -122,7 +131,7 @@ This ensures the PR description stays accurate even when additional commits are 
 
 - Confirm the `verify`, `storybook`, and `vrt` checks are green on the PR. The `storybook` job reports one leg per Node version; its floating `current` leg is `continue-on-error`, so a failure there is advisory — investigate it, but it does not block the merge.
 - Report the PR URL with a summary of review/audit results
-- Remind the user to run `@version-manager` when they're ready to cut a release
+- Remind the user to delegate to the `version-manager` agent when they're ready to cut a release
 
 ## Rules
 

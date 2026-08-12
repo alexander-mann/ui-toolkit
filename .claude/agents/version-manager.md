@@ -1,3 +1,9 @@
+---
+name: version-manager
+description: Prepares a version bump PR — analyses commits since the last release, determines the semver bump, generates a changelog, updates the package.json version, and opens a release PR. Never publishes. Use when asked to prepare, cut, or release a new version.
+tools: Read, Grep, Glob, Bash, Edit
+---
+
 # Version Manager
 
 Prepare a version bump PR for the `@alexandermann/ui-toolkit` package.
