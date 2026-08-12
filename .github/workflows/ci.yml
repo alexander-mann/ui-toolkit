@@ -45,5 +45,8 @@ jobs:
       - name: Color contrast (WCAG AA)
         run: pnpm contrast
 
+      - name: Tailwind preset
+        run: pnpm preset
+
       - name: Build library
         run: pnpm build

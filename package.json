@@ -32,6 +32,7 @@
     "pre-commit": "pretty-quick --staged",
     "prettier": "prettier --write .",
     "contrast": "node scripts/check-contrast.mjs",
+    "preset": "node scripts/check-preset.mjs",
     "vrt": "playwright test",
     "vrt:update": "playwright test --update-snapshots=all",
     "npm-publish": "pnpm build && npm publish --access public",
@@ -107,7 +108,7 @@
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "tailwindcss": "^3.4.0"
+    "tailwindcss": "^3.4.1"
   },
   "dependencies": {
     "@tailwindcss/container-queries": "^0.1.1",

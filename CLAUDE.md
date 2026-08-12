@@ -19,6 +19,7 @@ Package manager is **pnpm** (do not use npm/yarn for installs).
 | Run Storybook          | `pnpm storybook` (port 6006)                                                                   |
 | Scaffold a component   | `pnpm generate:component`                                                                      |
 | Color-contrast gate    | `pnpm contrast` (WCAG AA — see Accessibility below)                                            |
+| Tailwind preset gate   | `pnpm preset` (see Theming below)                                                              |
 | Build Storybook        | `pnpm build-storybook` — required before `pnpm vrt`                                            |
 | Visual regression      | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh baselines)                                   |
 
@@ -81,6 +82,11 @@ Prefer `pnpm generate:component` (plop) to create a new component — it generat
 Theme tokens live in `src/styles/` (`palette.ts` → raw colors, `theme.ts` → semantic light/dark mappings, `theme-preset.ts` / `theme-plugin.ts` → Tailwind integration). When adding a semantic color, add it to both `light` and `dark` in `theme.ts` and to the `ThemeColors` type in `src/types/theme.ts`.
 
 A token is public API, so adding or renaming one also means updating: the variable maps in `theme-plugin.ts` (both modes) and its `colors` extension, the swatch list in `src/docs/themes.mdx`, the token table in `src/docs/custom-theme.mdx`, the token count quoted in `src/docs/custom-theme.mdx` and `README.md`, and the `checks` array in `scripts/check-contrast.mjs`.
+
+`themePreset` is the fragile half of that integration, because every way of breaking it is silent: Tailwind accepts a malformed preset or an unrecognized `darkMode` value and just emits a build with the utilities missing. `pnpm preset` (`scripts/check-preset.mjs`) guards it by running a real Tailwind build over `tailwind.config.js` and asserting the `dark:` variant and both plugins actually come out — **run it after any change to `theme-preset.ts`, the `src/styles` barrel, or `tailwind.config.js`**, and add a check whenever the preset takes on another responsibility. Two things to know about the guards:
+
+- Keep the `satisfies Partial<Config>` annotation on `themePreset`. `pnpm preset` does catch a `darkMode` value Tailwind would ignore — such a value emits no `dark:` utilities at all — but the annotation rejects it at typecheck time instead. Note it only guards the _types of known keys_: `Config` carries an index signature, so a misspelled key like `darkModee` still compiles. `tailwind.config.js` gets no static check at all (outside tsconfig's `include`, ESLint-ignored, `@type` JSDoc unenforced), so `pnpm preset` is its only guard.
+- Keep `themePreset` a **named** export re-exported with a plain `export *`. This is the one regression `pnpm preset` **cannot** see: `export * as themePreset` hands consumers a namespace (`{ default: … }`), but Tailwind's config loader unwraps that via jiti's default interop, so the repo's own build looks fine while plain-ESM consumers get a preset that applies nothing. The ESLint `no-restricted-syntax` rule in `eslint.config.mjs` bans the syntax for this reason.
 
 ## Accessibility — color contrast (WCAG 2.1 AA)
 

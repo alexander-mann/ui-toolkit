@@ -34,7 +34,7 @@ npm install react react-dom tailwindcss
 | ------------- | ---------------------- |
 | `react`       | `^18.0.0 \|\| ^19.0.0` |
 | `react-dom`   | `^18.0.0 \|\| ^19.0.0` |
-| `tailwindcss` | `^3.4.0`               |
+| `tailwindcss` | `^3.4.1`               |
 
 ## Setup
 
@@ -125,7 +125,7 @@ function App() {
 ## Dark mode
 
 The theme ships light and dark palettes. Dark mode is activated by setting
-`data-mode="dark"` on any ancestor element (typically `<html>`):
+`data-mode="dark"` on the element or any ancestor (typically `<html>`):
 
 ```html
 <html data-mode="dark">
