@@ -24,7 +24,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "tsc --project tsconfig.json",
+    "test": "tsc --project tsconfig.json && tsc --project tsconfig.tests.json",
     "clean": "rm -rf dist",
     "build": "pnpm clean && tsc --project tsconfig.build.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "generate:component": "plop component",
@@ -35,6 +35,7 @@
     "pre-commit": "pretty-quick --staged",
     "prettier": "prettier --write .",
     "contrast": "node scripts/check-contrast.mjs",
+    "preset": "node scripts/check-preset.mjs",
     "vrt": "playwright test",
     "vrt:update": "playwright test --update-snapshots=all",
     "npm-publish": "pnpm build && npm publish --access public",
@@ -81,6 +82,7 @@
     "@storybook/test": "^8.6.17",
     "@storybook/theming": "^8.6.17",
     "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.13.5",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",
@@ -109,7 +111,7 @@
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "tailwindcss": "^3.4.0"
+    "tailwindcss": "^3.4.1"
   },
   "dependencies": {
     "@tailwindcss/container-queries": "^0.1.1",

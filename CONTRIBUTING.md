@@ -31,12 +31,20 @@ pnpm install
 | Build the library    | `pnpm build`                                        |
 | Scaffold a component | `pnpm generate:component`                           |
 | Color-contrast gate  | `pnpm contrast`                                     |
+| Tailwind preset gate | `pnpm preset`                                       |
 | Build Storybook      | `pnpm build-storybook` — required before `pnpm vrt` |
 | Visual regression    | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh)  |
 
 There is no unit-test framework — a passing `tsc` typecheck (`pnpm test`) is the
-test. Before opening a PR, make sure `pnpm test`, `pnpm lint`, and (for any
-color/theme change) `pnpm contrast` all pass.
+test. It runs two projects: `tsconfig.json` for `src/`, then
+`tsconfig.tests.json` (`noEmit`) for the Playwright harness in `tests/` and
+`playwright.config.ts`. They stay separate because `tsconfig.json` is
+`tsconfig.build.json`'s parent and its `rootDir` is `./src`, so widening it to
+cover `tests/` breaks `pnpm build` rather than just checking more files — see the
+comment in `tsconfig.tests.json` for the specifics. Before opening a PR, make
+sure `pnpm test`, `pnpm lint`, (for any color/theme change) `pnpm contrast`, and
+(for any change to `theme-preset.ts`, the `src/styles` barrel, or
+`tailwind.config.js`) `pnpm preset` all pass.
 
 ## Architecture
 
@@ -54,17 +62,22 @@ flowchart TD
   tokens --> components["components/*<br/>(cva + cn)"]
 ```
 
-Dark mode is driven by a `data-mode="dark"` attribute on an ancestor element;
-`theme-plugin.ts` defines the CSS variables for both modes and `theme-preset.ts`
-registers the `darkMode` selector.
+Dark mode is driven by a `data-mode="dark"` attribute on the element or an
+ancestor; `theme-plugin.ts` defines the CSS variables for both modes and
+`theme-preset.ts` registers the `darkMode` selector. `themePreset` must stay a
+named export; the `no-restricted-syntax` rule in `eslint.config.mjs` bans
+`export * as`, which `pnpm preset` cannot detect. See the notes in
+`theme-preset.ts`.
 
 ### Build pipeline
 
 There is no runtime bundler. TypeScript compiles `src/` and `tscpaths` rewrites
-the `@*` path aliases to relative paths in the output. Storybook stories and
-specs are excluded from the published build via `tsconfig.build.json`, so only
+the `@*` path aliases to relative paths in the output. Storybook stories are
+excluded from the published build via `tsconfig.build.json`, so only
 component/utility/style code lands in `dist/` (the `files` field limits the
-published tarball to `dist/`).
+published tarball to `dist/`). Specs never reach it at all — they live in
+`tests/`, which `tsconfig.json`'s `include` doesn't cover, so that config's
+`**/*.spec.ts` exclude matches nothing today.
 
 ```mermaid
 flowchart LR
