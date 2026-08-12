@@ -50,3 +50,50 @@ jobs:
 
       - name: Build library
         run: pnpm build
+
+  # The Storybook config runs under bare Node, so it is sensitive to the
+  # CJS/ESM churn across releases (see issue #34). Build it on the `engines`
+  # floor (20), the version `.nvmrc` pins (22), the active LTS (24), and the
+  # newest release, so a Node-only failure fails here instead of on a
+  # contributor's first command. `current` floats deliberately: a future Node
+  # breaking the config is exactly what this job exists to catch early.
+  # fail-fast is off so one leg breaking still reports the others. The floating
+  # leg is advisory: a new Node release breaking the config would otherwise go
+  # red on every open PR, including the PR that fixes it.
+  storybook:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.node-version == 'current' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['20', '22', '24', 'current']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-node${{ matrix.node-version }}-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm build-storybook

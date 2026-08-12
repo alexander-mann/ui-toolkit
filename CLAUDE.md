@@ -8,7 +8,9 @@ Guidance for AI agents working in this repo. Follow these conventions so changes
 
 ## Commands
 
-Package manager is **pnpm** (do not use npm/yarn for installs).
+Package manager is **pnpm** (do not use npm/yarn for installs). Node comes from `.nvmrc` (22); `engines` in `package.json` declares the supported floor (`>=20`), which pnpm only warns about.
+
+`.storybook/main.ts` must keep `const require = createRequire(import.meta.url)`. Node 23+ type-strips that file as ESM, where the CJS `require` does not exist, so a bare `require.resolve` breaks `pnpm storybook` and `pnpm build-storybook` outright. That file is invisible to both local gates — it sits in neither `pnpm test` project (the `.storybook/` gap in issue #36, below), and ESLint ignores `.storybook/` — so neither `pnpm test` nor `pnpm lint` will catch mistakes in it. Verify changes with an actual `pnpm build-storybook`; the `storybook` CI job builds it across a Node matrix to keep this from regressing.
 
 | Task                   | Command                                                                                        |
 | ---------------------- | ---------------------------------------------------------------------------------------------- |

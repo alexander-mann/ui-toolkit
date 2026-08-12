@@ -20,6 +20,9 @@
     "./package.json": "./package.json"
   },
   "packageManager": "pnpm@10.4.1",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "tsc --project tsconfig.json && tsc --project tsconfig.tests.json",
     "clean": "rm -rf dist",
