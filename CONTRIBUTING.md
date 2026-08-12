@@ -93,6 +93,12 @@ not commit locally-generated snapshots. After an intentional visual change, run
 the **Visual Regression** workflow manually with `update_baselines = true` to
 regenerate and commit them.
 
+If a diff fails, fix the component or refresh the baseline — don't widen the
+tolerance in `playwright.config.ts`. `maxDiffPixels` is a structural budget, and
+a light-on-light component costs surprisingly few pixels to appear or vanish
+(~1,500 on a 1280x720 frame), so a budget in the thousands hides real
+regressions. `tests/vrt/tolerance.spec.ts` fails if it grows that loose.
+
 ## Dependency overrides
 
 `package.json` has a `pnpm.overrides` block that force-upgrades a handful of

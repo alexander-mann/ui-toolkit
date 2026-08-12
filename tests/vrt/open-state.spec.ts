@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { waitForDomIdle } from './dom-idle'
+import { settleStory } from './dom-idle'
 
 /**
  * Guards the coverage itself. The stories below exist so visual regression
@@ -23,8 +23,7 @@ test.describe('stories that must be captured open', () => {
   for (const id of openStories) {
     test(`${id} has its surface open at capture time`, async ({ page }) => {
       await page.goto(`/iframe.html?id=${id}&viewMode=story`)
-      await page.locator('#storybook-root').waitFor({ state: 'attached' })
-      await waitForDomIdle(page)
+      await settleStory(page)
 
       const dialogs = await page.locator('[role="dialog"]').count()
       const diagnostics = await page.evaluate(() => {

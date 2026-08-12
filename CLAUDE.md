@@ -19,6 +19,7 @@ Package manager is **pnpm** (do not use npm/yarn for installs).
 | Run Storybook          | `pnpm storybook` (port 6006)                                               |
 | Scaffold a component   | `pnpm generate:component`                                                  |
 | Color-contrast gate    | `pnpm contrast` (WCAG AA — see Accessibility below)                        |
+| Build Storybook        | `pnpm build-storybook` — required before `pnpm vrt`                        |
 | Visual regression      | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh baselines)               |
 
 There is **no unit-test framework**. "Tests" = a clean `tsc` typecheck. Before finishing any change, run `pnpm test` and `pnpm lint` and make sure both pass.
@@ -92,10 +93,11 @@ This library must stay **WCAG 2.1 AA** compliant for color contrast, in both lig
 
 ## Visual regression testing
 
-Playwright snapshots every Storybook story (light + dark) and diffs against committed baselines in `tests/vrt/__screenshots__/`. Config: `playwright.config.ts`; test: `tests/vrt/stories.spec.ts` (the story list is read from the built Storybook index, so new components are covered automatically).
+Playwright snapshots every Storybook story (light + dark) and diffs against committed baselines in `tests/vrt/__screenshots__/`. Config: `playwright.config.ts`. `pnpm vrt` reads the story list from the built Storybook index — so new components are covered automatically, and you must run `pnpm build-storybook` first. Three specs live in `tests/vrt/`: `stories.spec.ts` takes the snapshots, and `open-state.spec.ts` + `tolerance.spec.ts` guard the coverage itself (see the last bullet).
 
 - Runs on every PR via `.github/workflows/vrt.yml`, inside the pinned `mcr.microsoft.com/playwright` container so rendering is stable. On a diff it fails and uploads an HTML report (expected/actual/diff) as a run artifact.
 - Baselines are generated **only in CI** (rendering is environment-sensitive) — do not commit locally-generated snapshots. After an **intentional** visual change, seed/refresh them by running the **Visual Regression** workflow with `update_baselines = true`; it regenerates and commits the PNGs. Keep the container tag in `vrt.yml` in sync with the `@playwright/test` version.
+- Tolerance is split across the two knobs Playwright gives you: `threshold` absorbs sub-pixel AA noise per pixel, `maxDiffPixels` stays a small structural budget. Don't quiet a failing diff by raising `maxDiffPixels`, or by swapping it back out for `maxDiffPixelRatio` — a budget in the thousands lets a whole light-on-light component appear or disappear unnoticed. Raising `threshold` spends the same headroom less visibly, since it shrinks every diff at once. `tests/vrt/tolerance.spec.ts` fails if the budget grows loose enough to swallow a vanishing popover; `tests/vrt/open-state.spec.ts` asserts the play-function stories are actually open at capture time.
 
 ## Publishing
 
