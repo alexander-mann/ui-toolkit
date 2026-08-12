@@ -21,7 +21,7 @@
   },
   "packageManager": "pnpm@10.4.1",
   "scripts": {
-    "test": "tsc --project tsconfig.json",
+    "test": "tsc --project tsconfig.json && tsc --project tsconfig.tests.json",
     "clean": "rm -rf dist",
     "build": "pnpm clean && tsc --project tsconfig.build.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "generate:component": "plop component",
@@ -78,6 +78,7 @@
     "@storybook/test": "^8.6.17",
     "@storybook/theming": "^8.6.17",
     "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.13.5",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "autoprefixer": "^10.4.20",

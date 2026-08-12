@@ -1,0 +1,24 @@
+{
+  // Typecheck-only project for the Playwright harness, which `tsconfig.json`
+  // reaches neither via `include` nor past its `exclude`. It can't simply be
+  // widened: it is `tsconfig.build.json`'s parent, so pulling `tests/` in fails
+  // the build with TS6059 against `rootDir: ./src` and writes `.js` beside the
+  // sources — and relaxing `rootDir` to settle that moves `dist/index.js` to
+  // `dist/src/`, breaking the `main` field, while emitting `tests/` into `dist/`.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    // Without this the files below are all TS6059 against the inherited
+    // `rootDir: ./src`.
+    "rootDir": ".",
+    // Pinned so the gate is hermetic. Left unset, tsc sweeps every ambient
+    // `@types` package it can find up the directory tree, so a developer's
+    // home-directory `node_modules` decides whether `process` resolves.
+    "types": ["node"]
+  },
+  // Overrides the parent's `exclude`, which drops `**/*.spec.ts` — inheriting it
+  // would silently reduce this project to `dom-idle.ts` + the config, and still
+  // exit 0.
+  "exclude": ["node_modules", "dist"],
+  "include": ["tests/**/*.ts", "tests/**/*.tsx", "playwright.config.ts"]
+}
