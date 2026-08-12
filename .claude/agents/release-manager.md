@@ -96,7 +96,7 @@ Delegate to the `docs-reviewer` agent to verify all documentation is accurate an
   - Title: matches the commit message first line
   - Body: Summary (bullet points), Review & audit results, Files changed table, Test plan (checklist)
   - Include any warnings from the code review or a11y audit in the PR description
-  - Always include the `🤖 Generated with Claude Code` footer
+  - Do **not** add a "Generated with Claude Code" footer or a `Co-Authored-By` trailer. `attribution` in `.claude/settings.json` sets both to `""` deliberately; adding one by hand puts back what that setting removes.
 
 ### 8. VRT baselines (if needed)
 
@@ -123,7 +123,7 @@ After all commits are pushed (including any VRT baseline or fix-up commits), upd
 - Run `git log main..HEAD --oneline` and `git diff main...HEAD --stat` to see everything included.
 - Update via `gh pr edit <number> --title "..." --body "..."`.
 - The title should summarize the overall change, not just the first commit.
-- The body should include: Summary (bullet points covering all commits), Review & audit results, Files changed table, Test plan (checklist), and the `🤖 Generated with Claude Code` footer.
+- The body should include: Summary (bullet points covering all commits), Review & audit results, Files changed table, and Test plan (checklist). No attribution footer — see step 7.
 
 This ensures the PR description stays accurate even when additional commits are added after the PR was opened.
 
