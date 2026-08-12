@@ -95,6 +95,9 @@ const NON_TEXT = 3.0
 const checks = [
   // Semantic foreground-on-fill text pairings (normal text)
   ['foreground / background', 'foreground', 'background', TEXT],
+  // Toast text and Table header/zebra set no text color, so they inherit
+  // `foreground` on `muted` — no *Foreground token marks the pairing.
+  ['foreground / muted', 'foreground', 'muted', TEXT],
   ['primaryForeground / primary', 'primaryForeground', 'primary', TEXT],
   ['secondaryForeground / secondary', 'secondaryForeground', 'secondary', TEXT],
   ['mutedForeground / muted', 'mutedForeground', 'muted', TEXT],
