@@ -31,8 +31,8 @@ before/after on each entry.
 ### Changed
 
 - **Breaking** `ToastPosition` values are kebab-case:
-  `position="BottomRight"` → `position="bottom-right"`. Key access changes with
-  them — `ToastPosition.BottomRight` → `ToastPosition['bottom-right']` (#60)
+  `position="BottomRight"` → `position="bottom-right"`. Keys are camelCase —
+  `ToastPosition.BottomRight` → `ToastPosition.bottomRight` (#60)
 - **Breaking** `ToastVariant` keys are lowercase: `ToastVariant.Success` →
   `ToastVariant.success`. Values are unchanged (#60)
 - **Breaking** `SortDirection` is an `as const` object instead of a TypeScript

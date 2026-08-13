@@ -13,10 +13,10 @@ export const ToastVariant = {
 } as const
 
 export const ToastPosition = {
-  'top-left': 'top-left',
-  'top-right': 'top-right',
-  'bottom-left': 'bottom-left',
-  'bottom-right': 'bottom-right',
+  topLeft: 'top-left',
+  topRight: 'top-right',
+  bottomLeft: 'bottom-left',
+  bottomRight: 'bottom-right',
 } as const
 
 export type ToastVariantValue = (typeof ToastVariant)[keyof typeof ToastVariant]
@@ -60,7 +60,7 @@ let toaster: { addToast: (toast: Omit<Toast, 'id'>) => void } | null = null
 export const Toaster = ({
   usePortal,
   duration = 5000,
-  position = ToastPosition['bottom-right'],
+  position = ToastPosition.bottomRight,
   maxToasts = 3,
 }: ToastProps) => {
   const [toasts, setToasts] = useState<Toast[]>([])
@@ -105,23 +105,23 @@ export const Toaster = ({
   }
 
   const positionClass = {
-    [ToastPosition['top-left']]: 'fixed top-4 left-4 flex-col',
-    [ToastPosition['top-right']]: 'fixed top-4 right-4 flex-col',
-    [ToastPosition['bottom-left']]: 'fixed bottom-4 left-4 flex-col-reverse',
-    [ToastPosition['bottom-right']]: 'fixed bottom-4 right-4 flex-col-reverse',
+    [ToastPosition.topLeft]: 'fixed top-4 left-4 flex-col',
+    [ToastPosition.topRight]: 'fixed top-4 right-4 flex-col',
+    [ToastPosition.bottomLeft]: 'fixed bottom-4 left-4 flex-col-reverse',
+    [ToastPosition.bottomRight]: 'fixed bottom-4 right-4 flex-col-reverse',
   }
 
   const marginStyle = {
-    [ToastPosition['top-left']]: { marginBottom: '-10%' },
-    [ToastPosition['top-right']]: { marginBottom: '-10%' },
-    [ToastPosition['bottom-left']]: { marginTop: '-10%' },
-    [ToastPosition['bottom-right']]: { marginTop: '-10%' },
+    [ToastPosition.topLeft]: { marginBottom: '-10%' },
+    [ToastPosition.topRight]: { marginBottom: '-10%' },
+    [ToastPosition.bottomLeft]: { marginTop: '-10%' },
+    [ToastPosition.bottomRight]: { marginTop: '-10%' },
   }
 
   const getEntryAnimation = (position: ToastPositionValue) => {
     switch (position) {
-      case ToastPosition['top-left']:
-      case ToastPosition['bottom-left']:
+      case ToastPosition.topLeft:
+      case ToastPosition.bottomLeft:
         return 'animate-slide-in-from-left'
       default:
         return 'animate-slide-in-from-right'
@@ -130,8 +130,8 @@ export const Toaster = ({
 
   const getExitAnimation = (position: ToastPositionValue) => {
     switch (position) {
-      case ToastPosition['top-left']:
-      case ToastPosition['bottom-left']:
+      case ToastPosition.topLeft:
+      case ToastPosition.bottomLeft:
         return 'animate-slide-out-to-left'
       default:
         return 'animate-slide-out-to-right'

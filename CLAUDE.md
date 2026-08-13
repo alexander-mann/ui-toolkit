@@ -56,6 +56,7 @@ The component's public exports are re-exported from `src/components/index.ts` (o
 Follow the pattern in `src/components/button/button.tsx`:
 
 - Style variants use **`class-variance-authority` (`cva`)**. Define variant/size option maps as plain exported `const` objects (e.g. `ButtonVariant`, `ButtonSize`) and key the `cva` variants off them so consumers can reference named values.
+- Option map casing: **values** are always lowercase, kebab-case if multi-word (`'bottom-right'`) — the value is the string a consumer types as a prop, so it has to be the guessable one. **Keys** match the value for single words (`default: 'default'`) and camelCase it for multi-word (`bottomRight: 'bottom-right'`), so the map is always reachable with dot access. Never PascalCase either half.
 - Props interface extends the relevant native HTML attributes **and** `VariantProps<typeof xVariants>`.
 - Render with `className={cn(xVariants({ variant, size, className }))}` so consumer-supplied `className` merges/overrides correctly.
 - Use named exports (`export { Button }`), not default exports.
