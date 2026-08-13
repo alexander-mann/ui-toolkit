@@ -2,7 +2,7 @@ import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { SortDirection, Table } from '..'
+import { SortDirection, Table, type SortDirectionValue } from '..'
 
 const meta: Meta<typeof Table> = {
   title: 'Components/Table',
@@ -58,7 +58,7 @@ export const Sortable: Story = {
       }
     }, [props.rows, props.defaultSort])
 
-    const handleSort = (label: string, direction: SortDirection) => {
+    const handleSort = (label: string, direction: SortDirectionValue) => {
       const columnIndex =
         props.headers?.findIndex((header) => header.label === label) ?? 0
 

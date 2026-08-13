@@ -6,5 +6,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function colorMix(color: string, opacity?: number) {
-  return `color-mix(in srgb, var(--${color}) calc(${opacity || '<alpha-value>'} * 100%), transparent)`
+  return `color-mix(in srgb, var(--${color}) calc(${opacity ?? '<alpha-value>'} * 100%), transparent)`
 }

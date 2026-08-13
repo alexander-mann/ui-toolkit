@@ -40,6 +40,11 @@ const meta: Meta<typeof Select> = {
       description: 'The error message to display',
       control: 'text',
     },
+    placeholder: {
+      description:
+        'Text for a leading empty option. Omit it to render no placeholder',
+      control: 'text',
+    },
     disabled: {
       description: 'Whether the select is disabled',
       table: {
@@ -62,6 +67,7 @@ export const BasicUsage: Story = {
     hasError: false,
     errorMessage: 'Please select a country',
     disabled: false,
+    placeholder: 'Select an option',
     options: [
       { label: 'United States', value: 'us' },
       { label: 'Canada', value: 'ca' },

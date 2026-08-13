@@ -9,7 +9,7 @@ export const RadioGroupVariant = {
   lg: 'lg',
 }
 
-const radioGroupVariants = cva('flex flex-col gap-2', {
+export const radioGroupVariants = cva('flex flex-col gap-2', {
   variants: {
     variant: {
       [RadioGroupVariant.default]: '[&_label]:text-sm [&_legend]:text-sm',
