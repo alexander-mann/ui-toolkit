@@ -322,9 +322,9 @@ check(
 // --- An agent definition must not run a slash command ---
 //
 // The same constraint in a second costume: a subagent has no more access to
-// `/release` than it does to another subagent, so an agent told to run one is an
+// `/ship` than it does to another subagent, so an agent told to run one is an
 // agent that silently skips the step. Telling the *user* to run it is fine and
-// is how `/release` hands off to `/version`, so a mention with "user" in the
+// is how `/ship` hands off to `/release`, so a mention with "user" in the
 // preceding clause is exempt.
 
 const badSlashRuns = []

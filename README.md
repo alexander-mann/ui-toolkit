@@ -176,8 +176,8 @@ allowlist so each one surfaces for approval.
 
 | Command    | What it does                                                                                                                                           |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/release` | Runs the full PR pipeline: pre-flight gates, then the code review, a11y audit, and docs review gates, then branch, commit, push, PR, VRT baselines, CI |
-| `/version` | Prepares a version bump PR — analyzes commits since the last release, determines the semver bump, generates a changelog, and opens a release PR        |
+| `/ship`    | Runs the full PR pipeline: pre-flight gates, then the code review, a11y audit, and docs review gates, then branch, commit, push, PR, VRT baselines, CI |
+| `/release` | Prepares a version bump PR — analyzes commits since the last release, determines the semver bump, generates a changelog, and opens a release PR        |
 
 ### Example usage
 
@@ -189,8 +189,8 @@ Use the code-reviewer agent to review my changes
 Use the a11y-auditor agent to audit the dialog component
 Use the docs-reviewer agent to audit all documentation
 Use the repo-auditor agent to find problems that aren't filed yet
+/ship
 /release
-/version
 ```
 
 ### The rest of the harness
@@ -222,7 +222,7 @@ an agent automatically, so it should say _when_ to use the agent, not just what 
 does.
 
 A command's frontmatter carries `description`, and its name comes from the
-filename — `.claude/commands/release.md` is `/release`. Note it uses
+filename — `.claude/commands/ship.md` is `/ship`. Note it uses
 `allowed-tools`, not `tools`; a `tools` key in a command restricts nothing.
 
 See the existing definitions for the pattern, or refer to the Claude Code docs on
