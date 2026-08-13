@@ -36,6 +36,7 @@
     "prettier": "prettier --write .",
     "contrast": "node scripts/check-contrast.mjs",
     "preset": "node scripts/check-preset.mjs",
+    "agents": "node scripts/check-agents.mjs",
     "vrt": "playwright test",
     "vrt:update": "playwright test --update-snapshots=all",
     "npm-publish": "pnpm build && npm publish --access public",

@@ -48,6 +48,11 @@ jobs:
       - name: Tailwind preset
         run: pnpm preset
 
+      # `.claude/` is in neither tsc project and is outside ESLint's scope, so
+      # this is the only thing that checks it. See issue #62.
+      - name: Agent harness
+        run: pnpm agents
+
       - name: Build library
         run: pnpm build
 

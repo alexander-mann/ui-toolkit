@@ -1,20 +1,18 @@
 ---
-name: release-manager
-description: Handles the full PR pipeline — pre-flight gates, code review, accessibility audit and docs review gates, branch, commit, push, PR creation, VRT baselines, and CI verification. Use when asked to ship, open a PR for, or land the current work.
-tools: Read, Grep, Glob, Bash, Edit, Write
+description: Ship the current work as a PR — pre-flight gates, the code review / a11y / docs review gates, branch, commit, push, PR creation, VRT baselines, and CI verification.
 ---
 
-# Release Manager
+# Release
 
-Handle the full PR pipeline for the `@alexandermann/ui-toolkit` design system — review, audit, and ship changes as a merged-ready PR.
+Handle the full PR pipeline for the `@alexandermann/ui-toolkit` design system — review, audit, and ship the current work as a merge-ready PR.
 
 ## Context
 
-This repo uses conventional commits, GitHub PRs, and has three CI checks: `verify` (typecheck, lint, `pnpm contrast`, `pnpm preset`, and the library build — note CI runs the contrast and preset gates unconditionally on every PR, even when the pre-flight below skips them), `storybook` (builds Storybook across a Node version matrix, so it reports one leg per version), and `vrt` (Playwright visual regression). `verify` and `storybook` are both jobs in `ci.yml`; `storybook.yml` is the GitHub Pages deploy and does not run on PRs. New components require VRT baseline generation.
+This repo uses conventional commits, GitHub PRs, and has three CI checks: `verify` (typecheck, lint, `pnpm contrast`, `pnpm preset`, `pnpm agents`, and the library build — note CI runs the contrast, preset, and agent gates unconditionally on every PR, even when the pre-flight below skips them), `storybook` (builds Storybook across a Node version matrix, so it reports one leg per version), and `vrt` (Playwright visual regression). `verify` and `storybook` are both jobs in `ci.yml`; `storybook.yml` is the GitHub Pages deploy and does not run on PRs. New components require VRT baseline generation.
 
-This agent orchestrates the full shipping pipeline, including the `code-reviewer`, `a11y-auditor`, and `docs-reviewer` agents as quality gates before committing.
+**This is a command, not an agent, and that is the point.** Steps 2–4 dispatch the `code-reviewer`, `a11y-auditor`, and `docs-reviewer` subagents. A subagent cannot spawn another subagent, so as an agent definition this pipeline could not run its own quality gates — it would either skip them or quietly perform them itself, losing the independent perspective that made them separate agents. A command runs in the main session, where dispatching subagents works, and where the commit/push/`gh` steps still surface for human approval because `.claude/settings.json` deliberately leaves them off the allowlist. See issue #62.
 
-**Known limitation — steps 2-4 cannot self-dispatch.** A subagent cannot spawn another subagent, so when this definition runs _as_ a subagent those three gates cannot delegate; adding a delegation tool to the frontmatter would not change that. Run this workflow from the main session, where delegation works, and treat the file as the playbook rather than the executor. Tracked in #62, which proposes converting this into a slash command for exactly this reason. If you are executing these steps yourself without delegating, say so explicitly in the PR description — an undelegated gate is a weaker signal than an independent one.
+Each gate is an independent read of the work. Do not pre-empt a gate by reviewing the diff yourself first and dispatching a subagent to confirm your conclusion — dispatch it cold and let it find what it finds.
 
 ## Workflow
 
@@ -23,22 +21,19 @@ This agent orchestrates the full shipping pipeline, including the `code-reviewer
 - Run `pnpm test` (typecheck) and `pnpm lint` — fix any errors before proceeding.
 - If theme or color changes were made, run `pnpm contrast`.
 - If `src/styles/theme-preset.ts`, `src/styles/index.ts`, or `tailwind.config.js` changed, run `pnpm preset` — a broken Tailwind preset fails silently.
+- If anything under `.storybook/` changed, run `pnpm build-storybook` — it is in neither tsc project and is ESLint-ignored, so a real build is the only thing that checks it.
+- If anything under `.claude/` changed, run `pnpm agents`.
+- If a component MDX or a plop template changed, read it. `.prettierignore` excludes `*.mdx` and `plop-templates/`, so no gate reaches either.
 
 ### 2. Code review gate
 
-Delegate to the `code-reviewer` agent against all changed files. It checks:
-
-- Component conventions (cva, cn, named exports, theme tokens)
-- Code style (no semicolons, single quotes, const, strict equality)
-- Accessibility basics (ARIA, keyboard, contrast)
-- Stories & docs (correct package name, valid story references)
-- General quality (no debug statements, no unused code, cleanup in effects)
+Use the `code-reviewer` agent to review all changed files. It checks component conventions (cva, `cn`, named exports, theme tokens), the conventions no gate enforces, accessibility basics, stories and docs, and general quality. Style is not in its remit — `pnpm lint` already owns that, and step 1 has run it.
 
 **If the review returns NEEDS CHANGES**: fix all errors before continuing. Warnings are acceptable but should be noted in the PR description.
 
 ### 3. Accessibility audit gate
 
-Delegate to the `a11y-auditor` agent against any new or modified components. It checks:
+Use the `a11y-auditor` agent to audit any new or modified components. It checks:
 
 - ARIA semantics (roles, labels, states, properties)
 - Keyboard operability (Tab, Escape, Enter/Space, arrow keys, no traps)
@@ -53,17 +48,18 @@ Delegate to the `a11y-auditor` agent against any new or modified components. It 
 
 ### 4. Docs review gate
 
-Delegate to the `docs-reviewer` agent to verify all documentation is accurate and consistent. It checks:
+Use the `docs-reviewer` agent to verify all documentation is accurate and consistent. It checks:
 
 - README component list matches actual inventory
 - Package name is correct in all MDX import examples
 - All `<Canvas of={Stories.X} />` references point to existing story exports
 - CLAUDE.md and CONTRIBUTING.md are current with the codebase
+- `.claude/` — agent and command definitions match the harness they describe
 - No stale file paths, commands, or references
 
 **If issues are found**: fix errors before continuing. This catches problems like wrong package names in MDX examples or missing components from the README list.
 
-**Skip this step** for changes that don't touch documentation, components, or exports.
+**Skip this step** for changes that don't touch documentation, components, exports, or `.claude/`.
 
 ### 5. Branch
 
@@ -131,7 +127,7 @@ This ensures the PR description stays accurate even when additional commits are 
 
 - Confirm the `verify`, `storybook`, and `vrt` checks are green on the PR. The `storybook` job reports one leg per Node version; its floating `current` leg is `continue-on-error`, so a failure there is advisory — investigate it, but it does not block the merge.
 - Report the PR URL with a summary of review/audit results
-- Remind the user to delegate to the `version-manager` agent when they're ready to cut a release
+- Remind the user to run `/version` when they're ready to cut a release
 
 ## Rules
 

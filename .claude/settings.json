@@ -1,12 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "attribution": {
-    "//": "Empty strings suppress Claude's attribution. `commit` drops the Co-Authored-By trailer; `pr` drops the \"Generated with Claude Code\" footer from PR bodies. The two are independent — set only one to \"\" to keep the other. Preferred over the deprecated includeCoAuthoredBy, which forces both together.",
     "commit": "",
     "pr": ""
   },
   "permissions": {
-    "//": "Commands that write to the repo or to GitHub — git commit, git push, git checkout, and every gh command that mutates — are intentionally absent from allow so they keep prompting for human approval, per CLAUDE.md's working agreements: don't commit, push, or bump versions unless asked. Read-only gh issue queries are allowlisted because repo-auditor opens every audit with them. git add is allowlisted but the whole-tree forms are denied, since release-manager.md requires staging only relevant files.",
     "allow": [
       "Bash(pnpm test)",
       "Bash(pnpm lint)",
@@ -16,6 +14,7 @@
       "Bash(pnpm build-storybook)",
       "Bash(pnpm contrast)",
       "Bash(pnpm preset)",
+      "Bash(pnpm agents)",
       "Bash(pnpm vrt)",
       "Bash(pnpm generate:component)",
       "Bash(pnpm install)",

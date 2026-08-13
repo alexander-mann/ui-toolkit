@@ -10,7 +10,7 @@ Whole-repo audit of `@alexandermann/ui-toolkit` for defects that pass every exis
 
 ## Context
 
-This agent exists because the repo's other review agents both work from an anchor: `code-reviewer` reviews a diff, `a11y-auditor` walks a WCAG checklist over a component. Neither looks at code that has been sitting on `main` passing `pnpm test`, `pnpm lint`, `pnpm contrast`, `pnpm preset`, and `pnpm vrt` for months. That is where latent defects live.
+This agent exists because the repo's other review agents both work from an anchor: `code-reviewer` reviews a diff, `a11y-auditor` walks a WCAG checklist over a component. Neither looks at code that has been sitting on `main` passing `pnpm test`, `pnpm lint`, `pnpm contrast`, `pnpm preset`, `pnpm agents`, and `pnpm vrt` for months. That is where latent defects live.
 
 Two rules define the work, and both are load-bearing:
 
@@ -25,16 +25,16 @@ A full audit is expensive. It is an on-request or periodic activity, not a per-P
 ### 1. Establish the baseline
 
 - `gh issue list --state all --limit 100 --json number,title,state` — then read the body of every open issue with `gh issue view <n>`. Anything already filed is out of scope; note the issue number instead of re-reporting.
-- Run the four static gates and confirm they pass, so findings are additions rather than pre-existing breakage:
+- Run the five static gates and confirm they pass, so findings are additions rather than pre-existing breakage:
   ```
-  pnpm test && pnpm lint && pnpm contrast && pnpm preset
+  pnpm test && pnpm lint && pnpm contrast && pnpm preset && pnpm agents
   ```
   `pnpm vrt` is deliberately not in that list: it needs `pnpm build-storybook` first, and baselines are CI-generated. Read the committed PNGs instead — see below.
 - Read CLAUDE.md, which documents where the gates do not reach. Two distinctions matter, and conflating them produces wrong findings:
 
   - **Neither gate** — `.storybook/`, `tailwind.config.js`, and `plop-templates/` are in no `tsc` project _and_ in ESLint's `ignores`. Nothing checks them; #55 came from here.
   - **ESLint but no `tsc`** — `scripts/` and `plopfile.mjs` are linted but typechecked by nothing (#36).
-  - `.claude/` has no `tsc`, ESLint, or CI coverage at all — only Prettier reaches its `.md`/`.json` files, and the hook script not even that (#62).
+  - **`pnpm agents` but no `tsc` or ESLint** — `.claude/` is checked only by `scripts/check-agents.mjs`, which covers frontmatter validity and referential accuracy and nothing else. Whether a workflow step is possible or current is unchecked; `warn-ungated-files.sh` is reached by no gate at all, not even Prettier (#62).
 
   The no-gate paths are the highest-yield places to look, because nothing else is looking.
 
@@ -139,7 +139,7 @@ Report disproved suspicions too. An audit that only reports confirmations over-r
 ```
 ## Repo Audit
 
-Gates at time of audit: test PASS / lint PASS / contrast PASS / preset PASS
+Gates at time of audit: test PASS / lint PASS / contrast PASS / preset PASS / agents PASS
 Existing issues cross-referenced: #NN, #NN
 
 ### Verified findings
