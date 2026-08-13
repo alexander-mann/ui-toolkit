@@ -75,7 +75,8 @@ There is no runtime bundler. TypeScript compiles `src/` and `tscpaths` rewrites
 the `@*` path aliases to relative paths in the output. Storybook stories are
 excluded from the published build via `tsconfig.build.json`, so only
 component/utility/style code lands in `dist/` (the `files` field limits the
-published tarball to `dist/`). Specs never reach it at all — they live in
+published tarball to `dist/` plus `CHANGELOG.md`, alongside the `README.md` and
+`LICENSE` npm always includes). Specs never reach it at all — they live in
 `tests/`, which `tsconfig.json`'s `include` doesn't cover, so that config's
 `**/*.spec.ts` exclude matches nothing today.
 
@@ -133,7 +134,32 @@ only fix is a major bump of a package that a build tool pins to an older major
 PRs as the upstream tools ship compatible releases. Remove an override once the
 direct dependency includes the fix on its own.
 
+## Changelog
+
+Any change to the **public API** — an added, removed, or renamed export, a
+changed prop interface, a changed default, or a behavior change a consumer would
+notice — gets an entry under `## [Unreleased]` in
+[CHANGELOG.md](CHANGELOG.md), in the same PR. Internal refactors, docs, CI, and
+tooling changes don't need one.
+
+The format is [Keep a Changelog](https://keepachangelog.com/en/1.1.0/): group
+entries under Added / Changed / Deprecated / Removed / Fixed / Security, and
+reference the issue or PR number. Prefix anything breaking with **Breaking** and
+show the before/after, since that line is what a consumer upgrading will read:
+
+```markdown
+- **Breaking** `ToastPosition` values are kebab-case:
+  `position="BottomRight"` → `position="bottom-right"` (#60)
+```
+
+The package is pre-1.0, so breaking changes ship in a minor bump (`0.x.0`).
+Releasing the `Unreleased` section into a version heading is the release PR's
+job, not yours — see below.
+
 ## Publishing
 
 Version bumps and `npm publish` happen via `pnpm npm-publish`. Do **not** publish
 or bump the version unless explicitly asked.
+
+The release PR renames `## [Unreleased]` to the new version, opens a fresh empty
+`Unreleased`, and bumps `package.json` — those two files and nothing else.

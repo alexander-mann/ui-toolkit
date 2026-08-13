@@ -107,12 +107,21 @@ Playwright snapshots every Storybook story (light + dark) and diffs against comm
 - Baselines are generated **only in CI** (rendering is environment-sensitive) — do not commit locally-generated snapshots. After an **intentional** visual change, seed/refresh them by running the **Visual Regression** workflow with `update_baselines = true`; it regenerates and commits the PNGs. Keep the container tag in `vrt.yml` in sync with the `@playwright/test` version.
 - Tolerance is split across the two knobs Playwright gives you: `threshold` absorbs sub-pixel AA noise per pixel, `maxDiffPixels` stays a small structural budget. Don't quiet a failing diff by raising `maxDiffPixels`, or by swapping it back out for `maxDiffPixelRatio` — a budget in the thousands lets a whole light-on-light component appear or disappear unnoticed. Raising `threshold` spends the same headroom less visibly, since it shrinks every diff at once. `tests/vrt/tolerance.spec.ts` fails if the budget grows loose enough to swallow a vanishing popover; `tests/vrt/open-state.spec.ts` asserts the play-function stories are actually open at capture time.
 
+## Changelog
+
+`CHANGELOG.md` ([Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format) records every **public API** change: added/removed/renamed exports, changed prop interfaces, changed defaults, and consumer-visible behavior changes. Add the entry under `## [Unreleased]` in the same change that makes it — the file is written as work lands, not reconstructed from commits at release time. Internal refactors, docs, CI, and tooling don't need one.
+
+Prefix breaking entries with **Breaking** and show the before/after inline (`` `ToastPosition.BottomRight` → `ToastPosition['bottom-right']` ``); that line is the whole migration note a consumer gets. The package is pre-1.0, so breaking changes ship in a minor bump (`0.x.0`). Nothing enforces this — no gate parses `CHANGELOG.md` — so the `version-manager` agent reconciles `Unreleased` against the commit log at release time and fills in what was missed.
+
 ## Publishing
 
 Version bumps and `npm publish` are done via `pnpm npm-publish` (builds then publishes with public access). Do **not** publish or bump the version unless explicitly asked.
+
+Cutting a release renames `## [Unreleased]` to the new version heading, opens a fresh empty `Unreleased`, and bumps `package.json` — that PR touches those two files and nothing else. `CHANGELOG.md` is in the `files` array, so it ships in the published tarball.
 
 ## Working agreements
 
 - Don't commit, push, or bump versions unless asked.
 - Match the surrounding style; keep comment density low (the codebase is largely comment-free).
 - After edits, verify with `pnpm test` + `pnpm lint` before reporting done.
+- A public API change also needs a `CHANGELOG.md` entry under `Unreleased`.
