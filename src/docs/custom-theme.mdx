@@ -254,9 +254,11 @@ changes:
 
 - **Normal text ≥ 4.5:1** — each `*Foreground` token against its own fill
   (`primaryForeground` on `primary`, `cardForeground` on `card`, …), plus
-  `foreground` and `mutedForeground` on `background`, `mutedForeground` on
-  `muted`, and colored text: `destructive` on `background` and on `card`, and
-  `primary` on `background`.
+  `foreground` and `mutedForeground` on `background`, `foreground` on `muted`,
+  and colored text: `destructive` on `background` and on `card`, and `primary`
+  on `background`. That `foreground` on `muted` pairing is the easy one to
+  miss: `Toast` message text and the `Table` header and `/50` zebra rows set no
+  text color of their own, so they inherit `foreground` from the page.
 - **UI components & meaningful icons ≥ 3:1** — `border` on `background`, the
   status tokens (`success`, `warning`, `info`, `destructive`) on `muted` where
   toasts render their icons and borders, and both switch pairings: the thumb

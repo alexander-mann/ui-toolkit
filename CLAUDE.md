@@ -97,7 +97,9 @@ This library must stay **WCAG 2.1 AA** compliant for color contrast, in both lig
 - **Normal text** ≥ 4.5:1, **large text** ≥ 3:1 (1.4.3).
 - **UI components & meaningful icons** (input/error borders, status icons) ≥ 3:1 (1.4.11).
 
-`pnpm contrast` (`scripts/check-contrast.mjs`) enforces this — it parses `palette.ts` + `theme.ts` and checks every foreground/background pairing the components render, exiting non-zero on any failure. **Run it after any change to `theme.ts`, `palette.ts`, or a component's color classes**, and add a new pairing to the `checks` array whenever a component introduces a new token combination. Prefer fixing contrast by picking a compliant shade **within the same hue family** so the design language is preserved.
+`pnpm contrast` (`scripts/check-contrast.mjs`) enforces this — it parses `palette.ts` + `theme.ts` and checks every foreground/background pairing the components render, exiting non-zero on any failure. **Run it after any change to `theme.ts`, `palette.ts`, or a component's color classes**, and add a new pairing to the `checks` array whenever a component introduces a new token combination — also add it to the "Keep it accessible" list in `src/docs/custom-theme.mdx`, which tells theme authors it mirrors that array exactly. Prefer fixing contrast by picking a compliant shade **within the same hue family** so the design language is preserved.
+
+Two known limits of the gate. It resolves tokens to flat hexes with no alpha compositing, so no `/NN` opacity utility is checkable — `hover:bg-destructive/80` and the rest are invisible to it. And it only checks pairings someone remembered to add; a surface that inherits `foreground` instead of setting a `*-foreground` token (issue #61) or a class that compiles to nothing (`border-input`, issue #43) slips through silently.
 
 ## Visual regression testing
 
