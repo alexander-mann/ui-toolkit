@@ -32,6 +32,7 @@ pnpm install
 | Scaffold a component | `pnpm generate:component`                           |
 | Color-contrast gate  | `pnpm contrast`                                     |
 | Tailwind preset gate | `pnpm preset`                                       |
+| Agent harness gate   | `pnpm agents`                                       |
 | Build Storybook      | `pnpm build-storybook` — required before `pnpm vrt` |
 | Visual regression    | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh)  |
 
@@ -42,9 +43,10 @@ test. It runs two projects: `tsconfig.json` for `src/`, then
 `tsconfig.build.json`'s parent and its `rootDir` is `./src`, so widening it to
 cover `tests/` breaks `pnpm build` rather than just checking more files — see the
 comment in `tsconfig.tests.json` for the specifics. Before opening a PR, make
-sure `pnpm test`, `pnpm lint`, (for any color/theme change) `pnpm contrast`, and
-(for any change to `theme-preset.ts`, the `src/styles` barrel, or
-`tailwind.config.js`) `pnpm preset` all pass.
+sure `pnpm test`, `pnpm lint`, (for any color/theme change) `pnpm contrast`, (for
+any change to `theme-preset.ts`, the `src/styles` barrel, or
+`tailwind.config.js`) `pnpm preset`, and (for any change under `.claude/`)
+`pnpm agents` all pass. CI runs all five unconditionally.
 
 ## Architecture
 
@@ -122,8 +124,9 @@ regressions. `tests/vrt/tolerance.spec.ts` fails if it grows that loose.
 ## Dependency overrides
 
 `package.json` has a `pnpm.overrides` block that force-upgrades a handful of
-**transitive, dev-only** packages (pulled in by Storybook, plop, webpack, and
-tscpaths) to versions that clear known advisories. None of these are part of the
+**dev-only** packages (mostly transitive, pulled in by Storybook, plop, webpack,
+and tscpaths; `postcss` and `webpack` are also direct `devDependencies`) to
+versions that clear known advisories. None of these are part of the
 published runtime — the shipped `dependencies` are `class-variance-authority`,
 `clsx`, `tailwind-merge`, `lucide-react`, `@tailwindcss/container-queries`, and
 `tailwindcss-animate`.

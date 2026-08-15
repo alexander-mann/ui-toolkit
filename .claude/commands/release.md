@@ -1,16 +1,16 @@
 ---
-name: version-manager
-description: Prepares a version bump PR — analyses commits since the last release, determines the semver bump, generates a changelog, updates the package.json version, and opens a release PR. Never publishes. Use when asked to prepare, cut, or release a new version.
-tools: Read, Grep, Glob, Bash, Edit
+description: Prepare a version bump PR — analyse commits since the last release, determine the semver bump, generate a changelog, update package.json, and open a release PR. Never publishes.
 ---
 
-# Version Manager
+# Release
 
 Prepare a version bump PR for the `@alexandermann/ui-toolkit` package.
 
 ## Context
 
-This is an npm-published package (`pnpm npm-publish` builds and publishes). Versions follow semver. This agent handles the mechanical work of determining the bump, updating `package.json`, and opening a dedicated version bump PR. It does **not** publish — that is a separate manual step.
+This is an npm-published package (`pnpm npm-publish` builds and publishes). Versions follow semver. This command handles the mechanical work of determining the bump, updating `package.json`, and opening a dedicated version bump PR. It does **not** publish — that is a separate manual step.
+
+It is a command rather than an agent for the same reason `/ship` is: the commit, push, and `gh pr create` steps are deliberately left off the allowlist in `.claude/settings.json` so they surface for human approval, which only happens in the main session. See issue #62.
 
 ## Workflow
 
@@ -31,11 +31,12 @@ This is an npm-published package (`pnpm npm-publish` builds and publishes). Vers
   - Removed or renamed exports (search `git diff <last-version-commit>..HEAD -- src/components/index.ts src/index.ts`)
   - Changed prop interfaces
   - Changed component behavior
+  - A change to `Theme` or `ThemeColors` in `src/types/theme.ts` — they are re-exported from `src/styles/theme.ts`, so they are public API
 
 ### 3. Determine the semver bump
 
 - **patch** (0.0.x) — only fixes, docs, refactors, chores — no new public API
-- **minor** (0.x.0) — new components, new exports, new props/variants — backwards compatible
+- **minor** (0.x.0) — new components, new exports, new props/variants, new theme tokens — backwards compatible
 - **major** (x.0.0) — removed/renamed exports, changed prop interfaces, breaking behavior
 
 ### 4. Generate changelog summary
@@ -66,6 +67,7 @@ Only include sections that have entries. Use PR numbers where available.
 - Push and open a PR with:
   - Title: `chore(release): v<new-version>`
   - Body: the changelog summary, the previous version, the bump rationale, and instructions for publishing after merge
+  - No attribution footer — `attribution` in `.claude/settings.json` sets both the commit trailer and the PR footer to `""` deliberately
 
 Example PR body:
 
@@ -91,11 +93,10 @@ Example PR body:
 ### Publishing
 
 After merging this PR, publish by running:
+
 \`\`\`
 pnpm npm-publish
 \`\`\`
-
-🤖 Generated with [Claude Code](https://claude.com/claude-code)
 ```
 
 ## Rules

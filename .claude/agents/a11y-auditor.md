@@ -59,7 +59,8 @@ For each component in scope, read the `.tsx` file and check against all sections
 
 ### 6. Color contrast (verify `check-contrast.mjs` coverage)
 
-- [ ] Every foreground/background pairing the component renders is listed in the `checks` array in `scripts/check-contrast.mjs`
+- [ ] Run `pnpm contrast` — it must pass before any finding here is yours rather than pre-existing
+- [ ] Every foreground/background pairing the component renders is listed in the `checks` array in `scripts/check-contrast.mjs`. The gate is green on pairings it was never told about, so an omission passes by absence — reuse the luminance and ratio helpers in that script to compute any pairing the array misses
 - [ ] Normal text meets 4.5:1 ratio (WCAG 1.4.3)
 - [ ] Large text (18px+ or 14px+ bold) meets 3:1 ratio
 - [ ] UI components and meaningful icons meet 3:1 ratio (WCAG 1.4.11)
