@@ -22,6 +22,7 @@ Package manager is **pnpm** (do not use npm/yarn for installs). Node comes from 
 | Scaffold a component   | `pnpm generate:component`                                                                      |
 | Color-contrast gate    | `pnpm contrast` (WCAG AA — see Accessibility below)                                            |
 | Tailwind preset gate   | `pnpm preset` (see Theming below)                                                              |
+| Agent harness gate     | `pnpm agents` (see Agent harness below)                                                        |
 | Build Storybook        | `pnpm build-storybook` — required before `pnpm vrt`                                            |
 | Visual regression      | `pnpm vrt` (compare) / `pnpm vrt:update` (refresh baselines)                                   |
 
@@ -34,7 +35,7 @@ Enforced by ESLint (`typescript-eslint` strict + stylistic) and Prettier. Key ru
 - **No semicolons**, single quotes, 2-space indent, print width 80.
 - Use `===`/`!==` (`eqeqeq`), prefer `const`, no `var`, prefer template literals over concatenation, object shorthand, `curly` braces always.
 - Imports are auto-sorted: `react` first, then third-party, then relative — separated by blank lines. Don't hand-order; let Prettier do it.
-- A Husky pre-commit hook runs `pretty-quick --staged`, so staged files are auto-formatted on commit.
+- A Husky pre-commit hook runs `pretty-quick --staged`, so staged files are auto-formatted on commit — except those in `.prettierignore`, which excludes `*.mdx` and `plop-templates/`. Component MDX docs are formatted by nothing and linted by nothing; they need reading.
 
 ## Path aliases
 
@@ -55,7 +56,7 @@ The component's public exports are re-exported from `src/components/index.ts` (o
 
 Follow the pattern in `src/components/button/button.tsx`:
 
-- Style variants use **`class-variance-authority` (`cva`)**. Define variant/size option maps as plain exported `const` objects (e.g. `ButtonVariant`, `ButtonSize`) and key the `cva` variants off them so consumers can reference named values.
+- Style variants use **`class-variance-authority` (`cva`)**. Define variant/size option maps as plain exported `const` objects (e.g. `ButtonVariant`, `ButtonSize`) and key the `cva` variants off them so consumers can reference named values. **End each map with `as const`.** Without it the values widen to `string`, `cva` infers `variant?: string`, and every invalid value compiles — the defect #42 tracks across 11 of 12 components, invisible to every gate.
 - Option map casing: **values** are always lowercase, kebab-case if multi-word (`'bottom-right'`) — the value is the string a consumer types as a prop, so it has to be the guessable one. **Keys** match the value for single words (`default: 'default'`) and camelCase it for multi-word (`bottomRight: 'bottom-right'`), so the map is always reachable with dot access. Never PascalCase either half.
 - Props interface extends the relevant native HTML attributes **and** `VariantProps<typeof xVariants>`.
 - Render with `className={cn(xVariants({ variant, size, className }))}` so consumer-supplied `className` merges/overrides correctly.
@@ -98,7 +99,9 @@ This library must stay **WCAG 2.1 AA** compliant for color contrast, in both lig
 - **Normal text** ≥ 4.5:1, **large text** ≥ 3:1 (1.4.3).
 - **UI components & meaningful icons** (input/error borders, status icons) ≥ 3:1 (1.4.11).
 
-`pnpm contrast` (`scripts/check-contrast.mjs`) enforces this — it parses `palette.ts` + `theme.ts` and checks every foreground/background pairing the components render, exiting non-zero on any failure. **Run it after any change to `theme.ts`, `palette.ts`, or a component's color classes**, and add a new pairing to the `checks` array whenever a component introduces a new token combination. Prefer fixing contrast by picking a compliant shade **within the same hue family** so the design language is preserved.
+`pnpm contrast` (`scripts/check-contrast.mjs`) enforces this — it parses `palette.ts` + `theme.ts` and checks every foreground/background pairing the components render, exiting non-zero on any failure. **Run it after any change to `theme.ts`, `palette.ts`, or a component's color classes**, and add a new pairing to the `checks` array whenever a component introduces a new token combination — also add it to the "Keep it accessible" list in `src/docs/custom-theme.mdx`, which tells theme authors it mirrors that array exactly. Prefer fixing contrast by picking a compliant shade **within the same hue family** so the design language is preserved.
+
+Two known limits of the gate. It resolves tokens to flat hexes with no alpha compositing, so no `/NN` opacity utility is checkable — `hover:bg-destructive/80` and the rest are invisible to it. And it only checks pairings someone remembered to add; a surface that inherits `foreground` instead of setting a `*-foreground` token (issue #61) or a class that compiles to nothing (`border-input`, issue #43) slips through silently.
 
 ## Visual regression testing
 
@@ -112,13 +115,36 @@ Playwright snapshots every Storybook story (light + dark) and diffs against comm
 
 `CHANGELOG.md` ([Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format) records every **public API** change: added/removed/renamed exports, changed prop interfaces, changed defaults, and consumer-visible behavior changes. Add the entry under `## [Unreleased]` in the same change that makes it — the file is written as work lands, not reconstructed from commits at release time. Internal refactors, docs, CI, and tooling don't need one.
 
-Prefix breaking entries with **Breaking** and show the before/after inline (`` `ToastPosition.BottomRight` → `ToastPosition['bottom-right']` ``); that line is the whole migration note a consumer gets. The package is pre-1.0, so breaking changes ship in a minor bump (`0.x.0`). Nothing enforces this — no gate parses `CHANGELOG.md` — so the `version-manager` agent reconciles `Unreleased` against the commit log at release time and fills in what was missed.
+Prefix breaking entries with **Breaking** and show the before/after inline (`` `ToastPosition.BottomRight` → `ToastPosition.bottomRight` ``); that line is the whole migration note a consumer gets. The package is pre-1.0, so breaking changes ship in a minor bump (`0.x.0`). Nothing enforces this — no gate parses `CHANGELOG.md`, and `pnpm agents` does not look at it — so `/release` reconciles `Unreleased` against the commit log at release time and fills in what was missed.
 
 ## Publishing
 
 Version bumps and `npm publish` are done via `pnpm npm-publish` (builds then publishes with public access). Do **not** publish or bump the version unless explicitly asked.
 
 Cutting a release renames `## [Unreleased]` to the new version heading, opens a fresh empty `Unreleased`, and bumps `package.json` — that PR touches those two files and nothing else. `CHANGELOG.md` is in the `files` array, so it ships in the published tarball.
+
+## Agent harness
+
+`.claude/` holds the Claude Code harness. The roster lives in one place — the agent and command tables in `README.md` — so don't restate it here; this section is the conventions behind it.
+
+**Agents and commands are not interchangeable.** `.claude/agents/*.md` are scoped, mostly read-only reviewers; `.claude/commands/*.md` are orchestrators. A subagent cannot spawn another subagent, so a workflow whose job is to coordinate other agents **must** be a command — as an agent definition it would silently skip its own gates or perform them itself, losing the independent read that made them separate agents. That is why `/ship` and `/release` are commands and not the `release-manager` / `version-manager` agents they used to be (issue #62). An agent may name another agent to describe a boundary; it may not instruct delegation.
+
+Writing a definition:
+
+- **Frontmatter is required.** A file without it is not registered at all, and nothing announces that — six agents in this directory shipped that way and none of them ever ran.
+- An agent's `name` must match its filename stem. This is a repo convention rather than a platform rule, and `pnpm agents` enforces it.
+- `description` drives automatic selection, so write it to say _when_ to use the agent, not just what it does.
+- Keep `tools` as tight as the workflow allows, so a read-only agent is read-only by construction rather than by promise. Commands use `allowed-tools`; a `tools` key in a command restricts nothing.
+- Never write `@agent-name`. `@` is a file reference, not a dispatch — it makes Claude read the definition instead of running it. Name the agent in plain language ("use the code-reviewer agent to …").
+
+`.claude/` sits outside every static gate — it is in neither tsc project and ESLint doesn't see it, the same class of gap as `.storybook/` and the root configs (issue #36). `pnpm agents` (`scripts/check-agents.mjs`) is the one thing that checks it: frontmatter validity, `name`-matches-stem, every cited `pnpm` script / file path / agent name / slash command resolving, no `@agent-name` syntax, no agent delegating to an agent, and the README tables matching the files on disk. Run it after any change under `.claude/`. It cannot check whether a workflow step is _sensible_ — that is `docs-reviewer`'s remit, which covers `.claude/` for this reason.
+
+Two things about `.claude/settings.json`, which is JSON and so can hold no comments of its own — the schema sets `additionalProperties: false` on both objects below, so a `"//"` pseudo-comment inside either one draws an editor warning:
+
+- **`permissions`.** Commands that write to the repo or to GitHub — `git commit`, `git push`, `git checkout`, and every mutating `gh` command — are intentionally absent from `allow` so they keep prompting for approval, per the working agreements below. Read-only `gh issue` queries are allowlisted because `repo-auditor` opens every audit with them. `git add` is allowlisted but the whole-tree forms are denied, since `/ship` requires staging only relevant files.
+- **`attribution`.** Empty strings suppress Claude's attribution: `commit` drops the `Co-Authored-By` trailer, `pr` drops the "Generated with Claude Code" footer from PR bodies. The two are independent — set only one to `""` to keep the other. Preferred over the deprecated `includeCoAuthoredBy`, which forces both together. Don't add either back by hand in a commit message or PR body.
+
+The `PostToolUse` hook (`.claude/hooks/warn-ungated-files.sh`) fires on `Edit|Write` to `.storybook/` or `tailwind.config.js` and prints a reminder that neither is covered by `pnpm test` or `pnpm lint`, so each needs a real build to verify. It exits 2 because that is the only code that reliably puts stderr in front of the model, so a successful edit is followed by what the transcript renders as an error — expected, not a failure. Its matcher is `Edit|Write`, so a write performed through Bash (heredoc, `sed -i`, `cp`) bypasses it entirely.
 
 ## Working agreements
 

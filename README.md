@@ -141,58 +141,93 @@ Accordion · Badge · Button · Card · Checkbox · Dialog · Divider · Input �
 Label · Popover · RadioGroup · Select · Switch · Table · Tabs · Textarea ·
 Toast · Tooltip
 
-## AI agents
+## AI agent harness
 
-This repo ships custom [Claude Code](https://claude.com/claude-code) agents in
-`.claude/agents/` that encode the toolkit's conventions and automate common
-workflows. Claude picks one automatically when a task matches the agent's
-`description`; to request a specific agent, ask for it by name in plain language
-("use the code-reviewer agent to review my changes"). `/agents` lists and
-manages the agents available in a session.
+This repo ships a custom [Claude Code](https://claude.com/claude-code) harness in
+`.claude/` that encodes the toolkit's conventions and automates common workflows.
+It comes in two halves, and the split is deliberate: **agents** are scoped,
+mostly read-only reviewers that answer a question, and **commands** are
+orchestrators that drive a multi-step pipeline, dispatching those agents where a
+step calls for one. A subagent cannot spawn another subagent, so anything that
+may need to coordinate other agents — or to reach a tool only the main session
+has — has to be a command — see
+[issue #62](https://github.com/alexander-mann/ui-toolkit/issues/62).
 
-The same directory configures the rest of the harness:
-[`.claude/settings.json`](.claude/settings.json) allowlists the project's gate
-commands and denies publishing, and
-[`.claude/hooks/warn-ungated-files.sh`](.claude/hooks/warn-ungated-files.sh)
-prints a reminder when `.storybook/main.ts` or `tailwind.config.js` is edited —
-neither file is covered by `pnpm test` or `pnpm lint`, so each needs a build to
-verify it.
+### Agents
 
-| Agent               | What it does                                                                                                                                                        |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `component-planner` | Plans a new component — researches existing patterns, designs the API (CVA variants, props, a11y), and outputs a structured implementation plan                     |
-| `code-reviewer`     | Reviews changes against a comprehensive checklist: component conventions, code style, WCAG AA accessibility, stories/docs quality                                   |
-| `docs-reviewer`     | Audits all documentation (MDX, README, CLAUDE.md, CONTRIBUTING.md) for accuracy, stale references, and cross-file consistency                                       |
-| `release-manager`   | Handles the full PR pipeline: pre-flight checks, code review, a11y audit & docs review gates, branch, commit, push, PR creation, VRT baselines, and CI verification |
-| `a11y-auditor`      | Deep WCAG 2.1 AA accessibility audit — ARIA semantics, keyboard operability, focus management, contrast coverage, and screen reader experience                      |
-| `version-manager`   | Prepares version bump PRs — analyzes commits since last release, determines semver bump, generates changelog, and opens a release PR                                |
-| `repo-auditor`      | Whole-repo audit for latent defects with no issue filed yet — sweeps the code, gates, package shape, CI, and docs, proving each finding by running it               |
+Claude picks an agent automatically when a task matches its `description`; to
+request a specific one, ask for it by name in plain language ("use the
+code-reviewer agent to review my changes"). `/agents` lists and manages the
+agents available in a session.
+
+| Agent               | What it does                                                                                                                                          |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `component-planner` | Plans a new component — researches existing patterns, designs the API (CVA variants, props, a11y), and outputs a structured implementation plan       |
+| `code-reviewer`     | Reviews changes against component conventions, the conventions no gate enforces, accessibility basics, and stories/docs quality                       |
+| `a11y-auditor`      | Deep WCAG 2.1 AA accessibility audit — ARIA semantics, keyboard operability, focus management, contrast coverage, and screen reader experience        |
+| `docs-reviewer`     | Audits all documentation (MDX, README, CLAUDE.md, CONTRIBUTING.md, `.claude/`) for accuracy, stale references, and cross-file consistency             |
+| `repo-auditor`      | Whole-repo audit for latent defects with no issue filed yet — sweeps the code, gates, package shape, CI, and docs, proving each finding by running it |
+
+### Commands
+
+Commands are invoked by name at the prompt. Both of these end in a commit, a
+push, and a `gh` call, which `.claude/settings.json` deliberately leaves off the
+allowlist so each one surfaces for approval.
+
+| Command    | What it does                                                                                                                                           |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/ship`    | Runs the full PR pipeline: pre-flight gates, then the code review, a11y audit, and docs review gates, then branch, commit, push, PR, VRT baselines, CI |
+| `/release` | Prepares a version bump PR — analyzes commits since the last release, determines the semver bump, generates a changelog, and opens a release PR        |
 
 ### Example usage
 
-Each of these is a plain request typed at the Claude Code prompt:
+Each of these is typed at the Claude Code prompt:
 
 ```
 Use the component-planner agent to plan a Breadcrumbs component
 Use the code-reviewer agent to review my changes
-Use the docs-reviewer agent to audit all documentation
-Use the release-manager agent to ship these changes
 Use the a11y-auditor agent to audit the dialog component
-Use the version-manager agent to prepare a release
+Use the docs-reviewer agent to audit all documentation
 Use the repo-auditor agent to find problems that aren't filed yet
+/ship
+/release
 ```
 
-### Writing your own agents
+### The rest of the harness
 
-Agent definitions are Markdown files in `.claude/agents/`. Each file is YAML
-frontmatter followed by a markdown body defining the agent's purpose, workflow
-steps, and output format. The frontmatter carries `name` (by convention matching
-the filename without its extension), `description`, and an optional `tools` list
-limiting what the agent may use. Without frontmatter the file is not registered
-as an agent at all. `description` is what Claude matches a task against when
-selecting an agent automatically, so it should say _when_ to use the agent, not
-just what it does. See the existing agents for the pattern, or refer to the
-[Claude Code docs](https://docs.anthropic.com/en/docs/claude-code/sub-agents).
+[`.claude/settings.json`](.claude/settings.json) allowlists the project's gate
+commands and denies publishing, and
+[`.claude/hooks/warn-ungated-files.sh`](.claude/hooks/warn-ungated-files.sh)
+prints a reminder when anything in `.storybook/` or `tailwind.config.js` is
+edited — neither is covered by `pnpm test` or `pnpm lint`, so each needs a build
+to verify it. `pnpm agents` ([`scripts/check-agents.mjs`](scripts/check-agents.mjs))
+is the gate over the directory itself: it checks that every definition has valid
+frontmatter, that every command, path, and agent name cited in one resolves, and
+that the two tables above match the files on disk.
+
+### Writing your own
+
+Both kinds are Markdown files — agents in `.claude/agents/`, commands in
+`.claude/commands/` — with YAML frontmatter followed by a body defining the
+purpose, workflow steps, and output format. **Without frontmatter the file is not
+registered at all**, which fails silently.
+
+An agent's frontmatter carries `name` (matching the filename stem, which is this
+repo's convention rather than a platform rule — `pnpm agents` enforces it),
+`description`, and an optional `tools` list limiting what it may use. Keep that
+list as tight as the workflow allows: a planner or reviewer that never runs
+anything should not carry `Bash`, so its read-only property is enforced rather
+than promised. `description` is what Claude matches a task against when selecting
+an agent automatically, so it should say _when_ to use the agent, not just what it
+does.
+
+A command's frontmatter carries `description`, and its name comes from the
+filename — `.claude/commands/ship.md` is `/ship`. Note it uses
+`allowed-tools`, not `tools`; a `tools` key in a command restricts nothing.
+
+See the existing definitions for the pattern, or refer to the Claude Code docs on
+[subagents](https://code.claude.com/docs/en/sub-agents) and
+[slash commands](https://code.claude.com/docs/en/slash-commands).
 
 ## Documentation
 
