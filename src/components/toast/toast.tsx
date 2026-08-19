@@ -6,20 +6,23 @@ import { AlertTriangleIcon, CircleCheck, CircleX, InfoIcon } from 'lucide-react'
 import { createPortal } from 'react-dom'
 
 export const ToastVariant = {
-  Success: 'success',
-  Error: 'error',
-  Info: 'info',
-  Warning: 'warning',
+  success: 'success',
+  error: 'error',
+  info: 'info',
+  warning: 'warning',
 } as const
 
 export const ToastPosition = {
-  TopLeft: 'TopLeft',
-  TopRight: 'TopRight',
-  BottomLeft: 'BottomLeft',
-  BottomRight: 'BottomRight',
+  topLeft: 'top-left',
+  topRight: 'top-right',
+  bottomLeft: 'bottom-left',
+  bottomRight: 'bottom-right',
 } as const
 
-type ToastVariantValue = (typeof ToastVariant)[keyof typeof ToastVariant]
+export type ToastVariantValue = (typeof ToastVariant)[keyof typeof ToastVariant]
+
+export type ToastPositionValue =
+  (typeof ToastPosition)[keyof typeof ToastPosition]
 
 interface Toast {
   id: string
@@ -28,19 +31,19 @@ interface Toast {
   dismissing?: boolean
 }
 
-const toastVariants = cva(
+export const toastVariants = cva(
   'min-w-[300px] p-3 rounded-lg shadow-xl relative border bg-muted flex items-center gap-2 [&>svg]:size-5 [&>svg]:shrink-0 max-w-40',
   {
     variants: {
       variant: {
-        [ToastVariant.Success]: 'border-success [&>svg]:text-success',
-        [ToastVariant.Error]: 'border-destructive [&>svg]:text-destructive',
-        [ToastVariant.Info]: 'border-info [&>svg]:text-info',
-        [ToastVariant.Warning]: 'border-warning [&>svg]:text-warning',
+        [ToastVariant.success]: 'border-success [&>svg]:text-success',
+        [ToastVariant.error]: 'border-destructive [&>svg]:text-destructive',
+        [ToastVariant.info]: 'border-info [&>svg]:text-info',
+        [ToastVariant.warning]: 'border-warning [&>svg]:text-warning',
       },
     },
     defaultVariants: {
-      variant: ToastVariant.Info,
+      variant: ToastVariant.info,
     },
   },
 )
@@ -48,7 +51,7 @@ const toastVariants = cva(
 interface ToastProps {
   usePortal?: boolean
   duration?: number
-  position?: (typeof ToastPosition)[keyof typeof ToastPosition]
+  position?: ToastPositionValue
   maxToasts?: number
 }
 
@@ -57,7 +60,7 @@ let toaster: { addToast: (toast: Omit<Toast, 'id'>) => void } | null = null
 export const Toaster = ({
   usePortal,
   duration = 5000,
-  position = ToastPosition.BottomRight,
+  position = ToastPosition.bottomRight,
   maxToasts = 3,
 }: ToastProps) => {
   const [toasts, setToasts] = useState<Toast[]>([])
@@ -90,45 +93,45 @@ export const Toaster = ({
 
   const determineIcon = (variant: ToastVariantValue) => {
     switch (variant) {
-      case ToastVariant.Success:
+      case ToastVariant.success:
         return <CircleCheck />
-      case ToastVariant.Error:
+      case ToastVariant.error:
         return <CircleX />
-      case ToastVariant.Info:
+      case ToastVariant.info:
         return <InfoIcon />
-      case ToastVariant.Warning:
+      case ToastVariant.warning:
         return <AlertTriangleIcon />
     }
   }
 
   const positionClass = {
-    [ToastPosition.TopLeft]: 'fixed top-4 left-4 flex-col',
-    [ToastPosition.TopRight]: 'fixed top-4 right-4 flex-col',
-    [ToastPosition.BottomLeft]: 'fixed bottom-4 left-4 flex-col-reverse',
-    [ToastPosition.BottomRight]: 'fixed bottom-4 right-4 flex-col-reverse',
+    [ToastPosition.topLeft]: 'fixed top-4 left-4 flex-col',
+    [ToastPosition.topRight]: 'fixed top-4 right-4 flex-col',
+    [ToastPosition.bottomLeft]: 'fixed bottom-4 left-4 flex-col-reverse',
+    [ToastPosition.bottomRight]: 'fixed bottom-4 right-4 flex-col-reverse',
   }
 
   const marginStyle = {
-    [ToastPosition.TopLeft]: { marginBottom: '-10%' },
-    [ToastPosition.TopRight]: { marginBottom: '-10%' },
-    [ToastPosition.BottomLeft]: { marginTop: '-10%' },
-    [ToastPosition.BottomRight]: { marginTop: '-10%' },
+    [ToastPosition.topLeft]: { marginBottom: '-10%' },
+    [ToastPosition.topRight]: { marginBottom: '-10%' },
+    [ToastPosition.bottomLeft]: { marginTop: '-10%' },
+    [ToastPosition.bottomRight]: { marginTop: '-10%' },
   }
 
-  const getEntryAnimation = (position: keyof typeof ToastPosition) => {
+  const getEntryAnimation = (position: ToastPositionValue) => {
     switch (position) {
-      case ToastPosition.TopLeft:
-      case ToastPosition.BottomLeft:
+      case ToastPosition.topLeft:
+      case ToastPosition.bottomLeft:
         return 'animate-slide-in-from-left'
       default:
         return 'animate-slide-in-from-right'
     }
   }
 
-  const getExitAnimation = (position: keyof typeof ToastPosition) => {
+  const getExitAnimation = (position: ToastPositionValue) => {
     switch (position) {
-      case ToastPosition.TopLeft:
-      case ToastPosition.BottomLeft:
+      case ToastPosition.topLeft:
+      case ToastPosition.bottomLeft:
         return 'animate-slide-out-to-left'
       default:
         return 'animate-slide-out-to-right'
@@ -167,8 +170,8 @@ const handleAddToast = (message: string, variant: ToastVariantValue) => {
 }
 
 export const toast = {
-  success: (message: string) => handleAddToast(message, ToastVariant.Success),
-  error: (message: string) => handleAddToast(message, ToastVariant.Error),
-  info: (message: string) => handleAddToast(message, ToastVariant.Info),
-  warning: (message: string) => handleAddToast(message, ToastVariant.Warning),
+  success: (message: string) => handleAddToast(message, ToastVariant.success),
+  error: (message: string) => handleAddToast(message, ToastVariant.error),
+  info: (message: string) => handleAddToast(message, ToastVariant.info),
+  warning: (message: string) => handleAddToast(message, ToastVariant.warning),
 }

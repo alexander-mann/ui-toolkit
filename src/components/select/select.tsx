@@ -9,7 +9,7 @@ export const SelectVariant = {
   lg: 'lg',
 }
 
-const selectVariants = cva('flex flex-col gap-1', {
+export const selectVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [SelectVariant.default]: '[&>label]:text-sm [&>select]:text-sm',
@@ -31,6 +31,11 @@ interface SelectProps
   errorMessage?: string
   options: { label: string; value: string }[]
   required?: boolean
+  /**
+   * Text for a leading empty option. Omit it and no placeholder is rendered —
+   * the option carries user-facing copy, so the component can't supply one.
+   */
+  placeholder?: string
 }
 
 const Select = ({
@@ -42,6 +47,7 @@ const Select = ({
   options,
   variant,
   required,
+  placeholder,
   ...props
 }: SelectProps) => {
   return (
@@ -59,8 +65,7 @@ const Select = ({
         )}
         {...props}
       >
-        <option value="">Select an option</option>
-        <hr />
+        {placeholder && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

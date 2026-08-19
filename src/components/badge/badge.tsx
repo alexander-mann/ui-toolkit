@@ -17,7 +17,7 @@ export const BadgeSize = {
   lg: 'lg',
 }
 
-const badgeVariants = cva(
+export const badgeVariants = cva(
   'inline-flex gap-1 items-center border w-fit rounded-full px-2.5 py-0.5 text-xs font-medium',
   {
     variants: {

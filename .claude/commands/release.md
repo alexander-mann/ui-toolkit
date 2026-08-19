@@ -39,31 +39,41 @@ It is a command rather than an agent for the same reason `/ship` is: the commit,
 - **minor** (0.x.0) — new components, new exports, new props/variants, new theme tokens — backwards compatible
 - **major** (x.0.0) — removed/renamed exports, changed prop interfaces, breaking behavior
 
-### 4. Generate changelog summary
+### 4. Close out the changelog
 
-Summarize changes grouped by type:
+`CHANGELOG.md` is the source of truth — entries are written as each change lands, not reconstructed here. Your job is to release the `## [Unreleased]` section, not to author it:
+
+- Rename `## [Unreleased]` to `## [<new-version>] — <YYYY-MM-DD>`
+- Open a fresh empty `## [Unreleased]` above it
+- Update the link references at the bottom of the file
+
+Then reconcile it against step 2 before continuing. If the commit log contains a public-API change with no changelog entry, **add the missing entry** rather than releasing an incomplete file — a contributor forgetting one is the expected failure mode. If `Unreleased` is empty but there are shippable commits, stop and report that rather than cutting an empty release.
+
+The `Unreleased` section also overrides the commit log for the bump decision in step 3: an entry marked **Breaking** means a breaking bump even if no commit message said so.
+
+Format (Keep a Changelog — Added / Changed / Deprecated / Removed / Fixed / Security, only the sections with entries):
 
 ```markdown
+## [0.1.0] — 2026-08-13
+
 ### Added
 
 - Tooltip component with position, variant, and portal support (#24)
 
 ### Changed
 
-- Convert ToastVariant from enum to const map (#26)
+- **Breaking** `ToastVariant` keys are lowercase: `ToastVariant.Success` → `ToastVariant.success` (#26)
 
 ### Fixed
 
 - Correct package name in badge/dialog MDX docs (#25)
 ```
 
-Only include sections that have entries. Use PR numbers where available.
-
 ### 5. Create the version bump PR
 
 - Create a branch: `release/v<new-version>` (e.g. `release/v0.1.0`)
 - Update the `"version"` field in `package.json`
-- Commit with message: `chore(release): v<new-version>`
+- Commit `package.json` and `CHANGELOG.md` together with message: `chore(release): v<new-version>`
 - Push and open a PR with:
   - Title: `chore(release): v<new-version>`
   - Body: the changelog summary, the previous version, the bump rationale, and instructions for publishing after merge
@@ -104,4 +114,4 @@ pnpm npm-publish
 - Never publish or run `pnpm npm-publish` — only prepare the version bump PR
 - Never bump to a major version without explicitly confirming with the user
 - Only one version bump PR should be open at a time — check for existing ones first
-- The version bump PR should contain only the `package.json` version change — no other code changes
+- The version bump PR should contain only the `package.json` version change and the `CHANGELOG.md` release rollover — no other code changes

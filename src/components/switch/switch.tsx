@@ -9,7 +9,7 @@ export const SwitchVariant = {
   lg: 'lg',
 }
 
-const switchVariants = cva('flex flex-col gap-1', {
+export const switchVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [SwitchVariant.default]: '[&_label]:text-sm',

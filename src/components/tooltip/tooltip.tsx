@@ -23,7 +23,7 @@ export const TooltipVariant = {
   light: 'light',
 } as const
 
-const tooltipVariants = cva(
+export const tooltipVariants = cva(
   'z-50 px-2.5 py-1.5 rounded-md text-xs font-medium whitespace-nowrap pointer-events-none animate-in fade-in-0 zoom-in-95',
   {
     variants: {
@@ -84,8 +84,6 @@ interface TooltipProps
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }
-
-export { tooltipVariants }
 
 export const Tooltip = ({
   content,

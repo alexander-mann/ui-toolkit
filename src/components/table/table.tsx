@@ -3,10 +3,13 @@ import React, { useState } from 'react'
 import { cn } from '@utils'
 import { ChevronDown } from 'lucide-react'
 
-export enum SortDirection {
-  Asc = 'ascending',
-  Desc = 'descending',
-}
+export const SortDirection = {
+  Asc: 'ascending',
+  Desc: 'descending',
+} as const
+
+export type SortDirectionValue =
+  (typeof SortDirection)[keyof typeof SortDirection]
 
 interface TableHeader {
   label: string
@@ -15,7 +18,7 @@ interface TableHeader {
 
 interface DefaultSort {
   label: string
-  direction: SortDirection
+  direction: SortDirectionValue
 }
 
 interface TableProps {
@@ -23,7 +26,7 @@ interface TableProps {
   headers: TableHeader[]
   rows: (string | React.ReactNode)[][]
   defaultSort?: DefaultSort
-  onSort?: (label: string, direction: SortDirection) => void
+  onSort?: (label: string, direction: SortDirectionValue) => void
 }
 
 const Table = ({ caption, headers, rows, defaultSort, onSort }: TableProps) => {

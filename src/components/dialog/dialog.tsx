@@ -18,7 +18,7 @@ export const DialogSize = {
   lg: 'lg',
 }
 
-const dialogVariants = cva(
+export const dialogVariants = cva(
   'flex flex-col gap-4 h-fit bg-background p-5 rounded-lg pb-6',
   {
     variants: {

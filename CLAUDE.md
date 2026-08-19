@@ -57,6 +57,7 @@ The component's public exports are re-exported from `src/components/index.ts` (o
 Follow the pattern in `src/components/button/button.tsx`:
 
 - Style variants use **`class-variance-authority` (`cva`)**. Define variant/size option maps as plain exported `const` objects (e.g. `ButtonVariant`, `ButtonSize`) and key the `cva` variants off them so consumers can reference named values. **End each map with `as const`.** Without it the values widen to `string`, `cva` infers `variant?: string`, and every invalid value compiles — the defect #42 tracks across 11 of 12 components, invisible to every gate.
+- Option map casing: **values** are always lowercase, kebab-case if multi-word (`'bottom-right'`) — the value is the string a consumer types as a prop, so it has to be the guessable one. **Keys** match the value for single words (`default: 'default'`) and camelCase it for multi-word (`bottomRight: 'bottom-right'`), so the map is always reachable with dot access. Never PascalCase either half.
 - Props interface extends the relevant native HTML attributes **and** `VariantProps<typeof xVariants>`.
 - Render with `className={cn(xVariants({ variant, size, className }))}` so consumer-supplied `className` merges/overrides correctly.
 - Use named exports (`export { Button }`), not default exports.
@@ -110,9 +111,17 @@ Playwright snapshots every Storybook story (light + dark) and diffs against comm
 - Baselines are generated **only in CI** (rendering is environment-sensitive) — do not commit locally-generated snapshots. After an **intentional** visual change, seed/refresh them by running the **Visual Regression** workflow with `update_baselines = true`; it regenerates and commits the PNGs. Keep the container tag in `vrt.yml` in sync with the `@playwright/test` version.
 - Tolerance is split across the two knobs Playwright gives you: `threshold` absorbs sub-pixel AA noise per pixel, `maxDiffPixels` stays a small structural budget. Don't quiet a failing diff by raising `maxDiffPixels`, or by swapping it back out for `maxDiffPixelRatio` — a budget in the thousands lets a whole light-on-light component appear or disappear unnoticed. Raising `threshold` spends the same headroom less visibly, since it shrinks every diff at once. `tests/vrt/tolerance.spec.ts` fails if the budget grows loose enough to swallow a vanishing popover; `tests/vrt/open-state.spec.ts` asserts the play-function stories are actually open at capture time.
 
+## Changelog
+
+`CHANGELOG.md` ([Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format) records every **public API** change: added/removed/renamed exports, changed prop interfaces, changed defaults, and consumer-visible behavior changes. Add the entry under `## [Unreleased]` in the same change that makes it — the file is written as work lands, not reconstructed from commits at release time. Internal refactors, docs, CI, and tooling don't need one.
+
+Prefix breaking entries with **Breaking** and show the before/after inline (`` `ToastPosition.BottomRight` → `ToastPosition.bottomRight` ``); that line is the whole migration note a consumer gets. The package is pre-1.0, so breaking changes ship in a minor bump (`0.x.0`). Nothing enforces this — no gate parses `CHANGELOG.md`, and `pnpm agents` does not look at it — so `/release` reconciles `Unreleased` against the commit log at release time and fills in what was missed.
+
 ## Publishing
 
 Version bumps and `npm publish` are done via `pnpm npm-publish` (builds then publishes with public access). Do **not** publish or bump the version unless explicitly asked.
+
+Cutting a release renames `## [Unreleased]` to the new version heading, opens a fresh empty `Unreleased`, and bumps `package.json` — that PR touches those two files and nothing else. `CHANGELOG.md` is in the `files` array, so it ships in the published tarball.
 
 ## Agent harness
 
@@ -142,3 +151,4 @@ The `PostToolUse` hook (`.claude/hooks/warn-ungated-files.sh`) fires on `Edit|Wr
 - Don't commit, push, or bump versions unless asked.
 - Match the surrounding style; keep comment density low (the codebase is largely comment-free).
 - After edits, verify with `pnpm test` + `pnpm lint` before reporting done.
+- A public API change also needs a `CHANGELOG.md` entry under `Unreleased`.

@@ -9,7 +9,7 @@ export const InputVariant = {
   lg: 'lg',
 }
 
-const inputVariants = cva('flex flex-col gap-1', {
+export const inputVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [InputVariant.default]: '[&>label]:text-sm [&>input]:text-sm',

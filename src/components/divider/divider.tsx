@@ -8,7 +8,7 @@ export const DividerOrientation = {
   Vertical: 'vertical',
 }
 
-const dividerVariants = cva('opacity-30', {
+export const dividerVariants = cva('opacity-30', {
   variants: {
     orientation: {
       [DividerOrientation.Horizontal]: 'border-b w-full',

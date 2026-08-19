@@ -8,7 +8,7 @@ export const CardVariant = {
   outline: 'outline',
 }
 
-const cardVariants = cva('rounded-lg p-4 border-2 border-card', {
+export const cardVariants = cva('rounded-lg p-4 border-2 border-card', {
   variants: {
     variant: {
       [CardVariant.default]: 'bg-card text-card-foreground',

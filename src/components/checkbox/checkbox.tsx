@@ -9,7 +9,7 @@ export const CheckboxVariant = {
   lg: 'lg',
 }
 
-const checkboxVariants = cva('flex flex-col gap-1', {
+export const checkboxVariants = cva('flex flex-col gap-1', {
   variants: {
     variant: {
       [CheckboxVariant.default]: '[&_label]:text-sm [&_input]:size-4',

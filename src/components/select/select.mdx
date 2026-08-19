@@ -24,9 +24,12 @@ import { Select } from '@alexandermann/ui-toolkit'
   onChange={handleCountryChange}
   hasError={hasError}
   errorMessage="Please select a country"
+  placeholder="Select an option"
   options={countryOptions}
 />
 `} />
+
+`placeholder` renders a leading empty option. It is optional and has no default — the string is user-facing copy, so omitting it renders no placeholder at all rather than an untranslatable English one.
 
 ## Properties
 
